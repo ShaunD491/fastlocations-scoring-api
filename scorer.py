@@ -51,9 +51,9 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 
-DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety"]
-DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.12,"incentives":0.12,"real_estate":0.10,
-                 "demographics":0.10,"logistics":0.10,"cost":0.18,"safety":0.10}
+DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size"]
+DEFAULT_WEIGHTS={"workforce":0.16,"infrastructure":0.11,"incentives":0.11,"real_estate":0.09,
+                 "demographics":0.09,"logistics":0.09,"cost":0.14,"safety":0.09,"market_size":0.12}
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -153,6 +153,12 @@ def m_incentives(f,crit):
         pf=got/tot*100
     return {"incentive_breadth":rec["count"],"priority_match":pf}
 
+def m_market_size(f,crit):
+    pop=f.get("TOTPOP_CY"); inc=f.get("MEDHINC_CY")
+    if pop is None: return None
+    return {"population_scale":pop,
+            "buying_power":(pop*inc if inc is not None else None)}
+
 def m_cost(f,crit):
     inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
     if inc is None and wl is None: return None
@@ -193,7 +199,8 @@ DIM_PHRASE={"workforce":"labor availability, workforce quality (critical thinkin
             "infrastructure":"utility and power readiness",
             "real_estate":"real-estate cost (property taxes)",
             "cost":"operating cost (wages and cost of living)",
-            "safety":"public safety (low crime)"}
+            "safety":"public safety (low crime)",
+            "market_size":"market size (population and buying power)"}
 def build_rationale(rank,r,pending):
     s=r["sub_scores"]
     live=sorted([(d,s[d]) for d in DIMS if s[d] is not None],key=lambda x:x[1],reverse=True)
@@ -264,7 +271,8 @@ def run(criteria,top=10):
          "infrastructure":{f:None for f in cands},
          "real_estate":score_dimension(cands,m_real_estate,criteria),
          "cost":score_dimension(cands,m_cost,criteria),
-         "safety":score_dimension(cands,m_safety,criteria)}
+         "safety":score_dimension(cands,m_safety,criteria),
+         "market_size":score_dimension(cands,m_market_size,criteria)}
 
     pref=set(geo.get("preferred_regions") or []); results=[]
     for f in cands:
@@ -283,7 +291,7 @@ def run(criteria,top=10):
     top_results=results[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size"],
             "dimensions_pending_data":["infrastructure"],
             "results":top_results}
 
