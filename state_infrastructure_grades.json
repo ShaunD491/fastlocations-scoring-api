@@ -1,0 +1,6 @@
+{
+  "_comment": "ASCE Infrastructure Report Card overall state GPA. Edit/extend this list, then push to redeploy. Verified from asce pages: TX, CA, FL.",
+  "TX": "C",
+  "CA": "C-",
+  "FL": "C+"
+}

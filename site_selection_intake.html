@@ -7,6 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/png" href="https://www.fastlocations.ai/favicon.png" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-62NLH2NPYT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-62NLH2NPYT');
+</script>
 <style>
   :root {
     --fl-blue: #1a54a0;
@@ -217,7 +226,7 @@
   <div class="wrap">
     <a href="https://www.fastlocations.ai" target="_blank" rel="noopener" class="brand"><img src="https://www.arcgis.com/sharing/rest/content/items/2fcdb00b6e444d699f6704f6e2fda716/resources/images/widget_2/1766160233490.png" alt="FastLocations.ai" /></a>
     <h1>Your Project Requirements</h1>
-    <p>Tell us what your project needs. We compare it against demographic, infrastructure, real estate, and incentive data across North America and return the five strongest matches - each with the reasoning behind it.</p>
+    <p>Tell us what your project needs. We compare it against demographic, infrastructure, real estate, and incentive data across North America and return the five strongest matches - each with the reasoning behind it. Your project details remain strictly confidential and are never shared with any economic development organization unless you choose to submit your project to FastLocations.</p>
   </div>
 </header>
 
@@ -225,20 +234,10 @@
 
   <!-- 1. PROJECT -->
   <section class="card">
-    <div class="section-head"><div class="section-num">1</div><h2>Project & Contact</h2></div>
-    <p class="section-sub">Who's submitting, and how to reach you with results. Fields marked <span class="req">*</span> are required.</p>
+    <div class="section-head"><div class="section-num">1</div><h2>Project</h2></div>
+    <p class="section-sub">Tell us about the project. Your details stay private - you can choose to submit to FastLocations after generating results. Fields marked <span class="req">*</span> are required.</p>
     <div class="grid">
       <div class="field full"><label>Project name / code <span class="req">*</span> <span class="opt">(a working title is fine)</span></label><input type="text" name="project_name" placeholder="e.g. Project Cardinal" /></div>
-      <div class="field"><label>Your name</label><input type="text" name="contact_name" /></div>
-      <div class="field"><label>Firm / company</label><input type="text" name="contact_firm" /></div>
-      <div class="field"><label>Email <span class="req">*</span></label><input type="email" name="contact_email" placeholder="you@firm.com" /></div>
-      <div class="field"><label>Phone <span class="opt">(optional)</span></label><input type="tel" name="contact_phone" /></div>
-      <div class="field"><label>Confidentiality</label>
-        <select name="confidentiality">
-          <option value="blind">Blind - don't reveal company to EDOs yet</option>
-          <option value="named">Named - company may be shared</option>
-        </select>
-      </div>
       <div class="field"><label>Use type</label>
         <select name="use_primary">
           <option value="manufacturing">Manufacturing</option>
@@ -315,6 +314,15 @@
           <label class="chip"><input type="checkbox" value="technicians" />Technicians</label>
           <label class="chip"><input type="checkbox" value="engineers" />Engineers</label>
           <label class="chip"><input type="checkbox" value="professional" />Professional / admin</label>
+          <label class="chip"><input type="checkbox" value="machine_operators" />Machine operators</label>
+          <label class="chip"><input type="checkbox" value="assembly_production" />Assembly / production</label>
+          <label class="chip"><input type="checkbox" value="logistics_warehouse" />Logistics / warehouse</label>
+          <label class="chip"><input type="checkbox" value="it_software" />IT / software</label>
+          <label class="chip"><input type="checkbox" value="scientists_rd" />Scientists / R&amp;D</label>
+          <label class="chip"><input type="checkbox" value="healthcare" />Healthcare / clinical</label>
+          <label class="chip"><input type="checkbox" value="finance_accounting" />Finance / accounting</label>
+          <label class="chip"><input type="checkbox" value="customer_service" />Customer service / call center</label>
+          <label class="chip"><input type="checkbox" value="management" />Management / executive</label>
         </div>
       </div>
     </div>
@@ -380,6 +388,14 @@
         <label class="chip"><input type="checkbox" value="tif" /><span class="ord"></span>TIF</label>
         <label class="chip"><input type="checkbox" value="utility_rate" /><span class="ord"></span>Utility rate incentive</label>
         <label class="chip"><input type="checkbox" value="fast_track_permitting" /><span class="ord"></span>Fast-track permitting</label>
+        <label class="chip"><input type="checkbox" value="sales_tax_exemption" /><span class="ord"></span>Sales/use tax exemption</label>
+        <label class="chip"><input type="checkbox" value="infrastructure_grant" /><span class="ord"></span>Infrastructure grant</label>
+        <label class="chip"><input type="checkbox" value="payroll_rebate" /><span class="ord"></span>Payroll / withholding rebate</label>
+        <label class="chip"><input type="checkbox" value="rd_credit" /><span class="ord"></span>R&amp;D tax credit</label>
+        <label class="chip"><input type="checkbox" value="enterprise_zone" /><span class="ord"></span>Enterprise / opportunity zone</label>
+        <label class="chip"><input type="checkbox" value="foreign_trade_zone" /><span class="ord"></span>Foreign trade zone (FTZ)</label>
+        <label class="chip"><input type="checkbox" value="low_interest_loan" /><span class="ord"></span>Low-interest loan / bond</label>
+        <label class="chip"><input type="checkbox" value="land_writedown" /><span class="ord"></span>Land discount / write-down</label>
       </div>
     </div>
     <div class="grid">
@@ -403,7 +419,7 @@
       <div class="field"><label>Excluded states <span class="opt">(remove these)</span></label><div class="msel" data-name="excl_regions"><div class="msel-box placeholder" tabindex="0">Select states&hellip;</div><div class="msel-pop" hidden></div></div></div>
       <div class="field full"><label>Market proximity <span class="opt">(optional - must be within X miles of a place)</span></label>
         <div class="range-pair" style="grid-template-columns: 2fr auto 1fr;">
-          <input type="text" name="prox_to" placeholder="Place, e.g. Detroit, MI" /><span>within</span><input type="number" name="prox_miles" min="0" placeholder="miles" />
+          <input type="text" name="prox_to" placeholder="Place, e.g. Detroit, MI" list="placeList" autocomplete="off" /><datalist id="placeList"></datalist><span>within</span><input type="number" name="prox_miles" min="0" placeholder="miles" />
         </div>
       </div>
     </div>
@@ -447,11 +463,28 @@
       <button type="button" class="btn btn-ghost" id="wordBtn">Download Word</button>
     </div>
     <div id="results" class="preview"></div>
-    <div id="preview" class="preview" style="display:none">
-      <h3>Criteria payload</h3>
-      <p class="cap">This is the <code>ProjectCriteria</code> object the scoring engine receives. Wire the endpoint in the <code>submitToBackend()</code> stub when the API is ready.</p>
-      <pre id="jsonOut"></pre>
+  </section>
+
+  <!-- Optional: submit to FastLocations (revealed after results) -->
+  <section class="card" id="flSubmitPanel" style="display:none">
+    <div class="section-head"><h2>Submit to FastLocations</h2></div>
+    <p class="section-sub">Optional. Send this project to FastLocations and we'll follow up to help advance your search.</p>
+    <div class="grid">
+      <div class="field"><label>Project name / code</label><input type="text" name="submit_project" readonly /></div>
+      <div class="field"><label>Your name</label><input type="text" name="submit_name" /></div>
+      <div class="field"><label>Firm / company</label><input type="text" name="submit_firm" /></div>
+      <div class="field"><label>Email</label><input type="email" name="submit_email" placeholder="you@firm.com" /></div>
+      <div class="field"><label>Phone <span class="opt">(optional)</span></label><input type="tel" name="submit_phone" /></div>
+      <div class="field"><label>Confidentiality</label>
+        <select name="submit_confidentiality">
+          <option value="blind">Blind - don't reveal company to EDOs</option>
+          <option value="named">Named - company may be shared</option>
+        </select>
+      </div>
     </div>
+    <p class="cap" style="border-top:1px solid var(--line); padding-top:12px; margin-top:4px;">FastLocations treats your submission as strictly confidential. Your contact details and project specifics are used solely to support your search and are never shared with third parties or economic development organizations without your explicit consent.</p>
+    <div class="actions"><button type="button" class="btn btn-primary" id="flSubmitBtn">Submit to FastLocations</button></div>
+    <div id="flSubmitMsg" class="cap" style="margin-top:8px;"></div>
   </section>
 
 </form>

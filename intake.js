@@ -102,10 +102,10 @@
         project_id: "auto",
         project_name: str('project_name'),
         submitted_by: {
-          name: str('contact_name'), firm: str('contact_firm'),
-          email: str('contact_email'), phone: str('contact_phone') || ""
+          name: str('submit_name'), firm: str('submit_firm'),
+          email: str('submit_email'), phone: str('submit_phone') || ""
         },
-        confidentiality: $('confidentiality').value,
+        confidentiality: ($('submit_confidentiality') ? $('submit_confidentiality').value : 'blind'),
         timeline: { decision_by: str('decision_by'), operational_by: str('operational_by') },
         notes: str('notes') || ""
       },
@@ -159,7 +159,6 @@
   function validate(c) {
     const errs = [];
     if (!c.project.project_name) errs.push("Add a project name.");
-    if (!c.project.submitted_by.email) errs.push("Add a contact email so results can be returned.");
     if (c.workforce.headcount.initial == null) errs.push("Add a starting headcount - labor matching needs it.");
     const conflict = c.geography.required_regions.filter(r => c.geography.excluded_regions.includes(r));
     if (conflict.length) errs.push("A region is in both Required and Excluded: " + conflict.join(", "));
@@ -201,11 +200,55 @@
     try {
       const data = await submitToBackend(c);
       renderResults(data);
+      const panel = document.getElementById('flSubmitPanel');
+      if (panel) {
+        panel.style.display = '';
+        const sp = $('submit_project'); if (sp) sp.value = c.project.project_name || '';
+      }
     } catch (err) {
       results.innerHTML = '<h3>Could not score</h3><p class="cap" style="color:#9a2017">' +
-        err.message + '. Make sure the local scoring server is running - <code>python app.py</code> - and that you opened this page at <code>http://127.0.0.1:8000</code>.</p>';
+        err.message + '. Please try again in a moment.</p>';
     }
   });
+
+  // ---- Submit to FastLocations (optional lead capture) ----
+  const flBtn = document.getElementById('flSubmitBtn');
+  if (flBtn) flBtn.addEventListener('click', async function () {
+    const c = buildCriteria();
+    const msg = document.getElementById('flSubmitMsg');
+    if (!c.project.submitted_by.email) { msg.style.color = '#9a2017'; msg.textContent = 'Please add your email so we can follow up.'; return; }
+    msg.style.color = ''; msg.textContent = 'Submitting...';
+    try {
+      const res = await fetch(API_BASE + '/submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(c)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      msg.style.color = '#1a7a3a';
+      msg.textContent = 'Thank you - your project has been submitted to FastLocations. We will be in touch.';
+      flBtn.disabled = true;
+    } catch (err) {
+      msg.style.color = '#9a2017'; msg.textContent = 'Could not submit: ' + err.message;
+    }
+  });
+
+  // ---- Market proximity autocomplete ----
+  const proxInput = form.querySelector('[name="prox_to"]');
+  const placeList = document.getElementById('placeList');
+  if (proxInput && placeList) {
+    let proxTimer;
+    proxInput.addEventListener('input', function () {
+      const q = proxInput.value.trim();
+      clearTimeout(proxTimer);
+      if (q.length < 2) { placeList.innerHTML = ''; return; }
+      proxTimer = setTimeout(async function () {
+        try {
+          const r = await fetch(API_BASE + '/places?q=' + encodeURIComponent(q));
+          const list = await r.json();
+          placeList.innerHTML = list.map(function (x) { return '<option value="' + x.replace(/"/g, '&quot;') + '"></option>'; }).join('');
+        } catch (_) {}
+      }, 220);
+    });
+  }
 
   function renderResults(data) {
     const wrap = document.getElementById('results');

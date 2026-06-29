@@ -86,6 +86,28 @@ def send_match_email(criteria, out):
     except Exception as e:
         return {"sent": False, "reason": str(e)[:150]}
 
+@app.route("/submit", methods=["POST","OPTIONS"])
+def submit():
+    if request.method=="OPTIONS": return ("",204)
+    crit=request.get_json(force=True,silent=True) or {}
+    out=scorer.run(crit, top=5)
+    try: res=send_match_email(crit, out)
+    except Exception as e: res={"sent": False, "reason": str(e)[:150]}
+    return jsonify({"email": res, "count": len(out.get("results", []))})
+
+@app.get("/places")
+def places():
+    q=(request.args.get("q") or "").strip()
+    nq=scorer._norm(q.split(",")[0]) if q else ""
+    if len(nq)<2: return jsonify([])
+    hits=set()
+    for k,v in scorer.PLACES.items():
+        st,nm=k.split("|",1)
+        if nm.startswith(nq) and len(v)>=3:
+            hits.add(v[2]+", "+st)
+    out=sorted(hits, key=lambda x:(len(x), x))[:10]
+    return jsonify(out)
+
 @app.route("/match", methods=["POST","OPTIONS"])
 def match():
     if request.method=="OPTIONS":
@@ -94,8 +116,6 @@ def match():
     try: top=int(request.args.get("top",5))
     except ValueError: top=5
     out=scorer.run(crit,top=top)
-    try: out["email"]=send_match_email(crit, out)
-    except Exception as e: out["email"]={"sent": False, "reason": str(e)[:150]}
     return jsonify(out)
 
 if __name__=="__main__":

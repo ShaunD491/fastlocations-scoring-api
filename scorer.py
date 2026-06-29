@@ -36,6 +36,9 @@ try:
 except FileNotFoundError:
     CA_INDEX={}
 INC=_load("incentives_index.json")                 # state/province -> programs
+try: INFRA_GRADES={k:v for k,v in _load("state_infrastructure_grades.json").items() if not k.startswith("_")}
+except FileNotFoundError: INFRA_GRADES={}
+GRADE_PTS={"A+":4.3,"A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D+":1.3,"D":1.0,"D-":0.7,"F":0.0}
 try: PLACES=_load("us_places.json")                # "ST|normname" -> [lat,lon]
 except FileNotFoundError: PLACES={}
 import re as _re, unicodedata as _ud
@@ -81,7 +84,7 @@ def geocode_place(place):
                 data=json.load(r)
             if data: res=[float(data[0]["lat"]),float(data[0]["lon"])]
         except Exception: res=None
-    res=tuple(res) if res else None
+    res=tuple(res[:2]) if res else None
     _GEO_CACHE[place]=res; return res
 
 def haversine_mi(lat1,lon1,lat2,lon2):
@@ -159,6 +162,12 @@ def m_market_size(f,crit):
     return {"population_scale":pop,
             "buying_power":(pop*inc if inc is not None else None)}
 
+def m_infrastructure(f,crit):
+    g=INFRA_GRADES.get(f.get("ST_ABBREV"))
+    pts=GRADE_PTS.get(g) if g else None
+    if pts is None: return None
+    return {"infra_grade":pts}
+
 def m_cost(f,crit):
     inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
     if inc is None and wl is None: return None
@@ -196,7 +205,7 @@ DIM_PHRASE={"workforce":"labor availability, workforce quality (critical thinkin
             "demographics":"population, labor force, education, and community health (low poverty and infant mortality)",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
-            "infrastructure":"utility and power readiness",
+            "infrastructure":"infrastructure quality (ASCE state grade)",
             "real_estate":"real-estate cost (property taxes)",
             "cost":"operating cost (wages and cost of living)",
             "safety":"public safety (low crime)",
@@ -268,7 +277,7 @@ def run(criteria,top=10):
          "demographics":score_dimension(cands,m_demographics,criteria),
          "logistics":score_dimension(cands,m_logistics,criteria),
          "incentives":score_dimension(cands,m_incentives,criteria),
-         "infrastructure":{f:None for f in cands},
+         "infrastructure":score_dimension(cands,m_infrastructure,criteria),
          "real_estate":score_dimension(cands,m_real_estate,criteria),
          "cost":score_dimension(cands,m_cost,criteria),
          "safety":score_dimension(cands,m_safety,criteria),
@@ -291,8 +300,8 @@ def run(criteria,top=10):
     top_results=results[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size"],
-            "dimensions_pending_data":["infrastructure"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure"],
+            "dimensions_pending_data":[],
             "results":top_results}
 
 if __name__=="__main__":
