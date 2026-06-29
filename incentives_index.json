@@ -1,0 +1,1283 @@
+{
+  "ME": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 3,
+      "cash_grant": 5,
+      "tax_credit": 10,
+      "tif": 6,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "AL": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 7,
+      "tax_credit": 6,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "AK": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": true
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 4,
+      "tax_credit": 3,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 1
+    }
+  },
+  "AZ": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 4,
+      "job_training_grant": 2,
+      "cash_grant": 3,
+      "tax_credit": 7,
+      "tif": 2,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "AR": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 0,
+      "cash_grant": 2,
+      "tax_credit": 10,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "CA": {
+    "count": 19,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 3,
+      "tax_credit": 5,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "CO": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 2,
+      "cash_grant": 7,
+      "tax_credit": 9,
+      "tif": 3,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "CT": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 1,
+      "cash_grant": 5,
+      "tax_credit": 14,
+      "tif": 4,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "DE": {
+    "count": 28,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 8,
+      "tif": 2,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "FL": {
+    "count": 34,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 4,
+      "cash_grant": 8,
+      "tax_credit": 6,
+      "tif": 2,
+      "utility_rate": 3,
+      "fast_track_permitting": 0
+    }
+  },
+  "GA": {
+    "count": 34,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 2,
+      "cash_grant": 4,
+      "tax_credit": 19,
+      "tif": 4,
+      "utility_rate": 3,
+      "fast_track_permitting": 0
+    }
+  },
+  "HI": {
+    "count": 31,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 2,
+      "cash_grant": 6,
+      "tax_credit": 11,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "ID": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 2,
+      "cash_grant": 11,
+      "tax_credit": 7,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "IL": {
+    "count": 33,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 4,
+      "tax_credit": 16,
+      "tif": 5,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "IN": {
+    "count": 32,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 2,
+      "cash_grant": 10,
+      "tax_credit": 11,
+      "tif": 2,
+      "utility_rate": 3,
+      "fast_track_permitting": 0
+    }
+  },
+  "IA": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 2,
+      "cash_grant": 9,
+      "tax_credit": 11,
+      "tif": 3,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "KS": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 5,
+      "cash_grant": 4,
+      "tax_credit": 11,
+      "tif": 0,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "KY": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": true
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 2,
+      "cash_grant": 6,
+      "tax_credit": 10,
+      "tif": 2,
+      "utility_rate": 4,
+      "fast_track_permitting": 1
+    }
+  },
+  "LA": {
+    "count": 29,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 2,
+      "cash_grant": 5,
+      "tax_credit": 11,
+      "tif": 1,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "MD": {
+    "count": 28,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 0,
+      "cash_grant": 4,
+      "tax_credit": 17,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "MA": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 4,
+      "cash_grant": 13,
+      "tax_credit": 10,
+      "tif": 3,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "MI": {
+    "count": 30,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": false,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 7,
+      "job_training_grant": 2,
+      "cash_grant": 9,
+      "tax_credit": 0,
+      "tif": 2,
+      "utility_rate": 3,
+      "fast_track_permitting": 0
+    }
+  },
+  "MN": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 2,
+      "cash_grant": 10,
+      "tax_credit": 5,
+      "tif": 3,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "MS": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 3,
+      "cash_grant": 5,
+      "tax_credit": 9,
+      "tif": 5,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "MO": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": true
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 4,
+      "cash_grant": 4,
+      "tax_credit": 10,
+      "tif": 2,
+      "utility_rate": 2,
+      "fast_track_permitting": 1
+    }
+  },
+  "MT": {
+    "count": 24,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 4,
+      "tif": 3,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "NE": {
+    "count": 24,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 8,
+      "tif": 0,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "NV": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 7,
+      "job_training_grant": 2,
+      "cash_grant": 6,
+      "tax_credit": 4,
+      "tif": 1,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "NH": {
+    "count": 25,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 4,
+      "tax_credit": 7,
+      "tif": 1,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "NJ": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 0,
+      "cash_grant": 3,
+      "tax_credit": 10,
+      "tif": 2,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "NM": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 1,
+      "cash_grant": 7,
+      "tax_credit": 7,
+      "tif": 1,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "NY": {
+    "count": 46,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 25,
+      "tax_credit": 11,
+      "tif": 4,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "NC": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 13,
+      "tax_credit": 3,
+      "tif": 2,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "ND": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 1,
+      "cash_grant": 3,
+      "tax_credit": 7,
+      "tif": 5,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "OH": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 4,
+      "cash_grant": 5,
+      "tax_credit": 6,
+      "tif": 3,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "OK": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 11,
+      "tax_credit": 5,
+      "tif": 0,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "PA": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 2,
+      "cash_grant": 12,
+      "tax_credit": 7,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "OR": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 0,
+      "cash_grant": 11,
+      "tax_credit": 1,
+      "tif": 3,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "RI": {
+    "count": 23,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 0,
+      "cash_grant": 12,
+      "tax_credit": 6,
+      "tif": 1,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "UT": {
+    "count": 23,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 11,
+      "tax_credit": 6,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "VA": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 13,
+      "tax_credit": 3,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "WA": {
+    "count": 22,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 0,
+      "cash_grant": 8,
+      "tax_credit": 7,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "WV": {
+    "count": 11,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 1,
+      "cash_grant": 3,
+      "tax_credit": 3,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "WI": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 8,
+      "tax_credit": 5,
+      "tif": 0,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "WY": {
+    "count": 23,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 4,
+      "cash_grant": 10,
+      "tax_credit": 1,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "SC": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 2,
+      "cash_grant": 4,
+      "tax_credit": 17,
+      "tif": 1,
+      "utility_rate": 2,
+      "fast_track_permitting": 0
+    }
+  },
+  "TN": {
+    "count": 25,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 4,
+      "cash_grant": 14,
+      "tax_credit": 6,
+      "tif": 0,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "VT": {
+    "count": 16,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": true,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 4,
+      "tax_credit": 2,
+      "tif": 1,
+      "utility_rate": 1,
+      "fast_track_permitting": 0
+    }
+  },
+  "SD": {
+    "count": 19,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": false,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 11,
+      "tax_credit": 0,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "TX": {
+    "count": 16,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 3,
+      "job_training_grant": 0,
+      "cash_grant": 4,
+      "tax_credit": 2,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "AB": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 2,
+      "job_training_grant": 0,
+      "cash_grant": 7,
+      "tax_credit": 3,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "BC": {
+    "count": 20,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 2,
+      "tax_credit": 10,
+      "tif": 2,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "MB": {
+    "count": 27,
+    "types_present": {
+      "property_tax_abatement": true,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 1,
+      "job_training_grant": 1,
+      "cash_grant": 6,
+      "tax_credit": 12,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "NB": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 11,
+      "tax_credit": 4,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "NL": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 7,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "NS": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 6,
+      "tax_credit": 8,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "ON": {
+    "count": 28,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 3,
+      "cash_grant": 8,
+      "tax_credit": 11,
+      "tif": 2,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "PE": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 2,
+      "cash_grant": 13,
+      "tax_credit": 2,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "SK": {
+    "count": 24,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": false,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": true,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 0,
+      "cash_grant": 10,
+      "tax_credit": 7,
+      "tif": 1,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "QC": {
+    "count": 13,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": false,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 0,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  },
+  "NF": {
+    "count": 26,
+    "types_present": {
+      "property_tax_abatement": false,
+      "job_training_grant": true,
+      "cash_grant": true,
+      "tax_credit": true,
+      "tif": false,
+      "utility_rate": false,
+      "fast_track_permitting": false
+    },
+    "type_counts": {
+      "property_tax_abatement": 0,
+      "job_training_grant": 1,
+      "cash_grant": 9,
+      "tax_credit": 7,
+      "tif": 0,
+      "utility_rate": 0,
+      "fast_track_permitting": 0
+    }
+  }
+}

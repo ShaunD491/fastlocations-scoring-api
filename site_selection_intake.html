@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Site Selection Intake - FastLocations.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --fl-blue: #1a54a0;
+    --fl-blue-dark: #143f78;
+    --fl-red: #cc2020;
+    --ink: #1a2330;
+    --muted-2: #6b7787;
+    --line: #e2e7ee;
+    --field: #f6f8fb;
+    --bg: #f0f3f8;
+    --card: #ffffff;
+    --gold: #c9921f;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; letter-spacing: .2px; }
+
+  /* ---- Header ---- */
+  .masthead {
+    background: linear-gradient(160deg, var(--fl-blue) 0%, var(--fl-blue-dark) 100%);
+    color: #fff;
+    padding: 40px 24px 88px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.07) 1px, transparent 0);
+    background-size: 22px 22px;
+    pointer-events: none;
+  }
+  .masthead .wrap { max-width: 940px; margin: 0 auto; position: relative; z-index: 1; }
+  .eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+    color: #bcd2f2; margin: 0 0 10px;
+  }
+  .brand { display: inline-block; margin: 0 0 16px; }
+  .brand img { height: 46px; width: auto; display: block; }
+  .masthead h1 { font-size: clamp(30px, 5vw, 46px); margin: 0 0 12px; line-height: 1.08; }
+  .masthead p { font-size: 16.5px; color: #dbe6f6; max-width: 620px; margin: 0; }
+
+  /* ---- Layout ---- */
+  .page { max-width: 940px; margin: -64px auto 80px; padding: 0 20px; position: relative; z-index: 2; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 16px 40px -24px rgba(20,63,120,.35);
+    padding: 30px 30px 8px; margin-bottom: 22px;
+  }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 4px; }
+  .section-num {
+    font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--fl-blue);
+    background: #eef3fb; border: 1px solid #dce6f5; border-radius: 8px;
+    min-width: 34px; height: 34px; display: grid; place-items: center; flex: none;
+  }
+  .section-head h2 { font-size: 23px; margin: 0; }
+  .section-sub { color: var(--muted-2); font-size: 13.5px; margin: 2px 0 22px 48px; }
+
+  /* ---- Fields ---- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 20px; }
+  .full { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  label { font-size: 13px; font-weight: 600; color: #3a4658; }
+  label .opt { font-weight: 400; color: #9aa6b5; font-size: 12px; }
+  label .req { color: var(--fl-red); font-weight: 700; margin-left: 1px; }
+  input[type=text], input[type=email], input[type=tel], input[type=number],
+  input[type=date], select, textarea {
+    font-family: inherit; font-size: 14.5px; color: var(--ink);
+    background: var(--field); border: 1px solid var(--line); border-radius: 9px;
+    padding: 10px 12px; width: 100%; transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--fl-blue); background: #fff;
+    box-shadow: 0 0 0 3px rgba(26,84,160,.13);
+  }
+  textarea { resize: vertical; min-height: 84px; }
+  .msel { position: relative; }
+  .msel-box { font-family: inherit; font-size: 14.5px; color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; min-height: 42px; cursor: pointer; }
+  .msel-box.placeholder { color: #9aa6b5; }
+  .msel-box:focus { outline: none; border-color: var(--fl-blue); box-shadow: 0 0 0 3px rgba(26,84,160,.13); }
+  .msel-pop { position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 4px); max-height: 240px; overflow-y: auto; background: #fff; border: 1px solid var(--line); border-radius: 9px; box-shadow: 0 12px 30px -12px rgba(20,63,120,.3); padding: 4px; }
+  .msel-pop label { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; font-weight: 500; color: #3a4658; cursor: pointer; }
+  .msel-pop label:hover { background: var(--field); }
+  .msel-pop input { width: 15px; height: 15px; accent-color: var(--fl-blue); }
+  .range-pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+  .range-pair span { color: #9aa6b5; font-size: 13px; }
+  .hint { font-size: 12px; color: var(--muted-2); margin-top: -8px; }
+
+  /* chips (multi-select) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    position: relative; cursor: pointer; user-select: none;
+    font-size: 13px; font-weight: 500; color: #44546a;
+    background: var(--field); border: 1px solid var(--line);
+    padding: 7px 13px; border-radius: 999px; transition: all .14s;
+  }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip:hover { border-color: #c2d2e8; }
+  .chip:has(input:checked) {
+    background: var(--fl-blue); border-color: var(--fl-blue); color: #fff;
+  }
+  .chip:has(input:focus-visible) { box-shadow: 0 0 0 3px rgba(26,84,160,.25); }
+
+  /* ordered priority chips for incentives */
+  .chip .ord {
+    display: none; margin-right: 6px; font-weight: 700; font-size: 11px;
+    background: rgba(255,255,255,.25); border-radius: 50%; width: 16px; height: 16px;
+    line-height: 16px; text-align: center;
+  }
+  .chip:has(input:checked) .ord { display: inline-block; }
+
+  .checkrow { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+  .checkrow input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--fl-blue); }
+  .checkrow label { font-weight: 500; color: #3a4658; margin: 0; }
+
+  /* ---- Weights ---- */
+  .weights-note {
+    background: #fbf7ec; border: 1px solid #ecdfba; border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; color: #6f5a1f; margin-bottom: 20px;
+  }
+  .weight-row { display: grid; grid-template-columns: 150px 1fr 56px; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .weight-row .wlabel { font-size: 13.5px; font-weight: 600; color: #3a4658; }
+  .weight-row input[type=range] { width: 100%; accent-color: var(--fl-blue); }
+  .weight-row .wval { font-size: 14px; font-weight: 700; color: var(--fl-blue); text-align: right; font-variant-numeric: tabular-nums; }
+  .weight-total { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--line); padding-top: 14px; margin-top: 4px; }
+  .weight-total b { font-family: 'DM Serif Display', serif; font-size: 18px; }
+
+  /* ---- Submit / output ---- */
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 8px 0 0; }
+  .btn {
+    font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+    border: none; border-radius: 999px; padding: 13px 26px; transition: transform .12s, box-shadow .2s, background .2s;
+  }
+  .btn-primary {
+    color: #fff; background: linear-gradient(135deg, var(--fl-red) 0%, #a51717 100%);
+    box-shadow: 0 8px 20px -8px rgba(204,32,32,.6);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 26px -8px rgba(204,32,32,.7); }
+  .btn-ghost { background: #eef2f8; color: var(--fl-blue); }
+  .btn-ghost:hover { background: #e2e9f4; }
+  .btn:focus-visible { outline: 3px solid rgba(26,84,160,.4); outline-offset: 2px; }
+
+  .preview { margin-top: 22px; display: none; }
+  .preview.show { display: block; }
+  .preview h3 { font-size: 18px; margin: 0 0 4px; color: var(--fl-blue-dark); }
+  .preview p.cap { font-size: 13px; color: var(--muted-2); margin: 0 0 12px; }
+  pre {
+    background: #0f1b2d; color: #cfe0f5; border-radius: 12px; padding: 18px 20px;
+    overflow-x: auto; font-size: 12.5px; line-height: 1.6; max-height: 360px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace; margin: 0;
+  }
+  .errbox {
+    display: none; background: #fdecea; border: 1px solid #f3c2bc; color: #9a2017;
+    border-radius: 10px; padding: 12px 14px; font-size: 13.5px; margin-bottom: 18px;
+  }
+  .errbox.show { display: block; }
+  .errbox ul { margin: 6px 0 0; padding-left: 18px; }
+
+  /* ---- Results ---- */
+  .result { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+  .rhead { display: flex; align-items: center; gap: 12px; }
+  .rhead .rank { width: 26px; height: 26px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--fl-blue); color: #fff; font-weight: 700; font-size: 13px; }
+  .rhead .place { font-weight: 600; font-size: 16px; color: var(--ink); flex: 1; }
+  .rhead .score { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--fl-blue); }
+  .subs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
+  .sub { font-size: 11.5px; font-weight: 600; color: #2f6bbf; background: #eef3fb; border: 1px solid #dce6f5; border-radius: 999px; padding: 3px 9px; text-transform: capitalize; }
+  .sub.na { color: #9aa6b5; background: #f4f6f9; border-color: var(--line); }
+  .edo { font-size: 13px; color: #44546a; border-top: 1px dashed var(--line); padding-top: 8px; }
+  .edo .cat { color: var(--muted-2); font-size: 12px; }
+  .edo a { color: var(--fl-blue); text-decoration: none; font-weight: 600; }
+  .edo a:hover { text-decoration: underline; }
+  .rationale { font-size: 13px; line-height: 1.55; color: #44546a; margin: 2px 0 12px; }
+
+  footer.fl { text-align: center; color: #8a97a8; font-size: 12.5px; padding: 0 20px 50px; }
+  footer.fl b { color: var(--fl-blue); font-weight: 600; }
+  .disclaimer { max-width: 940px; margin: 0 auto; padding: 0 20px 18px; }
+  .disclaimer p { font-size: 11.5px; line-height: 1.55; color: #9aa6b5; border-top: 1px solid var(--line); padding-top: 18px; margin: 0; }
+  .disclaimer strong { color: #6b7787; font-weight: 600; }
+
+  @media (max-width: 680px) {
+    .grid, .grid-3 { grid-template-columns: 1fr; }
+    .weight-row { grid-template-columns: 110px 1fr 46px; gap: 10px; }
+    .card { padding: 24px 18px 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+  @media print {
+    .actions, .errbox, .weights-note, .masthead::after { display: none !important; }
+    .masthead { padding: 18px 24px !important; }
+    .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12px; }
+    body { background: #fff; }
+    .result { break-inside: avoid; }
+    a { color: #000; text-decoration: underline; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a href="https://www.fastlocations.ai" target="_blank" rel="noopener" class="brand"><img src="https://www.arcgis.com/sharing/rest/content/items/2fcdb00b6e444d699f6704f6e2fda716/resources/images/widget_2/1766160233490.png" alt="FastLocations.ai" /></a>
+    <h1>Your Project Requirements</h1>
+    <p>Tell us what your project needs. We compare it against demographic, infrastructure, real estate, and incentive data across North America and return the five strongest matches - each with the reasoning behind it.</p>
+  </div>
+</header>
+
+<form id="intakeForm" class="page" novalidate>
+
+  <!-- 1. PROJECT -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">1</div><h2>Project & Contact</h2></div>
+    <p class="section-sub">Who's submitting, and how to reach you with results. Fields marked <span class="req">*</span> are required.</p>
+    <div class="grid">
+      <div class="field full"><label>Project name / code <span class="req">*</span> <span class="opt">(a working title is fine)</span></label><input type="text" name="project_name" placeholder="e.g. Project Cardinal" /></div>
+      <div class="field"><label>Your name</label><input type="text" name="contact_name" /></div>
+      <div class="field"><label>Firm / company</label><input type="text" name="contact_firm" /></div>
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" name="contact_email" placeholder="you@firm.com" /></div>
+      <div class="field"><label>Phone <span class="opt">(optional)</span></label><input type="tel" name="contact_phone" /></div>
+      <div class="field"><label>Confidentiality</label>
+        <select name="confidentiality">
+          <option value="blind">Blind - don't reveal company to EDOs yet</option>
+          <option value="named">Named - company may be shared</option>
+        </select>
+      </div>
+      <div class="field"><label>Use type</label>
+        <select name="use_primary">
+          <option value="manufacturing">Manufacturing</option>
+          <option value="warehouse_distribution">Warehouse / Distribution</option>
+          <option value="data_center">Data Center</option>
+          <option value="office">Office</option>
+          <option value="r_and_d">R&amp;D</option>
+          <option value="flex">Flex / Light Industrial</option>
+          <option value="mixed">Mixed Use</option>
+        </select>
+      </div>
+      <div class="field"><label>NAICS <span class="opt">(optional)</span></label><input type="text" name="naics" placeholder="e.g. 3363" /></div>
+      <div class="field full"><label>Decision timeline</label>
+        <div class="grid">
+          <div><span class="hint">Decision by</span><input type="date" name="decision_by" /></div>
+          <div><span class="hint">Operational by</span><input type="date" name="operational_by" /></div>
+        </div>
+      </div>
+      <div class="field full"><label>Project description &amp; anything the fields below don't capture</label>
+        <textarea name="notes" placeholder="Free text. This is also read by the AI parser, so capture nuance here - e.g. 'must be near an OEM assembly plant', 'union environment acceptable', 'ESG/renewable power a priority'."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. REAL ESTATE -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">2</div><h2>Real Estate</h2></div>
+    <p class="section-sub">What you're looking for on the ground. Leave a bound blank for "no limit".</p>
+    <div class="grid">
+      <div class="field"><label>Facility type</label>
+        <select name="facility_type">
+          <option value="any">Open to any</option>
+          <option value="existing_building">Existing building</option>
+          <option value="build_to_suit">Build-to-suit</option>
+          <option value="greenfield">Greenfield site</option>
+        </select>
+      </div>
+      <div class="field"><label>Clear ceiling height <span class="opt">(ft, optional)</span></label><input type="number" name="ceiling_ft" min="0" placeholder="e.g. 36" /></div>
+      <div class="field"><label>Building size <span class="opt">(sqft)</span></label>
+        <div class="range-pair"><input type="number" name="bldg_min" min="0" placeholder="Min" /><span>-</span><input type="number" name="bldg_max" min="0" placeholder="Max" /></div>
+      </div>
+      <div class="field"><label>Site size <span class="opt">(acres)</span></label>
+        <div class="range-pair"><input type="number" name="acre_min" min="0" placeholder="Min" /><span>-</span><input type="number" name="acre_max" min="0" placeholder="Max" /></div>
+      </div>
+    </div>
+    <div class="checkrow"><input type="checkbox" id="expand" name="expandability" /><label for="expand">Room to expand is required</label></div>
+  </section>
+
+  <!-- 3. WORKFORCE -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">3</div><h2>Workforce</h2></div>
+    <p class="section-sub">Headcount, skills, and wage expectations drive the labor match.</p>
+    <div class="grid">
+      <div class="field"><label>Headcount at start <span class="req">*</span></label><input type="number" name="hc_initial" min="0" placeholder="e.g. 300" /></div>
+      <div class="field"><label>Headcount by year 5 <span class="opt">(optional)</span></label><input type="number" name="hc_year5" min="0" placeholder="e.g. 550" /></div>
+      <div class="field"><label>Shift pattern</label>
+        <select name="shift">
+          <option value="single">Single shift</option>
+          <option value="two">Two shifts</option>
+          <option value="three">Three shifts</option>
+          <option value="continuous">Continuous (24/7)</option>
+        </select>
+      </div>
+      <div class="field"><label>Target wage <span class="opt">(optional)</span></label>
+        <div class="range-pair" style="grid-template-columns: 1fr 1fr;">
+          <input type="number" name="wage_value" min="0" placeholder="Amount" />
+          <select name="wage_basis"><option value="hourly">/ hour</option><option value="annual">/ year</option></select>
+        </div>
+      </div>
+      <div class="field full"><label>Skill profile <span class="opt">(select all that apply)</span></label>
+        <div class="chips" data-group="skills">
+          <label class="chip"><input type="checkbox" value="general_labor" />General labor</label>
+          <label class="chip"><input type="checkbox" value="skilled_trades" />Skilled trades</label>
+          <label class="chip"><input type="checkbox" value="technicians" />Technicians</label>
+          <label class="chip"><input type="checkbox" value="engineers" />Engineers</label>
+          <label class="chip"><input type="checkbox" value="professional" />Professional / admin</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. INFRASTRUCTURE -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">4</div><h2>Infrastructure & Utilities</h2></div>
+    <p class="section-sub">Often the deciding factor - and the data most likely to be thin. Specify only what matters.</p>
+    <div class="grid-3">
+      <div class="field"><label>Power demand <span class="opt">(MW)</span></label><input type="number" name="power_mw" min="0" step="0.1" placeholder="e.g. 15" /></div>
+      <div class="field"><label>Power reliability</label>
+        <select name="power_reliability">
+          <option value="standard">Standard</option>
+          <option value="redundant">Redundant</option>
+          <option value="critical">Critical (data-center grade)</option>
+        </select>
+      </div>
+      <div class="field"><label>Broadband <span class="opt">(min Gbps)</span></label><input type="number" name="broadband_gbps" min="0" step="0.1" placeholder="e.g. 1" /></div>
+      <div class="field"><label>Water <span class="opt">(GPD)</span></label><input type="number" name="water_gpd" min="0" placeholder="e.g. 200000" /></div>
+      <div class="field"><label>Sewer <span class="opt">(GPD)</span></label><input type="number" name="sewer_gpd" min="0" placeholder="e.g. 150000" /></div>
+      <div class="field"><label>Rail</label>
+        <select name="rail"><option value="none">Not needed</option><option value="served">Rail-served site</option><option value="adjacent">Adjacent to line</option></select>
+      </div>
+      <div class="field"><label>Highway access <span class="opt">(max <span class="unit">miles</span>)</span></label><input type="number" name="hwy_miles" min="0" placeholder="e.g. 5" /></div>
+      <div class="field"><label>Commercial airport <span class="opt">(max <span class="unit">miles</span>)</span></label><input type="number" name="air_miles" min="0" placeholder="e.g. 60" /></div>
+      <div class="field" style="justify-content:flex-end">
+        <div class="checkrow" style="margin-bottom:4px"><input type="checkbox" id="gas" name="gas" /><label for="gas">Natural gas required</label></div>
+        <div class="checkrow" style="margin-bottom:0"><input type="checkbox" id="port" name="port" /><label for="port">Port access required</label></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MARKET / DEMOGRAPHICS -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">5</div><h2>Market & Demographics</h2></div>
+    <p class="section-sub">Defines the labor draw and community thresholds to screen on.</p>
+    <div class="grid">
+      <div class="field"><label>Labor draw radius <span class="opt">(<span class="unit">miles</span>)</span></label><input type="number" name="draw_radius" min="0" placeholder="e.g. 45" /></div>
+      <div class="field"><label>Education priority</label>
+        <select name="education">
+          <option value="none">No preference</option>
+          <option value="hs">High-school+</option>
+          <option value="some_college">Some college / associate</option>
+          <option value="bachelors_plus">Bachelor's+</option>
+        </select>
+      </div>
+      <div class="field"><label>Min. population in radius <span class="opt">(optional)</span></label><input type="number" name="min_pop" min="0" placeholder="e.g. 150000" /></div>
+      <div class="field"><label>Min. labor force in radius <span class="opt">(optional)</span></label><input type="number" name="min_lf" min="0" placeholder="e.g. 75000" /></div>
+    </div>
+  </section>
+
+  <!-- 6. INCENTIVES -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">6</div><h2>Incentives</h2></div>
+    <p class="section-sub">Select in priority order - your first pick is weighted highest.</p>
+    <div class="field full"><label>Incentive priorities</label>
+      <div class="chips" data-group="incentives" id="incChips">
+        <label class="chip"><input type="checkbox" value="property_tax_abatement" /><span class="ord"></span>Property tax abatement</label>
+        <label class="chip"><input type="checkbox" value="job_training_grant" /><span class="ord"></span>Job training grant</label>
+        <label class="chip"><input type="checkbox" value="cash_grant" /><span class="ord"></span>Cash grant</label>
+        <label class="chip"><input type="checkbox" value="tax_credit" /><span class="ord"></span>Tax credit</label>
+        <label class="chip"><input type="checkbox" value="tif" /><span class="ord"></span>TIF</label>
+        <label class="chip"><input type="checkbox" value="utility_rate" /><span class="ord"></span>Utility rate incentive</label>
+        <label class="chip"><input type="checkbox" value="fast_track_permitting" /><span class="ord"></span>Fast-track permitting</label>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="field"><label>Target incentive value <span class="opt">(USD, optional)</span></label><input type="number" name="inc_target" min="0" placeholder="e.g. 5000000" /></div>
+    </div>
+  </section>
+
+  <!-- 7. GEOGRAPHY -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">7</div><h2>Geography</h2></div>
+    <p class="section-sub">Required = only score these states &middot; Preferred = rank these higher &middot; Excluded = remove these states. The list matches your selected country. Hold Ctrl (Cmd on Mac) to pick several.</p>
+    <div class="grid">
+      <div class="field"><label>Country <span class="req">*</span> <span class="opt">(choose one)</span></label>
+        <div class="chips" data-group="countries">
+          <label class="chip"><input type="radio" name="country" value="US" checked />United States</label>
+          <label class="chip"><input type="radio" name="country" value="CA" />Canada</label>
+        </div>
+      </div>
+      <div class="field"><label>Required states <span class="opt">(only score these - blank = all)</span></label><div class="msel" data-name="req_regions"><div class="msel-box placeholder" tabindex="0">Select states&hellip;</div><div class="msel-pop" hidden></div></div></div>
+      <div class="field"><label>Preferred states <span class="opt">(rank these higher)</span></label><div class="msel" data-name="pref_regions"><div class="msel-box placeholder" tabindex="0">Select states&hellip;</div><div class="msel-pop" hidden></div></div></div>
+      <div class="field"><label>Excluded states <span class="opt">(remove these)</span></label><div class="msel" data-name="excl_regions"><div class="msel-box placeholder" tabindex="0">Select states&hellip;</div><div class="msel-pop" hidden></div></div></div>
+      <div class="field full"><label>Market proximity <span class="opt">(optional - must be within X miles of a place)</span></label>
+        <div class="range-pair" style="grid-template-columns: 2fr auto 1fr;">
+          <input type="text" name="prox_to" placeholder="Place, e.g. Detroit, MI" /><span>within</span><input type="number" name="prox_miles" min="0" placeholder="miles" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. BUDGET -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">8</div><h2>Budget</h2></div>
+    <p class="section-sub">Optional, but sharpens the incentive and real-estate matching.</p>
+    <div class="grid">
+      <div class="field"><label>Capital investment <span class="opt">(USD)</span></label><input type="number" name="capex" min="0" placeholder="e.g. 220000000" /></div>
+      <div class="field"><label>Annual operating budget target <span class="opt">(USD, optional)</span></label><input type="number" name="opex" min="0" placeholder="optional" /></div>
+    </div>
+  </section>
+
+  <!-- 9. WEIGHTS -->
+  <section class="card">
+    <div class="section-head"><div class="section-num">9</div><h2>What Matters Most</h2></div>
+    <p class="section-sub">Set the relative importance of each factor. These weights drive how candidates are ranked.</p>
+    <div class="weights-note">Drag to set priority. The values normalize to 100% automatically - you don't have to make them add up yourself.</div>
+    <div id="weights">
+      <div class="weight-row"><span class="wlabel">Workforce</span><input type="range" data-w="workforce" min="0" max="100" value="18" /><span class="wval">18%</span></div>
+      <div class="weight-row"><span class="wlabel">Cost</span><input type="range" data-w="cost" min="0" max="100" value="18" /><span class="wval">18%</span></div>
+      <div class="weight-row"><span class="wlabel">Safety</span><input type="range" data-w="safety" min="0" max="100" value="10" /><span class="wval">10%</span></div>
+      <div class="weight-row"><span class="wlabel">Infrastructure</span><input type="range" data-w="infrastructure" min="0" max="100" value="12" /><span class="wval">12%</span></div>
+      <div class="weight-row"><span class="wlabel">Incentives</span><input type="range" data-w="incentives" min="0" max="100" value="12" /><span class="wval">12%</span></div>
+      <div class="weight-row"><span class="wlabel">Real estate</span><input type="range" data-w="real_estate" min="0" max="100" value="10" /><span class="wval">10%</span></div>
+      <div class="weight-row"><span class="wlabel">Demographics</span><input type="range" data-w="demographics" min="0" max="100" value="10" /><span class="wval">10%</span></div>
+      <div class="weight-row"><span class="wlabel">Logistics</span><input type="range" data-w="logistics" min="0" max="100" value="10" /><span class="wval">10%</span></div>
+      <div class="weight-total"><span class="wlabel">Normalized total</span><b id="wtotal">100%</b></div>
+    </div>
+  </section>
+
+  <!-- SUBMIT -->
+  <section class="card">
+    <div id="errbox" class="errbox"></div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Generate matches</button>
+      <button type="button" class="btn btn-ghost" id="printBtn">Print / Save as PDF</button>
+      <button type="button" class="btn btn-ghost" id="wordBtn">Download Word</button>
+    </div>
+    <div id="results" class="preview"></div>
+    <div id="preview" class="preview" style="display:none">
+      <h3>Criteria payload</h3>
+      <p class="cap">This is the <code>ProjectCriteria</code> object the scoring engine receives. Wire the endpoint in the <code>submitToBackend()</code> stub when the API is ready.</p>
+      <pre id="jsonOut"></pre>
+    </div>
+  </section>
+
+</form>
+
+<div class="disclaimer">
+  <p><strong>Disclaimer.</strong> Matches and scores produced by this tool are generated from automated analysis of third-party demographic, infrastructure, real-estate, and incentive data that may be incomplete, outdated, or contain errors. They are provided for preliminary screening and informational purposes only and do not constitute professional site-selection, legal, financial, tax, or real-estate advice. FastLocations.ai makes no warranty as to the accuracy or completeness of the results. Independently verify all data and consult qualified advisors before making any location, investment, or contractual decision.</p>
+</div>
+<footer class="fl">Powered by <b>FastLocations.ai</b> - site selection intelligence for North America</footer>
+
+<script src="intake.js"></script>
+</body>
+</html>

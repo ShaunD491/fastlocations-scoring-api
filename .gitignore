@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+_geocode_cache.json
+build.log
+FL Project Search/
+
+# Ignore ALL raw data files; whitelist only the small files the app loads at runtime
+*.json
+*.csv
+*.xlsx
+*.geojson
+!county_features.json
+!ca_features.json
+!edo_master_table_dual.json
+!edo_fips_index.json
+!edo_ca_cd_index.json
+!incentives_index.json
+!metrics_extra.json

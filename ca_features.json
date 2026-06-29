@@ -1,0 +1,4104 @@
+{
+ "1001": {
+  "id": "1001",
+  "geo_system": "CA",
+  "NAME": "Division No.  1",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 271878,
+  "POPDENS_CY": 29.8615100229224,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 86,
+   "grid_nodes": 14,
+   "telecom_towers": 90
+  }
+ },
+ "1002": {
+  "id": "1002",
+  "geo_system": "CA",
+  "NAME": "Division No.  2",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 19392,
+  "POPDENS_CY": 3.2781231933301553,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 35,
+   "grid_nodes": 2,
+   "telecom_towers": 37
+  }
+ },
+ "1003": {
+  "id": "1003",
+  "geo_system": "CA",
+  "NAME": "Division No.  3",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 13920,
+  "POPDENS_CY": 0.7222865350119576,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 29,
+   "grid_nodes": 4,
+   "telecom_towers": 34
+  }
+ },
+ "1004": {
+  "id": "1004",
+  "geo_system": "CA",
+  "NAME": "Division No.  4",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 19253,
+  "POPDENS_CY": 2.7426082199898576,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 25,
+   "grid_nodes": 1,
+   "telecom_towers": 21
+  }
+ },
+ "1005": {
+  "id": "1005",
+  "geo_system": "CA",
+  "NAME": "Division No.  5",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 40396,
+  "POPDENS_CY": 3.924311574562504,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 7,
+   "grid_nodes": 6,
+   "telecom_towers": 32
+  }
+ },
+ "1006": {
+  "id": "1006",
+  "geo_system": "CA",
+  "NAME": "Division No.  6",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 37339,
+  "POPDENS_CY": 2.3273788487082205,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 1,
+   "grid_nodes": 6,
+   "telecom_towers": 59
+  }
+ },
+ "1007": {
+  "id": "1007",
+  "geo_system": "CA",
+  "NAME": "Division No.  7",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 33044,
+  "POPDENS_CY": 3.442646349455067,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 38,
+   "grid_nodes": 1,
+   "telecom_towers": 44
+  }
+ },
+ "1008": {
+  "id": "1008",
+  "geo_system": "CA",
+  "NAME": "Division No.  8",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 33940,
+  "POPDENS_CY": 3.675172767771095,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 60,
+   "grid_nodes": 0,
+   "telecom_towers": 37
+  }
+ },
+ "1009": {
+  "id": "1009",
+  "geo_system": "CA",
+  "NAME": "Division No.  9",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 14733,
+  "POPDENS_CY": 1.115337883106412,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 54,
+   "grid_nodes": 0,
+   "telecom_towers": 41
+  }
+ },
+ "1010": {
+  "id": "1010",
+  "geo_system": "CA",
+  "NAME": "Division No. 10",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 24332,
+  "POPDENS_CY": 0.12693337734858962,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 17,
+   "grid_nodes": 3,
+   "telecom_towers": 53
+  }
+ },
+ "1011": {
+  "id": "1011",
+  "geo_system": "CA",
+  "NAME": "Division No. 11",
+  "ST_ABBREV": "NL",
+  "TOTPOP_CY": 2323,
+  "POPDENS_CY": 0.0347821451854354,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 3,
+   "grid_nodes": 0,
+   "telecom_towers": 3
+  }
+ },
+ "1101": {
+  "id": "1101",
+  "geo_system": "CA",
+  "NAME": "Kings",
+  "ST_ABBREV": "PE",
+  "TOTPOP_CY": 18327,
+  "POPDENS_CY": 10.85999395580628,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 19,
+   "grid_nodes": 2,
+   "telecom_towers": 10
+  }
+ },
+ "1102": {
+  "id": "1102",
+  "geo_system": "CA",
+  "NAME": "Queens",
+  "ST_ABBREV": "PE",
+  "TOTPOP_CY": 89770,
+  "POPDENS_CY": 45.17138659098686,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 13,
+   "grid_nodes": 2,
+   "telecom_towers": 24
+  }
+ },
+ "1103": {
+  "id": "1103",
+  "geo_system": "CA",
+  "NAME": "Prince",
+  "ST_ABBREV": "PE",
+  "TOTPOP_CY": 46234,
+  "POPDENS_CY": 23.04452496897259,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 16,
+   "grid_nodes": 7,
+   "telecom_towers": 8
+  }
+ },
+ "1201": {
+  "id": "1201",
+  "geo_system": "CA",
+  "NAME": "Shelburne",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 13704,
+  "POPDENS_CY": 5.5648727559195805,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 25,
+   "grid_nodes": 7,
+   "telecom_towers": 18
+  }
+ },
+ "1202": {
+  "id": "1202",
+  "geo_system": "CA",
+  "NAME": "Yarmouth",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 24947,
+  "POPDENS_CY": 11.758412164232215,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 17,
+   "grid_nodes": 11,
+   "telecom_towers": 22
+  }
+ },
+ "1203": {
+  "id": "1203",
+  "geo_system": "CA",
+  "NAME": "Digby",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 17062,
+  "POPDENS_CY": 6.791413411668238,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 15,
+   "grid_nodes": 10,
+   "telecom_towers": 8
+  }
+ },
+ "1204": {
+  "id": "1204",
+  "geo_system": "CA",
+  "NAME": "Queens",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 10501,
+  "POPDENS_CY": 4.387372256064442,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 10,
+   "grid_nodes": 22,
+   "telecom_towers": 8
+  }
+ },
+ "1205": {
+  "id": "1205",
+  "geo_system": "CA",
+  "NAME": "Annapolis",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 21252,
+  "POPDENS_CY": 6.676132793847856,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 3,
+   "grid_nodes": 17,
+   "telecom_towers": 14
+  }
+ },
+ "1206": {
+  "id": "1206",
+  "geo_system": "CA",
+  "NAME": "Lunenburg",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 48599,
+  "POPDENS_CY": 16.720740682123928,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 20,
+   "grid_nodes": 17,
+   "telecom_towers": 17
+  }
+ },
+ "1207": {
+  "id": "1207",
+  "geo_system": "CA",
+  "NAME": "Kings",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 62914,
+  "POPDENS_CY": 29.672076253000743,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 4,
+   "grid_nodes": 20,
+   "telecom_towers": 18
+  }
+ },
+ "1208": {
+  "id": "1208",
+  "geo_system": "CA",
+  "NAME": "Hants",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 45140,
+  "POPDENS_CY": 14.803834435804683,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 19,
+   "telecom_towers": 21
+  }
+ },
+ "1209": {
+  "id": "1209",
+  "geo_system": "CA",
+  "NAME": "Halifax",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 440072,
+  "POPDENS_CY": 80.34073503396586,
+  "infra_ca": {
+   "airports": 12,
+   "ports": 114,
+   "grid_nodes": 57,
+   "telecom_towers": 96
+  }
+ },
+ "1210": {
+  "id": "1210",
+  "geo_system": "CA",
+  "NAME": "Colchester",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 51476,
+  "POPDENS_CY": 14.190489317711915,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 17,
+   "telecom_towers": 52
+  }
+ },
+ "1211": {
+  "id": "1211",
+  "geo_system": "CA",
+  "NAME": "Cumberland",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 30538,
+  "POPDENS_CY": 7.142071991374692,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 5,
+   "grid_nodes": 20,
+   "telecom_towers": 17
+  }
+ },
+ "1212": {
+  "id": "1212",
+  "geo_system": "CA",
+  "NAME": "Pictou",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 43657,
+  "POPDENS_CY": 15.349806971527418,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 7,
+   "grid_nodes": 28,
+   "telecom_towers": 22
+  }
+ },
+ "1213": {
+  "id": "1213",
+  "geo_system": "CA",
+  "NAME": "Guysborough",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 7373,
+  "POPDENS_CY": 1.8262883469774471,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 16,
+   "grid_nodes": 13,
+   "telecom_towers": 22
+  }
+ },
+ "1214": {
+  "id": "1214",
+  "geo_system": "CA",
+  "NAME": "Antigonish",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 20129,
+  "POPDENS_CY": 13.820686056411526,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 7,
+   "grid_nodes": 6,
+   "telecom_towers": 21
+  }
+ },
+ "1215": {
+  "id": "1215",
+  "geo_system": "CA",
+  "NAME": "Inverness",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 17346,
+  "POPDENS_CY": 4.54365666657062,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 16,
+   "grid_nodes": 14,
+   "telecom_towers": 35
+  }
+ },
+ "1216": {
+  "id": "1216",
+  "geo_system": "CA",
+  "NAME": "Richmond",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 8914,
+  "POPDENS_CY": 7.153633795582949,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 5,
+   "grid_nodes": 11,
+   "telecom_towers": 6
+  }
+ },
+ "1217": {
+  "id": "1217",
+  "geo_system": "CA",
+  "NAME": "Cape Breton",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 98318,
+  "POPDENS_CY": 40.01237185565625,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 13,
+   "grid_nodes": 34,
+   "telecom_towers": 48
+  }
+ },
+ "1218": {
+  "id": "1218",
+  "geo_system": "CA",
+  "NAME": "Victoria",
+  "ST_ABBREV": "NS",
+  "TOTPOP_CY": 7441,
+  "POPDENS_CY": 2.623571597307674,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 11,
+   "grid_nodes": 9,
+   "telecom_towers": 25
+  }
+ },
+ "1301": {
+  "id": "1301",
+  "geo_system": "CA",
+  "NAME": "Saint John",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 76558,
+  "POPDENS_CY": 52.40037781823658,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 11,
+   "grid_nodes": 4,
+   "telecom_towers": 34
+  }
+ },
+ "1302": {
+  "id": "1302",
+  "geo_system": "CA",
+  "NAME": "Charlotte",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 26015,
+  "POPDENS_CY": 7.610619469026546,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 24,
+   "grid_nodes": 2,
+   "telecom_towers": 17
+  }
+ },
+ "1303": {
+  "id": "1303",
+  "geo_system": "CA",
+  "NAME": "Sunbury",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 27864,
+  "POPDENS_CY": 10.346978789139087,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 1
+  }
+ },
+ "1304": {
+  "id": "1304",
+  "geo_system": "CA",
+  "NAME": "Queens",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 10998,
+  "POPDENS_CY": 2.9877507110781494,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 5
+  }
+ },
+ "1305": {
+  "id": "1305",
+  "geo_system": "CA",
+  "NAME": "Kings",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 71184,
+  "POPDENS_CY": 20.441075120606474,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 18
+  }
+ },
+ "1306": {
+  "id": "1306",
+  "geo_system": "CA",
+  "NAME": "Albert",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 30749,
+  "POPDENS_CY": 17.023762069270973,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 9
+  }
+ },
+ "1307": {
+  "id": "1307",
+  "geo_system": "CA",
+  "NAME": "Westmorland",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 163576,
+  "POPDENS_CY": 44.69485004808956,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 7,
+   "grid_nodes": 0,
+   "telecom_towers": 43
+  }
+ },
+ "1308": {
+  "id": "1308",
+  "geo_system": "CA",
+  "NAME": "Kent",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 32169,
+  "POPDENS_CY": 7.069519468703714,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 10,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "1309": {
+  "id": "1309",
+  "geo_system": "CA",
+  "NAME": "Northumberland",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 45005,
+  "POPDENS_CY": 3.5041507894363932,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 8,
+   "grid_nodes": 2,
+   "telecom_towers": 31
+  }
+ },
+ "1310": {
+  "id": "1310",
+  "geo_system": "CA",
+  "NAME": "York",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 105261,
+  "POPDENS_CY": 13.003035165674092,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 34
+  }
+ },
+ "1311": {
+  "id": "1311",
+  "geo_system": "CA",
+  "NAME": "Carleton",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 26360,
+  "POPDENS_CY": 7.965984400450883,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 13
+  }
+ },
+ "1312": {
+  "id": "1312",
+  "geo_system": "CA",
+  "NAME": "Victoria",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 18312,
+  "POPDENS_CY": 3.3337884704661516,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 4,
+   "telecom_towers": 14
+  }
+ },
+ "1313": {
+  "id": "1313",
+  "geo_system": "CA",
+  "NAME": "Madawaska",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 32603,
+  "POPDENS_CY": 9.436578136939358,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 11
+  }
+ },
+ "1314": {
+  "id": "1314",
+  "geo_system": "CA",
+  "NAME": "Restigouche",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 30700,
+  "POPDENS_CY": 3.5835850792124044,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 3,
+   "grid_nodes": 3,
+   "telecom_towers": 20
+  }
+ },
+ "1315": {
+  "id": "1315",
+  "geo_system": "CA",
+  "NAME": "Gloucester",
+  "ST_ABBREV": "NB",
+  "TOTPOP_CY": 78256,
+  "POPDENS_CY": 16.52961690137275,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 18,
+   "grid_nodes": 2,
+   "telecom_towers": 15
+  }
+ },
+ "2401": {
+  "id": "2401",
+  "geo_system": "CA",
+  "NAME": "Communauté maritime des Îles-de-la-Madeleine",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 12654,
+  "POPDENS_CY": 67.54203362690151,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 14,
+   "grid_nodes": 0,
+   "telecom_towers": 8
+  }
+ },
+ "2402": {
+  "id": "2402",
+  "geo_system": "CA",
+  "NAME": "Le Rocher-Percé",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 17219,
+  "POPDENS_CY": 5.6000572396814094,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 13,
+   "grid_nodes": 0,
+   "telecom_towers": 6
+  }
+ },
+ "2403": {
+  "id": "2403",
+  "geo_system": "CA",
+  "NAME": "La Côte-de-Gaspé",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 17547,
+  "POPDENS_CY": 4.291909529178968,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 8,
+   "grid_nodes": 6,
+   "telecom_towers": 12
+  }
+ },
+ "2404": {
+  "id": "2404",
+  "geo_system": "CA",
+  "NAME": "La Haute-Gaspésie",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 10950,
+  "POPDENS_CY": 2.1666564434779683,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 5,
+   "grid_nodes": 4,
+   "telecom_towers": 7
+  }
+ },
+ "2405": {
+  "id": "2405",
+  "geo_system": "CA",
+  "NAME": "Bonaventure",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 17557,
+  "POPDENS_CY": 4.008941741675914,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 5,
+   "grid_nodes": 2,
+   "telecom_towers": 1
+  }
+ },
+ "2406": {
+  "id": "2406",
+  "geo_system": "CA",
+  "NAME": "Avignon",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 13415,
+  "POPDENS_CY": 3.8467273425895656,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 6,
+   "telecom_towers": 12
+  }
+ },
+ "2407": {
+  "id": "2407",
+  "geo_system": "CA",
+  "NAME": "La Matapédia",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 17592,
+  "POPDENS_CY": 3.2854424197828758,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 3,
+   "telecom_towers": 12
+  }
+ },
+ "2408": {
+  "id": "2408",
+  "geo_system": "CA",
+  "NAME": "La Matanie",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 20883,
+  "POPDENS_CY": 6.298103602190749,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 7,
+   "grid_nodes": 3,
+   "telecom_towers": 3
+  }
+ },
+ "2409": {
+  "id": "2409",
+  "geo_system": "CA",
+  "NAME": "La Mitis",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 18363,
+  "POPDENS_CY": 8.069555587781629,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 10
+  }
+ },
+ "2410": {
+  "id": "2410",
+  "geo_system": "CA",
+  "NAME": "Rimouski-Neigette",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 57191,
+  "POPDENS_CY": 21.150674191377156,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 14
+  }
+ },
+ "2411": {
+  "id": "2411",
+  "geo_system": "CA",
+  "NAME": "Les Basques",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 8873,
+  "POPDENS_CY": 7.921967769296016,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 4
+  }
+ },
+ "2412": {
+  "id": "2412",
+  "geo_system": "CA",
+  "NAME": "Rivière-du-Loup",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 35338,
+  "POPDENS_CY": 27.675704462509582,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 4,
+   "grid_nodes": 3,
+   "telecom_towers": 2
+  }
+ },
+ "2413": {
+  "id": "2413",
+  "geo_system": "CA",
+  "NAME": "Témiscouata",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 19492,
+  "POPDENS_CY": 4.997410535275689,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 14
+  }
+ },
+ "2414": {
+  "id": "2414",
+  "geo_system": "CA",
+  "NAME": "Kamouraska",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 21307,
+  "POPDENS_CY": 9.50768173563049,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 11
+  }
+ },
+ "2415": {
+  "id": "2415",
+  "geo_system": "CA",
+  "NAME": "Charlevoix-Est",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 15409,
+  "POPDENS_CY": 6.731848822832976,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 2,
+   "grid_nodes": 0,
+   "telecom_towers": 12
+  }
+ },
+ "2416": {
+  "id": "2416",
+  "geo_system": "CA",
+  "NAME": "Charlevoix",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 13371,
+  "POPDENS_CY": 3.578185671736053,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 1,
+   "grid_nodes": 2,
+   "telecom_towers": 13
+  }
+ },
+ "2417": {
+  "id": "2417",
+  "geo_system": "CA",
+  "NAME": "L'Islet",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 17598,
+  "POPDENS_CY": 8.3915883839588,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "2418": {
+  "id": "2418",
+  "geo_system": "CA",
+  "NAME": "Montmagny",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 22481,
+  "POPDENS_CY": 13.262657369060681,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 10
+  }
+ },
+ "2419": {
+  "id": "2419",
+  "geo_system": "CA",
+  "NAME": "Bellechasse",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 38000,
+  "POPDENS_CY": 21.715030229607866,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 6
+  }
+ },
+ "2420": {
+  "id": "2420",
+  "geo_system": "CA",
+  "NAME": "L'Île-d'Orléans",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 6817,
+  "POPDENS_CY": 35.0344331380409,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 1
+  }
+ },
+ "2421": {
+  "id": "2421",
+  "geo_system": "CA",
+  "NAME": "La Côte-de-Beaupré",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 30240,
+  "POPDENS_CY": 6.24120266984781,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 6,
+   "telecom_towers": 7
+  }
+ },
+ "2422": {
+  "id": "2422",
+  "geo_system": "CA",
+  "NAME": "La Jacques-Cartier",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 47813,
+  "POPDENS_CY": 15.017919233100793,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 16
+  }
+ },
+ "2423": {
+  "id": "2423",
+  "geo_system": "CA",
+  "NAME": "Québec",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 588777,
+  "POPDENS_CY": 1075.136497270055,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 3,
+   "grid_nodes": 1,
+   "telecom_towers": 32
+  }
+ },
+ "2425": {
+  "id": "2425",
+  "geo_system": "CA",
+  "NAME": "Lévis",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 149683,
+  "POPDENS_CY": 334.0243684727304,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 22
+  }
+ },
+ "2426": {
+  "id": "2426",
+  "geo_system": "CA",
+  "NAME": "La Nouvelle-Beauce",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 37988,
+  "POPDENS_CY": 41.95853628903101,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 13
+  }
+ },
+ "2427": {
+  "id": "2427",
+  "geo_system": "CA",
+  "NAME": "Robert-Cliche",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 19253,
+  "POPDENS_CY": 22.93115769414006,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 4
+  }
+ },
+ "2428": {
+  "id": "2428",
+  "geo_system": "CA",
+  "NAME": "Les Etchemins",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 16927,
+  "POPDENS_CY": 9.3540008841733,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 15
+  }
+ },
+ "2429": {
+  "id": "2429",
+  "geo_system": "CA",
+  "NAME": "Beauce-Sartigan",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 53384,
+  "POPDENS_CY": 27.337716872529143,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 13
+  }
+ },
+ "2430": {
+  "id": "2430",
+  "geo_system": "CA",
+  "NAME": "Le Granit",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 21948,
+  "POPDENS_CY": 8.035027859742124,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 15
+  }
+ },
+ "2431": {
+  "id": "2431",
+  "geo_system": "CA",
+  "NAME": "Les Appalaches",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 43412,
+  "POPDENS_CY": 22.70692108126203,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 20
+  }
+ },
+ "2432": {
+  "id": "2432",
+  "geo_system": "CA",
+  "NAME": "L'Érable",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 23534,
+  "POPDENS_CY": 18.285225904199528,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 11
+  }
+ },
+ "2433": {
+  "id": "2433",
+  "geo_system": "CA",
+  "NAME": "Lotbinière",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 34586,
+  "POPDENS_CY": 20.80661268393633,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "2434": {
+  "id": "2434",
+  "geo_system": "CA",
+  "NAME": "Portneuf",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 55523,
+  "POPDENS_CY": 14.281121233789285,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 1,
+   "grid_nodes": 6,
+   "telecom_towers": 15
+  }
+ },
+ "2435": {
+  "id": "2435",
+  "geo_system": "CA",
+  "NAME": "Mékinac",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 12762,
+  "POPDENS_CY": 2.4607470166190084,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 10
+  }
+ },
+ "2436": {
+  "id": "2436",
+  "geo_system": "CA",
+  "NAME": "Shawinigan",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 49620,
+  "POPDENS_CY": 67.97167162093669,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 1,
+   "grid_nodes": 5,
+   "telecom_towers": 11
+  }
+ },
+ "2437": {
+  "id": "2437",
+  "geo_system": "CA",
+  "NAME": "Francheville",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 158343,
+  "POPDENS_CY": 136.42378970766887,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 1,
+   "grid_nodes": 2,
+   "telecom_towers": 15
+  }
+ },
+ "2438": {
+  "id": "2438",
+  "geo_system": "CA",
+  "NAME": "Bécancour",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 20748,
+  "POPDENS_CY": 18.150007873051425,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 2,
+   "grid_nodes": 2,
+   "telecom_towers": 6
+  }
+ },
+ "2439": {
+  "id": "2439",
+  "geo_system": "CA",
+  "NAME": "Arthabaska",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 74348,
+  "POPDENS_CY": 39.39906202803316,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 16
+  }
+ },
+ "2440": {
+  "id": "2440",
+  "geo_system": "CA",
+  "NAME": "Les Sources",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 14623,
+  "POPDENS_CY": 18.61759014055816,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 6
+  }
+ },
+ "2441": {
+  "id": "2441",
+  "geo_system": "CA",
+  "NAME": "Le Haut-Saint-François",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 22926,
+  "POPDENS_CY": 10.101027902734756,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 6
+  }
+ },
+ "2442": {
+  "id": "2442",
+  "geo_system": "CA",
+  "NAME": "Le Val-Saint-François",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 31551,
+  "POPDENS_CY": 22.511183886641412,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 8
+  }
+ },
+ "2443": {
+  "id": "2443",
+  "geo_system": "CA",
+  "NAME": "Sherbrooke",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 172950,
+  "POPDENS_CY": 489.27803553242063,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 6,
+   "telecom_towers": 16
+  }
+ },
+ "2444": {
+  "id": "2444",
+  "geo_system": "CA",
+  "NAME": "Coaticook",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 18906,
+  "POPDENS_CY": 14.121179528547104,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 7
+  }
+ },
+ "2445": {
+  "id": "2445",
+  "geo_system": "CA",
+  "NAME": "Memphrémagog",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 54797,
+  "POPDENS_CY": 41.593229344567156,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 7
+  }
+ },
+ "2446": {
+  "id": "2446",
+  "geo_system": "CA",
+  "NAME": "Brome-Missisquoi",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 64786,
+  "POPDENS_CY": 39.25948369894559,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 2
+  }
+ },
+ "2447": {
+  "id": "2447",
+  "geo_system": "CA",
+  "NAME": "La Haute-Yamaska",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 92796,
+  "POPDENS_CY": 145.903366299272,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 4
+  }
+ },
+ "2448": {
+  "id": "2448",
+  "geo_system": "CA",
+  "NAME": "Acton",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 15654,
+  "POPDENS_CY": 27.00688370167176,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 3
+  }
+ },
+ "2449": {
+  "id": "2449",
+  "geo_system": "CA",
+  "NAME": "Drummond",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 107967,
+  "POPDENS_CY": 67.519464682155,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 4,
+   "telecom_towers": 22
+  }
+ },
+ "2450": {
+  "id": "2450",
+  "geo_system": "CA",
+  "NAME": "Nicolet-Yamaska",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 23848,
+  "POPDENS_CY": 23.73029772329246,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 13
+  }
+ },
+ "2451": {
+  "id": "2451",
+  "geo_system": "CA",
+  "NAME": "Maskinongé",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 37292,
+  "POPDENS_CY": 15.754298508723753,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 1
+  }
+ },
+ "2452": {
+  "id": "2452",
+  "geo_system": "CA",
+  "NAME": "D'Autray",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 44080,
+  "POPDENS_CY": 35.70184745721531,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 5
+  }
+ },
+ "2453": {
+  "id": "2453",
+  "geo_system": "CA",
+  "NAME": "Pierre-De Saurel",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 51843,
+  "POPDENS_CY": 87.11937890703771,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 5
+  }
+ },
+ "2454": {
+  "id": "2454",
+  "geo_system": "CA",
+  "NAME": "Les Maskoutains",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 89432,
+  "POPDENS_CY": 68.67867729499764,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 7
+  }
+ },
+ "2455": {
+  "id": "2455",
+  "geo_system": "CA",
+  "NAME": "Rouville",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 37889,
+  "POPDENS_CY": 78.47763048881524,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "2456": {
+  "id": "2456",
+  "geo_system": "CA",
+  "NAME": "Le Haut-Richelieu",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 121277,
+  "POPDENS_CY": 129.72605816851552,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 6
+  }
+ },
+ "2457": {
+  "id": "2457",
+  "geo_system": "CA",
+  "NAME": "La Vallée-du-Richelieu",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 131803,
+  "POPDENS_CY": 224.19288994726995,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "2458": {
+  "id": "2458",
+  "geo_system": "CA",
+  "NAME": "Longueuil",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 436785,
+  "POPDENS_CY": 1546.798640130323,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 14
+  }
+ },
+ "2459": {
+  "id": "2459",
+  "geo_system": "CA",
+  "NAME": "Marguerite-D'Youville",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 80313,
+  "POPDENS_CY": 231.39621989166764,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 2,
+   "grid_nodes": 0,
+   "telecom_towers": 5
+  }
+ },
+ "2460": {
+  "id": "2460",
+  "geo_system": "CA",
+  "NAME": "L'Assomption",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 128087,
+  "POPDENS_CY": 501.88864072724425,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 4
+  }
+ },
+ "2461": {
+  "id": "2461",
+  "geo_system": "CA",
+  "NAME": "Joliette",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 71124,
+  "POPDENS_CY": 170.38953571941934,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 7
+  }
+ },
+ "2462": {
+  "id": "2462",
+  "geo_system": "CA",
+  "NAME": "Matawinie",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 55500,
+  "POPDENS_CY": 5.889781494412663,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 4
+  }
+ },
+ "2463": {
+  "id": "2463",
+  "geo_system": "CA",
+  "NAME": "Montcalm",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 58680,
+  "POPDENS_CY": 82.6944757609921,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 4
+  }
+ },
+ "2464": {
+  "id": "2464",
+  "geo_system": "CA",
+  "NAME": "Les Moulins",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 171127,
+  "POPDENS_CY": 656.6905867454623,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 6
+  }
+ },
+ "2465": {
+  "id": "2465",
+  "geo_system": "CA",
+  "NAME": "Laval",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 438366,
+  "POPDENS_CY": 1781.9756097560978,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 10,
+   "telecom_towers": 16
+  }
+ },
+ "2466": {
+  "id": "2466",
+  "geo_system": "CA",
+  "NAME": "Montréal",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 2004265,
+  "POPDENS_CY": 4021.3177905740245,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 35
+  }
+ },
+ "2467": {
+  "id": "2467",
+  "geo_system": "CA",
+  "NAME": "Roussillon",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 185568,
+  "POPDENS_CY": 441.3032104637337,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 44
+  }
+ },
+ "2468": {
+  "id": "2468",
+  "geo_system": "CA",
+  "NAME": "Les Jardins-de-Napierville",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 30339,
+  "POPDENS_CY": 37.80325213382343,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 27
+  }
+ },
+ "2469": {
+  "id": "2469",
+  "geo_system": "CA",
+  "NAME": "Le Haut-Saint-Laurent",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 22213,
+  "POPDENS_CY": 19.01618854388714,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "2470": {
+  "id": "2470",
+  "geo_system": "CA",
+  "NAME": "Beauharnois-Salaberry",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 68322,
+  "POPDENS_CY": 145.82515154102282,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 2,
+   "grid_nodes": 1,
+   "telecom_towers": 3
+  }
+ },
+ "2471": {
+  "id": "2471",
+  "geo_system": "CA",
+  "NAME": "Vaudreuil-Soulanges",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 162600,
+  "POPDENS_CY": 190.34463382655932,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 5,
+   "grid_nodes": 1,
+   "telecom_towers": 14
+  }
+ },
+ "2472": {
+  "id": "2472",
+  "geo_system": "CA",
+  "NAME": "Deux-Montagnes",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 102052,
+  "POPDENS_CY": 420.2091740097174,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 2,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "2473": {
+  "id": "2473",
+  "geo_system": "CA",
+  "NAME": "Thérèse-De Blainville",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 163632,
+  "POPDENS_CY": 792.1766072811772,
+  "infra_ca": {
+   "airports": 0,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "2474": {
+  "id": "2474",
+  "geo_system": "CA",
+  "NAME": "Mirabel",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 61108,
+  "POPDENS_CY": 126.2301177442677,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "2475": {
+  "id": "2475",
+  "geo_system": "CA",
+  "NAME": "La Rivière-du-Nord",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 140394,
+  "POPDENS_CY": 313.50542628734763,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 16
+  }
+ },
+ "2476": {
+  "id": "2476",
+  "geo_system": "CA",
+  "NAME": "Argenteuil",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 34752,
+  "POPDENS_CY": 28.14633632733722,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 3,
+   "grid_nodes": 5,
+   "telecom_towers": 11
+  }
+ },
+ "2477": {
+  "id": "2477",
+  "geo_system": "CA",
+  "NAME": "Les Pays-d'en-Haut",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 46906,
+  "POPDENS_CY": 69.59656958024839,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "2478": {
+  "id": "2478",
+  "geo_system": "CA",
+  "NAME": "Les Laurentides",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 50777,
+  "POPDENS_CY": 20.66197085668014,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 10
+  }
+ },
+ "2479": {
+  "id": "2479",
+  "geo_system": "CA",
+  "NAME": "Antoine-Labelle",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 36462,
+  "POPDENS_CY": 2.462015068380305,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 23
+  }
+ },
+ "2480": {
+  "id": "2480",
+  "geo_system": "CA",
+  "NAME": "Papineau",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 24308,
+  "POPDENS_CY": 8.37208020775213,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 4,
+   "grid_nodes": 2,
+   "telecom_towers": 9
+  }
+ },
+ "2481": {
+  "id": "2481",
+  "geo_system": "CA",
+  "NAME": "Gatineau",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 291041,
+  "POPDENS_CY": 851.3206774504928,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 5,
+   "grid_nodes": 7,
+   "telecom_towers": 7
+  }
+ },
+ "2482": {
+  "id": "2482",
+  "geo_system": "CA",
+  "NAME": "Les Collines-de-l'Outaouais",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 54498,
+  "POPDENS_CY": 26.908207551361997,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 8
+  }
+ },
+ "2483": {
+  "id": "2483",
+  "geo_system": "CA",
+  "NAME": "La Vallée-de-la-Gatineau",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 20547,
+  "POPDENS_CY": 1.6620451559881189,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 10
+  }
+ },
+ "2484": {
+  "id": "2484",
+  "geo_system": "CA",
+  "NAME": "Pontiac",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 14764,
+  "POPDENS_CY": 1.151245636237882,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 4,
+   "telecom_towers": 5
+  }
+ },
+ "2485": {
+  "id": "2485",
+  "geo_system": "CA",
+  "NAME": "Témiscamingue",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 16132,
+  "POPDENS_CY": 0.9880420695720771,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 1,
+   "grid_nodes": 6,
+   "telecom_towers": 22
+  }
+ },
+ "2486": {
+  "id": "2486",
+  "geo_system": "CA",
+  "NAME": "Rouyn-Noranda",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 42313,
+  "POPDENS_CY": 7.095270434556598,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 23
+  }
+ },
+ "2487": {
+  "id": "2487",
+  "geo_system": "CA",
+  "NAME": "Abitibi-Ouest",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 20526,
+  "POPDENS_CY": 6.196584421896653,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 8
+  }
+ },
+ "2488": {
+  "id": "2488",
+  "geo_system": "CA",
+  "NAME": "Abitibi",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 24764,
+  "POPDENS_CY": 3.2466306570874197,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 20
+  }
+ },
+ "2489": {
+  "id": "2489",
+  "geo_system": "CA",
+  "NAME": "La Vallée-de-l'Or",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 43347,
+  "POPDENS_CY": 1.7990173821593192,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 39
+  }
+ },
+ "2490": {
+  "id": "2490",
+  "geo_system": "CA",
+  "NAME": "La Tuque",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 15038,
+  "POPDENS_CY": 0.5776776268428409,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 0,
+   "grid_nodes": 6,
+   "telecom_towers": 21
+  }
+ },
+ "2491": {
+  "id": "2491",
+  "geo_system": "CA",
+  "NAME": "Le Domaine-du-Roy",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 31095,
+  "POPDENS_CY": 1.7792494708599618,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 35
+  }
+ },
+ "2492": {
+  "id": "2492",
+  "geo_system": "CA",
+  "NAME": "Maria-Chapdelaine",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 24149,
+  "POPDENS_CY": 0.6802249708392522,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 4
+  }
+ },
+ "2493": {
+  "id": "2493",
+  "geo_system": "CA",
+  "NAME": "Lac-Saint-Jean-Est",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 52475,
+  "POPDENS_CY": 18.96122479214017,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 4,
+   "telecom_towers": 9
+  }
+ },
+ "2494": {
+  "id": "2494",
+  "geo_system": "CA",
+  "NAME": "Le Saguenay-et-son-Fjord",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 167833,
+  "POPDENS_CY": 4.217200937250689,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 2,
+   "grid_nodes": 15,
+   "telecom_towers": 35
+  }
+ },
+ "2495": {
+  "id": "2495",
+  "geo_system": "CA",
+  "NAME": "La Haute-Côte-Nord",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 10278,
+  "POPDENS_CY": 0.9098924913950622,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 3,
+   "grid_nodes": 8,
+   "telecom_towers": 11
+  }
+ },
+ "2496": {
+  "id": "2496",
+  "geo_system": "CA",
+  "NAME": "Manicouagan",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 30158,
+  "POPDENS_CY": 0.87023517529938,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 3,
+   "grid_nodes": 11,
+   "telecom_towers": 19
+  }
+ },
+ "2497": {
+  "id": "2497",
+  "geo_system": "CA",
+  "NAME": "Sept-Rivières--Caniapiscau",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 38240,
+  "POPDENS_CY": 0.40480892679902847,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 6,
+   "grid_nodes": 5,
+   "telecom_towers": 59
+  }
+ },
+ "2498": {
+  "id": "2498",
+  "geo_system": "CA",
+  "NAME": "Minganie--Le Golfe-du-Saint-Laurent",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 9849,
+  "POPDENS_CY": 0.10474645328126317,
+  "infra_ca": {
+   "airports": 19,
+   "ports": 27,
+   "grid_nodes": 5,
+   "telecom_towers": 38
+  }
+ },
+ "2499": {
+  "id": "2499",
+  "geo_system": "CA",
+  "NAME": "Nord-du-Québec",
+  "ST_ABBREV": "QC",
+  "TOTPOP_CY": 45740,
+  "POPDENS_CY": 0.06466786231049956,
+  "infra_ca": {
+   "airports": 41,
+   "ports": 1,
+   "grid_nodes": 14,
+   "telecom_towers": 125
+  }
+ },
+ "3501": {
+  "id": "3501",
+  "geo_system": "CA",
+  "NAME": "Stormont, Dundas and Glengarry",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 114637,
+  "POPDENS_CY": 34.645362314022606,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 2,
+   "grid_nodes": 12,
+   "telecom_towers": 34
+  }
+ },
+ "3502": {
+  "id": "3502",
+  "geo_system": "CA",
+  "NAME": "Prescott and Russell",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 95639,
+  "POPDENS_CY": 47.71690864641022,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 5,
+   "grid_nodes": 5,
+   "telecom_towers": 18
+  }
+ },
+ "3506": {
+  "id": "3506",
+  "geo_system": "CA",
+  "NAME": "Ottawa",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 1017449,
+  "POPDENS_CY": 364.9321210164809,
+  "infra_ca": {
+   "airports": 15,
+   "ports": 6,
+   "grid_nodes": 11,
+   "telecom_towers": 216
+  }
+ },
+ "3507": {
+  "id": "3507",
+  "geo_system": "CA",
+  "NAME": "Leeds and Grenville",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 104070,
+  "POPDENS_CY": 31.013827631422096,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 6,
+   "grid_nodes": 15,
+   "telecom_towers": 44
+  }
+ },
+ "3509": {
+  "id": "3509",
+  "geo_system": "CA",
+  "NAME": "Lanark",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 75760,
+  "POPDENS_CY": 25.365873257686594,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 10,
+   "telecom_towers": 43
+  }
+ },
+ "3510": {
+  "id": "3510",
+  "geo_system": "CA",
+  "NAME": "Frontenac",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 161780,
+  "POPDENS_CY": 43.42143050772851,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 6,
+   "grid_nodes": 5,
+   "telecom_towers": 40
+  }
+ },
+ "3511": {
+  "id": "3511",
+  "geo_system": "CA",
+  "NAME": "Lennox and Addington",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 45182,
+  "POPDENS_CY": 16.178666447045675,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 2,
+   "grid_nodes": 10,
+   "telecom_towers": 14
+  }
+ },
+ "3512": {
+  "id": "3512",
+  "geo_system": "CA",
+  "NAME": "Hastings",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 145746,
+  "POPDENS_CY": 24.236951597936592,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 3,
+   "grid_nodes": 8,
+   "telecom_towers": 36
+  }
+ },
+ "3513": {
+  "id": "3513",
+  "geo_system": "CA",
+  "NAME": "Prince Edward",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 25704,
+  "POPDENS_CY": 24.419532585977578,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 1,
+   "grid_nodes": 5,
+   "telecom_towers": 31
+  }
+ },
+ "3514": {
+  "id": "3514",
+  "geo_system": "CA",
+  "NAME": "Northumberland",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 89365,
+  "POPDENS_CY": 46.85222661451832,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 2,
+   "grid_nodes": 10,
+   "telecom_towers": 26
+  }
+ },
+ "3515": {
+  "id": "3515",
+  "geo_system": "CA",
+  "NAME": "Peterborough",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 147681,
+  "POPDENS_CY": 39.073906014769044,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 0,
+   "grid_nodes": 8,
+   "telecom_towers": 32
+  }
+ },
+ "3516": {
+  "id": "3516",
+  "geo_system": "CA",
+  "NAME": "Kawartha Lakes",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 79247,
+  "POPDENS_CY": 26.122226983551432,
+  "infra_ca": {
+   "airports": 15,
+   "ports": 0,
+   "grid_nodes": 10,
+   "telecom_towers": 27
+  }
+ },
+ "3518": {
+  "id": "3518",
+  "geo_system": "CA",
+  "NAME": "Durham",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 696992,
+  "POPDENS_CY": 276.472221561114,
+  "infra_ca": {
+   "airports": 24,
+   "ports": 4,
+   "grid_nodes": 13,
+   "telecom_towers": 64
+  }
+ },
+ "3519": {
+  "id": "3519",
+  "geo_system": "CA",
+  "NAME": "York",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 1173334,
+  "POPDENS_CY": 667.3154030336306,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 3,
+   "grid_nodes": 4,
+   "telecom_towers": 49
+  }
+ },
+ "3520": {
+  "id": "3520",
+  "geo_system": "CA",
+  "NAME": "Toronto",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 2794356,
+  "POPDENS_CY": 4428.807353990049,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 1,
+   "grid_nodes": 3,
+   "telecom_towers": 55
+  }
+ },
+ "3521": {
+  "id": "3521",
+  "geo_system": "CA",
+  "NAME": "Peel",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 1451022,
+  "POPDENS_CY": 1163.0133692411287,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 5,
+   "grid_nodes": 4,
+   "telecom_towers": 53
+  }
+ },
+ "3522": {
+  "id": "3522",
+  "geo_system": "CA",
+  "NAME": "Dufferin",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 66257,
+  "POPDENS_CY": 44.56349206349205,
+  "infra_ca": {
+   "airports": 14,
+   "ports": 0,
+   "grid_nodes": 7,
+   "telecom_towers": 15
+  }
+ },
+ "3523": {
+  "id": "3523",
+  "geo_system": "CA",
+  "NAME": "Wellington",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 241026,
+  "POPDENS_CY": 90.42939951601099,
+  "infra_ca": {
+   "airports": 22,
+   "ports": 0,
+   "grid_nodes": 5,
+   "telecom_towers": 29
+  }
+ },
+ "3524": {
+  "id": "3524",
+  "geo_system": "CA",
+  "NAME": "Halton",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 596637,
+  "POPDENS_CY": 617.8733055103913,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 3,
+   "grid_nodes": 1,
+   "telecom_towers": 57
+  }
+ },
+ "3525": {
+  "id": "3525",
+  "geo_system": "CA",
+  "NAME": "Hamilton",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 569353,
+  "POPDENS_CY": 509.10545987803386,
+  "infra_ca": {
+   "airports": 14,
+   "ports": 2,
+   "grid_nodes": 2,
+   "telecom_towers": 47
+  }
+ },
+ "3526": {
+  "id": "3526",
+  "geo_system": "CA",
+  "NAME": "Niagara",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 477941,
+  "POPDENS_CY": 257.96024331136624,
+  "infra_ca": {
+   "airports": 14,
+   "ports": 20,
+   "grid_nodes": 14,
+   "telecom_towers": 129
+  }
+ },
+ "3528": {
+  "id": "3528",
+  "geo_system": "CA",
+  "NAME": "Haldimand-Norfolk",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 116872,
+  "POPDENS_CY": 40.52750392715093,
+  "infra_ca": {
+   "airports": 14,
+   "ports": 2,
+   "grid_nodes": 13,
+   "telecom_towers": 66
+  }
+ },
+ "3529": {
+  "id": "3529",
+  "geo_system": "CA",
+  "NAME": "Brant",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 144771,
+  "POPDENS_CY": 132.31366814422154,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 19
+  }
+ },
+ "3530": {
+  "id": "3530",
+  "geo_system": "CA",
+  "NAME": "Waterloo",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 587165,
+  "POPDENS_CY": 428.54067072948243,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 60
+  }
+ },
+ "3531": {
+  "id": "3531",
+  "geo_system": "CA",
+  "NAME": "Perth",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 81565,
+  "POPDENS_CY": 36.77014209463358,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 25
+  }
+ },
+ "3532": {
+  "id": "3532",
+  "geo_system": "CA",
+  "NAME": "Oxford",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 121781,
+  "POPDENS_CY": 59.749288587969765,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 21
+  }
+ },
+ "3534": {
+  "id": "3534",
+  "geo_system": "CA",
+  "NAME": "Elgin",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 94752,
+  "POPDENS_CY": 50.439707855119984,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 2,
+   "grid_nodes": 4,
+   "telecom_towers": 32
+  }
+ },
+ "3536": {
+  "id": "3536",
+  "geo_system": "CA",
+  "NAME": "Chatham-Kent",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 104316,
+  "POPDENS_CY": 42.326591061248514,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 2,
+   "grid_nodes": 15,
+   "telecom_towers": 41
+  }
+ },
+ "3537": {
+  "id": "3537",
+  "geo_system": "CA",
+  "NAME": "Essex",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 422860,
+  "POPDENS_CY": 229.291833857499,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 10,
+   "grid_nodes": 18,
+   "telecom_towers": 65
+  }
+ },
+ "3538": {
+  "id": "3538",
+  "geo_system": "CA",
+  "NAME": "Lambton",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 128154,
+  "POPDENS_CY": 42.718711978532994,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 5,
+   "grid_nodes": 12,
+   "telecom_towers": 156
+  }
+ },
+ "3539": {
+  "id": "3539",
+  "geo_system": "CA",
+  "NAME": "Middlesex",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 500563,
+  "POPDENS_CY": 150.87742036603902,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 9,
+   "telecom_towers": 69
+  }
+ },
+ "3540": {
+  "id": "3540",
+  "geo_system": "CA",
+  "NAME": "Huron",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 61366,
+  "POPDENS_CY": 18.057852455639587,
+  "infra_ca": {
+   "airports": 13,
+   "ports": 5,
+   "grid_nodes": 6,
+   "telecom_towers": 30
+  }
+ },
+ "3541": {
+  "id": "3541",
+  "geo_system": "CA",
+  "NAME": "Bruce",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 73396,
+  "POPDENS_CY": 18.006162662898415,
+  "infra_ca": {
+   "airports": 12,
+   "ports": 10,
+   "grid_nodes": 9,
+   "telecom_towers": 22
+  }
+ },
+ "3542": {
+  "id": "3542",
+  "geo_system": "CA",
+  "NAME": "Grey",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 100905,
+  "POPDENS_CY": 22.433602938233967,
+  "infra_ca": {
+   "airports": 22,
+   "ports": 5,
+   "grid_nodes": 7,
+   "telecom_towers": 38
+  }
+ },
+ "3543": {
+  "id": "3543",
+  "geo_system": "CA",
+  "NAME": "Simcoe",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 533169,
+  "POPDENS_CY": 110.63869964992824,
+  "infra_ca": {
+   "airports": 35,
+   "ports": 7,
+   "grid_nodes": 15,
+   "telecom_towers": 118
+  }
+ },
+ "3544": {
+  "id": "3544",
+  "geo_system": "CA",
+  "NAME": "Muskoka",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 66674,
+  "POPDENS_CY": 17.3654176227448,
+  "infra_ca": {
+   "airports": 39,
+   "ports": 0,
+   "grid_nodes": 9,
+   "telecom_towers": 47
+  }
+ },
+ "3546": {
+  "id": "3546",
+  "geo_system": "CA",
+  "NAME": "Haliburton",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 20571,
+  "POPDENS_CY": 5.130616092940197,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 15
+  }
+ },
+ "3547": {
+  "id": "3547",
+  "geo_system": "CA",
+  "NAME": "Renfrew",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 106365,
+  "POPDENS_CY": 14.455773067535025,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 7,
+   "grid_nodes": 7,
+   "telecom_towers": 48
+  }
+ },
+ "3548": {
+  "id": "3548",
+  "geo_system": "CA",
+  "NAME": "Nipissing",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 84716,
+  "POPDENS_CY": 4.987348538635526,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 3,
+   "grid_nodes": 4,
+   "telecom_towers": 66
+  }
+ },
+ "3549": {
+  "id": "3549",
+  "geo_system": "CA",
+  "NAME": "Parry Sound",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 46909,
+  "POPDENS_CY": 5.146967657130694,
+  "infra_ca": {
+   "airports": 22,
+   "ports": 5,
+   "grid_nodes": 10,
+   "telecom_towers": 49
+  }
+ },
+ "3551": {
+  "id": "3551",
+  "geo_system": "CA",
+  "NAME": "Manitoulin",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 13935,
+  "POPDENS_CY": 4.533904233270756,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 11,
+   "grid_nodes": 3,
+   "telecom_towers": 17
+  }
+ },
+ "3552": {
+  "id": "3552",
+  "geo_system": "CA",
+  "NAME": "Sudbury",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 22368,
+  "POPDENS_CY": 0.5606466084113535,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 3,
+   "grid_nodes": 6,
+   "telecom_towers": 89
+  }
+ },
+ "3553": {
+  "id": "3553",
+  "geo_system": "CA",
+  "NAME": "Greater Sudbury / Grand Sudbury",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 166128,
+  "POPDENS_CY": 51.96599162928625,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 8,
+   "telecom_towers": 87
+  }
+ },
+ "3554": {
+  "id": "3554",
+  "geo_system": "CA",
+  "NAME": "Timiskaming",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 31424,
+  "POPDENS_CY": 2.372082736047671,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 1,
+   "grid_nodes": 10,
+   "telecom_towers": 41
+  }
+ },
+ "3556": {
+  "id": "3556",
+  "geo_system": "CA",
+  "NAME": "Cochrane",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 77963,
+  "POPDENS_CY": 0.5577390831568705,
+  "infra_ca": {
+   "airports": 19,
+   "ports": 0,
+   "grid_nodes": 31,
+   "telecom_towers": 84
+  }
+ },
+ "3557": {
+  "id": "3557",
+  "geo_system": "CA",
+  "NAME": "Algoma",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 113777,
+  "POPDENS_CY": 2.3565423736255826,
+  "infra_ca": {
+   "airports": 19,
+   "ports": 16,
+   "grid_nodes": 29,
+   "telecom_towers": 110
+  }
+ },
+ "3558": {
+  "id": "3558",
+  "geo_system": "CA",
+  "NAME": "Thunder Bay",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 146862,
+  "POPDENS_CY": 1.4272930161752495,
+  "infra_ca": {
+   "airports": 29,
+   "ports": 6,
+   "grid_nodes": 21,
+   "telecom_towers": 149
+  }
+ },
+ "3559": {
+  "id": "3559",
+  "geo_system": "CA",
+  "NAME": "Rainy River",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 19437,
+  "POPDENS_CY": 1.262064183011968,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 2,
+   "grid_nodes": 9,
+   "telecom_towers": 38
+  }
+ },
+ "3560": {
+  "id": "3560",
+  "geo_system": "CA",
+  "NAME": "Kenora",
+  "ST_ABBREV": "ON",
+  "TOTPOP_CY": 66000,
+  "POPDENS_CY": 0.16690607573014202,
+  "infra_ca": {
+   "airports": 66,
+   "ports": 1,
+   "grid_nodes": 10,
+   "telecom_towers": 98
+  }
+ },
+ "4601": {
+  "id": "4601",
+  "geo_system": "CA",
+  "NAME": "Division No.  1",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 20114,
+  "POPDENS_CY": 1.3588750130894918,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 2,
+   "grid_nodes": 6,
+   "telecom_towers": 35
+  }
+ },
+ "4602": {
+  "id": "4602",
+  "geo_system": "CA",
+  "NAME": "Division No.  2",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 83878,
+  "POPDENS_CY": 18.972673541446603,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 20
+  }
+ },
+ "4603": {
+  "id": "4603",
+  "geo_system": "CA",
+  "NAME": "Division No.  3",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 57363,
+  "POPDENS_CY": 10.852591450436556,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 2,
+   "grid_nodes": 1,
+   "telecom_towers": 25
+  }
+ },
+ "4604": {
+  "id": "4604",
+  "geo_system": "CA",
+  "NAME": "Division No.  4",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 9665,
+  "POPDENS_CY": 2.152935253785735,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 10
+  }
+ },
+ "4605": {
+  "id": "4605",
+  "geo_system": "CA",
+  "NAME": "Division No.  5",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 13326,
+  "POPDENS_CY": 1.6089578116435126,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 12
+  }
+ },
+ "4606": {
+  "id": "4606",
+  "geo_system": "CA",
+  "NAME": "Division No.  6",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 9906,
+  "POPDENS_CY": 2.4616439785892146,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 7
+  }
+ },
+ "4607": {
+  "id": "4607",
+  "geo_system": "CA",
+  "NAME": "Division No.  7",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 70896,
+  "POPDENS_CY": 11.194252555954682,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 56
+  }
+ },
+ "4608": {
+  "id": "4608",
+  "geo_system": "CA",
+  "NAME": "Division No.  8",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 13877,
+  "POPDENS_CY": 2.3746209709987203,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 6
+  }
+ },
+ "4609": {
+  "id": "4609",
+  "geo_system": "CA",
+  "NAME": "Division No.  9",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 24339,
+  "POPDENS_CY": 8.088223076641885,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 20
+  }
+ },
+ "4610": {
+  "id": "4610",
+  "geo_system": "CA",
+  "NAME": "Division No. 10",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 12913,
+  "POPDENS_CY": 6.745934311640955,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 14
+  }
+ },
+ "4611": {
+  "id": "4611",
+  "geo_system": "CA",
+  "NAME": "Division No. 11",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 753938,
+  "POPDENS_CY": 1323.952516419064,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 35
+  }
+ },
+ "4612": {
+  "id": "4612",
+  "geo_system": "CA",
+  "NAME": "Division No. 12",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 24863,
+  "POPDENS_CY": 13.42994960325391,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 5
+  }
+ },
+ "4613": {
+  "id": "4613",
+  "geo_system": "CA",
+  "NAME": "Division No. 13",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 51643,
+  "POPDENS_CY": 31.06738294762045,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 7
+  }
+ },
+ "4614": {
+  "id": "4614",
+  "geo_system": "CA",
+  "NAME": "Division No. 14",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 19749,
+  "POPDENS_CY": 6.970046692854193,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 19
+  }
+ },
+ "4615": {
+  "id": "4615",
+  "geo_system": "CA",
+  "NAME": "Division No. 15",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 23304,
+  "POPDENS_CY": 2.664989421922351,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 32
+  }
+ },
+ "4616": {
+  "id": "4616",
+  "geo_system": "CA",
+  "NAME": "Division No. 16",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 9945,
+  "POPDENS_CY": 2.1128870173768757,
+  "infra_ca": {
+   "airports": 2,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 5
+  }
+ },
+ "4617": {
+  "id": "4617",
+  "geo_system": "CA",
+  "NAME": "Division No. 17",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 21996,
+  "POPDENS_CY": 1.6137303538453747,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 3,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "4618": {
+  "id": "4618",
+  "geo_system": "CA",
+  "NAME": "Division No. 18",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 26636,
+  "POPDENS_CY": 2.3442127358096188,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 6,
+   "grid_nodes": 0,
+   "telecom_towers": 21
+  }
+ },
+ "4619": {
+  "id": "4619",
+  "geo_system": "CA",
+  "NAME": "Division No. 19",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 15381,
+  "POPDENS_CY": 0.2540783699867386,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 21,
+   "grid_nodes": 0,
+   "telecom_towers": 20
+  }
+ },
+ "4620": {
+  "id": "4620",
+  "geo_system": "CA",
+  "NAME": "Division No. 20",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 9634,
+  "POPDENS_CY": 0.9804829545165419,
+  "infra_ca": {
+   "airports": 1,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 8
+  }
+ },
+ "4621": {
+  "id": "4621",
+  "geo_system": "CA",
+  "NAME": "Division No. 21",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 21871,
+  "POPDENS_CY": 0.510990704226076,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 8,
+   "grid_nodes": 2,
+   "telecom_towers": 22
+  }
+ },
+ "4622": {
+  "id": "4622",
+  "geo_system": "CA",
+  "NAME": "Division No. 22",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 42226,
+  "POPDENS_CY": 0.47020784643336466,
+  "infra_ca": {
+   "airports": 30,
+   "ports": 5,
+   "grid_nodes": 3,
+   "telecom_towers": 25
+  }
+ },
+ "4623": {
+  "id": "4623",
+  "geo_system": "CA",
+  "NAME": "Division No. 23",
+  "ST_ABBREV": "MB",
+  "TOTPOP_CY": 4690,
+  "POPDENS_CY": 0.020078889056046472,
+  "infra_ca": {
+   "airports": 25,
+   "ports": 1,
+   "grid_nodes": 5,
+   "telecom_towers": 43
+  }
+ },
+ "4701": {
+  "id": "4701",
+  "geo_system": "CA",
+  "NAME": "Division No.  1",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 30351,
+  "POPDENS_CY": 2.0711256384622994,
+  "infra_ca": {
+   "airports": 14,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 38
+  }
+ },
+ "4702": {
+  "id": "4702",
+  "geo_system": "CA",
+  "NAME": "Division No.  2",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 22497,
+  "POPDENS_CY": 1.3604960848772487,
+  "infra_ca": {
+   "airports": 4,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 39
+  }
+ },
+ "4703": {
+  "id": "4703",
+  "geo_system": "CA",
+  "NAME": "Division No.  3",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 12262,
+  "POPDENS_CY": 0.6693549311566651,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 20
+  }
+ },
+ "4704": {
+  "id": "4704",
+  "geo_system": "CA",
+  "NAME": "Division No.  4",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 10872,
+  "POPDENS_CY": 0.5140559210759619,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 31
+  }
+ },
+ "4705": {
+  "id": "4705",
+  "geo_system": "CA",
+  "NAME": "Division No.  5",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 31583,
+  "POPDENS_CY": 2.186935444446521,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 41
+  }
+ },
+ "4706": {
+  "id": "4706",
+  "geo_system": "CA",
+  "NAME": "Division No.  6",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 276564,
+  "POPDENS_CY": 15.928215790337578,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 75
+  }
+ },
+ "4707": {
+  "id": "4707",
+  "geo_system": "CA",
+  "NAME": "Division No.  7",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 47413,
+  "POPDENS_CY": 2.534452962171633,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 36
+  }
+ },
+ "4708": {
+  "id": "4708",
+  "geo_system": "CA",
+  "NAME": "Division No.  8",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 30840,
+  "POPDENS_CY": 1.3794374364291355,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 62
+  }
+ },
+ "4709": {
+  "id": "4709",
+  "geo_system": "CA",
+  "NAME": "Division No.  9",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 36047,
+  "POPDENS_CY": 2.4272063660720353,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 25
+  }
+ },
+ "4710": {
+  "id": "4710",
+  "geo_system": "CA",
+  "NAME": "Division No. 10",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 16483,
+  "POPDENS_CY": 1.3825317702160564,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 19
+  }
+ },
+ "4711": {
+  "id": "4711",
+  "geo_system": "CA",
+  "NAME": "Division No. 11",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 326109,
+  "POPDENS_CY": 19.642055847912886,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 64
+  }
+ },
+ "4712": {
+  "id": "4712",
+  "geo_system": "CA",
+  "NAME": "Division No. 12",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 23208,
+  "POPDENS_CY": 1.6831747077035994,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 30
+  }
+ },
+ "4713": {
+  "id": "4713",
+  "geo_system": "CA",
+  "NAME": "Division No. 13",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 22047,
+  "POPDENS_CY": 1.2831361904118934,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 45
+  }
+ },
+ "4714": {
+  "id": "4714",
+  "geo_system": "CA",
+  "NAME": "Division No. 14",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 35428,
+  "POPDENS_CY": 1.0520236191596102,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 44
+  }
+ },
+ "4715": {
+  "id": "4715",
+  "geo_system": "CA",
+  "NAME": "Division No. 15",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 88988,
+  "POPDENS_CY": 4.587246765297178,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 40
+  }
+ },
+ "4716": {
+  "id": "4716",
+  "geo_system": "CA",
+  "NAME": "Division No. 16",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 37993,
+  "POPDENS_CY": 1.7583344209247032,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 2,
+   "grid_nodes": 2,
+   "telecom_towers": 32
+  }
+ },
+ "4717": {
+  "id": "4717",
+  "geo_system": "CA",
+  "NAME": "Division No. 17",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 47834,
+  "POPDENS_CY": 2.1524827530035715,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 22
+  }
+ },
+ "4718": {
+  "id": "4718",
+  "geo_system": "CA",
+  "NAME": "Division No. 18",
+  "ST_ABBREV": "SK",
+  "TOTPOP_CY": 35986,
+  "POPDENS_CY": 0.13720405391349916,
+  "infra_ca": {
+   "airports": 49,
+   "ports": 13,
+   "grid_nodes": 4,
+   "telecom_towers": 55
+  }
+ },
+ "4801": {
+  "id": "4801",
+  "geo_system": "CA",
+  "NAME": "Division No.  1",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 82513,
+  "POPDENS_CY": 4.069179955172098,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 39
+  }
+ },
+ "4802": {
+  "id": "4802",
+  "geo_system": "CA",
+  "NAME": "Division No.  2",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 178513,
+  "POPDENS_CY": 10.226279337545753,
+  "infra_ca": {
+   "airports": 18,
+   "ports": 0,
+   "grid_nodes": 7,
+   "telecom_towers": 39
+  }
+ },
+ "4803": {
+  "id": "4803",
+  "geo_system": "CA",
+  "NAME": "Division No.  3",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 40768,
+  "POPDENS_CY": 2.97032660623719,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 22,
+   "telecom_towers": 14
+  }
+ },
+ "4804": {
+  "id": "4804",
+  "geo_system": "CA",
+  "NAME": "Division No.  4",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 9220,
+  "POPDENS_CY": 0.4378961606670459,
+  "infra_ca": {
+   "airports": 10,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 19
+  }
+ },
+ "4805": {
+  "id": "4805",
+  "geo_system": "CA",
+  "NAME": "Division No.  5",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 55784,
+  "POPDENS_CY": 3.3501388784625785,
+  "infra_ca": {
+   "airports": 17,
+   "ports": 0,
+   "grid_nodes": 5,
+   "telecom_towers": 36
+  }
+ },
+ "4806": {
+  "id": "4806",
+  "geo_system": "CA",
+  "NAME": "Division No.  6",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 1590639,
+  "POPDENS_CY": 126.09817912859154,
+  "infra_ca": {
+   "airports": 41,
+   "ports": 0,
+   "grid_nodes": 27,
+   "telecom_towers": 70
+  }
+ },
+ "4807": {
+  "id": "4807",
+  "geo_system": "CA",
+  "NAME": "Division No.  7",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 40684,
+  "POPDENS_CY": 2.151496353974139,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 1,
+   "grid_nodes": 3,
+   "telecom_towers": 18
+  }
+ },
+ "4808": {
+  "id": "4808",
+  "geo_system": "CA",
+  "NAME": "Division No.  8",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 213470,
+  "POPDENS_CY": 21.58427594546854,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 38
+  }
+ },
+ "4809": {
+  "id": "4809",
+  "geo_system": "CA",
+  "NAME": "Division No.  9",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 20569,
+  "POPDENS_CY": 1.0920672877824804,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 12
+  }
+ },
+ "4810": {
+  "id": "4810",
+  "geo_system": "CA",
+  "NAME": "Division No. 10",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 95455,
+  "POPDENS_CY": 4.740947722676288,
+  "infra_ca": {
+   "airports": 20,
+   "ports": 1,
+   "grid_nodes": 1,
+   "telecom_towers": 69
+  }
+ },
+ "4811": {
+  "id": "4811",
+  "geo_system": "CA",
+  "NAME": "Division No. 11",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 1462041,
+  "POPDENS_CY": 92.84786649587886,
+  "infra_ca": {
+   "airports": 37,
+   "ports": 1,
+   "grid_nodes": 10,
+   "telecom_towers": 178
+  }
+ },
+ "4812": {
+  "id": "4812",
+  "geo_system": "CA",
+  "NAME": "Division No. 12",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 67483,
+  "POPDENS_CY": 2.1209803975184247,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 1,
+   "grid_nodes": 2,
+   "telecom_towers": 55
+  }
+ },
+ "4813": {
+  "id": "4813",
+  "geo_system": "CA",
+  "NAME": "Division No. 13",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 68076,
+  "POPDENS_CY": 2.8004753847691757,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 2,
+   "grid_nodes": 3,
+   "telecom_towers": 40
+  }
+ },
+ "4814": {
+  "id": "4814",
+  "geo_system": "CA",
+  "NAME": "Division No. 14",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 28617,
+  "POPDENS_CY": 1.0637162977156698,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 33
+  }
+ },
+ "4815": {
+  "id": "4815",
+  "geo_system": "CA",
+  "NAME": "Division No. 15",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 37735,
+  "POPDENS_CY": 1.3348001337099384,
+  "infra_ca": {
+   "airports": 15,
+   "ports": 0,
+   "grid_nodes": 9,
+   "telecom_towers": 32
+  }
+ },
+ "4816": {
+  "id": "4816",
+  "geo_system": "CA",
+  "NAME": "Division No. 16",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 74543,
+  "POPDENS_CY": 0.7924009110861824,
+  "infra_ca": {
+   "airports": 21,
+   "ports": 0,
+   "grid_nodes": 9,
+   "telecom_towers": 138
+  }
+ },
+ "4817": {
+  "id": "4817",
+  "geo_system": "CA",
+  "NAME": "Division No. 17",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 62132,
+  "POPDENS_CY": 0.32626566180987765,
+  "infra_ca": {
+   "airports": 34,
+   "ports": 4,
+   "grid_nodes": 3,
+   "telecom_towers": 98
+  }
+ },
+ "4818": {
+  "id": "4818",
+  "geo_system": "CA",
+  "NAME": "Division No. 18",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 13226,
+  "POPDENS_CY": 0.39952332692432585,
+  "infra_ca": {
+   "airports": 6,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 22
+  }
+ },
+ "4819": {
+  "id": "4819",
+  "geo_system": "CA",
+  "NAME": "Division No. 19",
+  "ST_ABBREV": "AB",
+  "TOTPOP_CY": 121167,
+  "POPDENS_CY": 5.923785293277899,
+  "infra_ca": {
+   "airports": 15,
+   "ports": 1,
+   "grid_nodes": 2,
+   "telecom_towers": 45
+  }
+ },
+ "5901": {
+  "id": "5901",
+  "geo_system": "CA",
+  "NAME": "East Kootenay",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 65896,
+  "POPDENS_CY": 2.3949893345632485,
+  "infra_ca": {
+   "airports": 13,
+   "ports": 0,
+   "grid_nodes": 6,
+   "telecom_towers": 28
+  }
+ },
+ "5903": {
+  "id": "5903",
+  "geo_system": "CA",
+  "NAME": "Central Kootenay",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 62509,
+  "POPDENS_CY": 2.8312723128753166,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 0,
+   "grid_nodes": 11,
+   "telecom_towers": 36
+  }
+ },
+ "5905": {
+  "id": "5905",
+  "geo_system": "CA",
+  "NAME": "Kootenay Boundary",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 33152,
+  "POPDENS_CY": 4.1025691794985395,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 3,
+   "telecom_towers": 20
+  }
+ },
+ "5907": {
+  "id": "5907",
+  "geo_system": "CA",
+  "NAME": "Okanagan-Similkameen",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 90178,
+  "POPDENS_CY": 8.66536238123059,
+  "infra_ca": {
+   "airports": 5,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 26
+  }
+ },
+ "5909": {
+  "id": "5909",
+  "geo_system": "CA",
+  "NAME": "Fraser Valley",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 324005,
+  "POPDENS_CY": 24.325722402743658,
+  "infra_ca": {
+   "airports": 9,
+   "ports": 1,
+   "grid_nodes": 15,
+   "telecom_towers": 69
+  }
+ },
+ "5915": {
+  "id": "5915",
+  "geo_system": "CA",
+  "NAME": "Greater Vancouver",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 2642825,
+  "POPDENS_CY": 917.9726847702989,
+  "infra_ca": {
+   "airports": 24,
+   "ports": 51,
+   "grid_nodes": 11,
+   "telecom_towers": 142
+  }
+ },
+ "5917": {
+  "id": "5917",
+  "geo_system": "CA",
+  "NAME": "Capital",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 415451,
+  "POPDENS_CY": 177.66996104057154,
+  "infra_ca": {
+   "airports": 24,
+   "ports": 26,
+   "grid_nodes": 2,
+   "telecom_towers": 28
+  }
+ },
+ "5919": {
+  "id": "5919",
+  "geo_system": "CA",
+  "NAME": "Cowichan Valley",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 89013,
+  "POPDENS_CY": 25.633545667123588,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 6,
+   "grid_nodes": 1,
+   "telecom_towers": 8
+  }
+ },
+ "5921": {
+  "id": "5921",
+  "geo_system": "CA",
+  "NAME": "Nanaimo",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 170367,
+  "POPDENS_CY": 83.67936344212777,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 12,
+   "grid_nodes": 2,
+   "telecom_towers": 36
+  }
+ },
+ "5923": {
+  "id": "5923",
+  "geo_system": "CA",
+  "NAME": "Alberni-Clayoquot",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 33521,
+  "POPDENS_CY": 5.0966231317754005,
+  "infra_ca": {
+   "airports": 13,
+   "ports": 15,
+   "grid_nodes": 8,
+   "telecom_towers": 23
+  }
+ },
+ "5924": {
+  "id": "5924",
+  "geo_system": "CA",
+  "NAME": "Strathcona",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 48150,
+  "POPDENS_CY": 2.6392672539013473,
+  "infra_ca": {
+   "airports": 27,
+   "ports": 17,
+   "grid_nodes": 11,
+   "telecom_towers": 7
+  }
+ },
+ "5926": {
+  "id": "5926",
+  "geo_system": "CA",
+  "NAME": "Comox Valley",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 72445,
+  "POPDENS_CY": 42.68828038914131,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 4,
+   "grid_nodes": 1,
+   "telecom_towers": 18
+  }
+ },
+ "5927": {
+  "id": "5927",
+  "geo_system": "CA",
+  "NAME": "Powell River",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 21496,
+  "POPDENS_CY": 4.241624193201484,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 9,
+   "grid_nodes": 6,
+   "telecom_towers": 4
+  }
+ },
+ "5929": {
+  "id": "5929",
+  "geo_system": "CA",
+  "NAME": "Sunshine Coast",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 32170,
+  "POPDENS_CY": 8.53897749925015,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 10,
+   "grid_nodes": 10,
+   "telecom_towers": 1
+  }
+ },
+ "5931": {
+  "id": "5931",
+  "geo_system": "CA",
+  "NAME": "Squamish-Lillooet",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 50496,
+  "POPDENS_CY": 3.0985984634643233,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 2,
+   "grid_nodes": 23,
+   "telecom_towers": 9
+  }
+ },
+ "5933": {
+  "id": "5933",
+  "geo_system": "CA",
+  "NAME": "Thompson-Nicola",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 143680,
+  "POPDENS_CY": 3.2398881462892497,
+  "infra_ca": {
+   "airports": 17,
+   "ports": 0,
+   "grid_nodes": 6,
+   "telecom_towers": 50
+  }
+ },
+ "5935": {
+  "id": "5935",
+  "geo_system": "CA",
+  "NAME": "Central Okanagan",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 222162,
+  "POPDENS_CY": 76.54371179911936,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 1,
+   "grid_nodes": 2,
+   "telecom_towers": 7
+  }
+ },
+ "5937": {
+  "id": "5937",
+  "geo_system": "CA",
+  "NAME": "North Okanagan",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 91610,
+  "POPDENS_CY": 12.219212213610135,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 16
+  }
+ },
+ "5939": {
+  "id": "5939",
+  "geo_system": "CA",
+  "NAME": "Columbia-Shuswap",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 57021,
+  "POPDENS_CY": 1.974016280675128,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 8,
+   "telecom_towers": 20
+  }
+ },
+ "5941": {
+  "id": "5941",
+  "geo_system": "CA",
+  "NAME": "Cariboo",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 62931,
+  "POPDENS_CY": 0.7829786408114879,
+  "infra_ca": {
+   "airports": 36,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 14
+  }
+ },
+ "5943": {
+  "id": "5943",
+  "geo_system": "CA",
+  "NAME": "Mount Waddington",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 10839,
+  "POPDENS_CY": 0.5369438044393101,
+  "infra_ca": {
+   "airports": 19,
+   "ports": 14,
+   "grid_nodes": 4,
+   "telecom_towers": 21
+  }
+ },
+ "5945": {
+  "id": "5945",
+  "geo_system": "CA",
+  "NAME": "Central Coast",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 3582,
+  "POPDENS_CY": 0.1466006813534738,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 3,
+   "grid_nodes": 2,
+   "telecom_towers": 1
+  }
+ },
+ "5947": {
+  "id": "5947",
+  "geo_system": "CA",
+  "NAME": "Skeena-Queen Charlotte",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 18181,
+  "POPDENS_CY": 0.9224115931323181,
+  "infra_ca": {
+   "airports": 21,
+   "ports": 27,
+   "grid_nodes": 3,
+   "telecom_towers": 24
+  }
+ },
+ "5949": {
+  "id": "5949",
+  "geo_system": "CA",
+  "NAME": "Kitimat-Stikine",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 37790,
+  "POPDENS_CY": 0.36229504660510153,
+  "infra_ca": {
+   "airports": 21,
+   "ports": 10,
+   "grid_nodes": 8,
+   "telecom_towers": 11
+  }
+ },
+ "5951": {
+  "id": "5951",
+  "geo_system": "CA",
+  "NAME": "Bulkley-Nechako",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 37737,
+  "POPDENS_CY": 0.5155098988091374,
+  "infra_ca": {
+   "airports": 17,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 23
+  }
+ },
+ "5953": {
+  "id": "5953",
+  "geo_system": "CA",
+  "NAME": "Fraser-Fort George",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 96979,
+  "POPDENS_CY": 1.9173115764267492,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 11,
+   "telecom_towers": 33
+  }
+ },
+ "5955": {
+  "id": "5955",
+  "geo_system": "CA",
+  "NAME": "Peace River",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 61532,
+  "POPDENS_CY": 0.5249418619977566,
+  "infra_ca": {
+   "airports": 15,
+   "ports": 0,
+   "grid_nodes": 8,
+   "telecom_towers": 46
+  }
+ },
+ "5957": {
+  "id": "5957",
+  "geo_system": "CA",
+  "NAME": "Stikine",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 683,
+  "POPDENS_CY": 0.005768155289888229,
+  "infra_ca": {
+   "airports": 3,
+   "ports": 0,
+   "grid_nodes": 1,
+   "telecom_towers": 3
+  }
+ },
+ "5959": {
+  "id": "5959",
+  "geo_system": "CA",
+  "NAME": "Northern Rockies",
+  "ST_ABBREV": "BC",
+  "TOTPOP_CY": 4478,
+  "POPDENS_CY": 0.05276995105993597,
+  "infra_ca": {
+   "airports": 7,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 23
+  }
+ },
+ "6001": {
+  "id": "6001",
+  "geo_system": "CA",
+  "NAME": "Yukon",
+  "ST_ABBREV": "YT",
+  "TOTPOP_CY": 40232,
+  "POPDENS_CY": 0.08517495522662208,
+  "infra_ca": {
+   "airports": 47,
+   "ports": 0,
+   "grid_nodes": 33,
+   "telecom_towers": 49
+  }
+ },
+ "6101": {
+  "id": "6101",
+  "geo_system": "CA",
+  "NAME": "Region 1",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 6205,
+  "POPDENS_CY": 0.017380216277674738,
+  "infra_ca": {
+   "airports": 12,
+   "ports": 6,
+   "grid_nodes": 0,
+   "telecom_towers": 33
+  }
+ },
+ "6102": {
+  "id": "6102",
+  "geo_system": "CA",
+  "NAME": "Region 2",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 2259,
+  "POPDENS_CY": 0.010348289811116913,
+  "infra_ca": {
+   "airports": 13,
+   "ports": 0,
+   "grid_nodes": 0,
+   "telecom_towers": 8
+  }
+ },
+ "6103": {
+  "id": "6103",
+  "geo_system": "CA",
+  "NAME": "Region 3",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 2650,
+  "POPDENS_CY": 0.10686802484500102,
+  "infra_ca": {
+   "airports": 8,
+   "ports": 0,
+   "grid_nodes": 4,
+   "telecom_towers": 0
+  }
+ },
+ "6104": {
+  "id": "6104",
+  "geo_system": "CA",
+  "NAME": "Region 4",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 2872,
+  "POPDENS_CY": 0.014860389435339351,
+  "infra_ca": {
+   "airports": 16,
+   "ports": 1,
+   "grid_nodes": 0,
+   "telecom_towers": 9
+  }
+ },
+ "6105": {
+  "id": "6105",
+  "geo_system": "CA",
+  "NAME": "Region 5",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 6279,
+  "POPDENS_CY": 0.041272301684421295,
+  "infra_ca": {
+   "airports": 17,
+   "ports": 2,
+   "grid_nodes": 1,
+   "telecom_towers": 16
+  }
+ },
+ "6106": {
+  "id": "6106",
+  "geo_system": "CA",
+  "NAME": "Region 6",
+  "ST_ABBREV": "NT",
+  "TOTPOP_CY": 20805,
+  "POPDENS_CY": 0.11418677201816517,
+  "infra_ca": {
+   "airports": 12,
+   "ports": 0,
+   "grid_nodes": 2,
+   "telecom_towers": 16
+  }
+ },
+ "6204": {
+  "id": "6204",
+  "geo_system": "CA",
+  "NAME": "Qikiqtaaluk",
+  "ST_ABBREV": "NU",
+  "TOTPOP_CY": 19355,
+  "POPDENS_CY": 0.019942206239607747,
+  "infra_ca": {
+   "airports": 21,
+   "ports": 4,
+   "grid_nodes": 6347,
+   "telecom_towers": 171
+  }
+ },
+ "6205": {
+  "id": "6205",
+  "geo_system": "CA",
+  "NAME": "Kivalliq",
+  "ST_ABBREV": "NU",
+  "TOTPOP_CY": 11045,
+  "POPDENS_CY": 0.02542990468379013,
+  "infra_ca": {
+   "airports": 12,
+   "ports": 0,
+   "grid_nodes": 3355,
+   "telecom_towers": 21
+  }
+ },
+ "6208": {
+  "id": "6208",
+  "geo_system": "CA",
+  "NAME": "Kitikmeot",
+  "ST_ABBREV": "NU",
+  "TOTPOP_CY": 6458,
+  "POPDENS_CY": 0.014945337393768743,
+  "infra_ca": {
+   "airports": 11,
+   "ports": 5,
+   "grid_nodes": 1848,
+   "telecom_towers": 30
+  }
+ }
+}
