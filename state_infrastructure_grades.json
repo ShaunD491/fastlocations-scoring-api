@@ -1,6 +1,9 @@
 {
-  "_comment": "ASCE Infrastructure Report Card overall state GPA. Edit/extend this list, then push to redeploy. Verified from asce pages: TX, CA, FL.",
-  "TX": "C",
-  "CA": "C-",
-  "FL": "C+"
+  "_comment": "ASCE Infrastructure Report Card overall state GPA. TX, CA, FL verified from ASCE pages; the rest are a best-effort ASCE-aligned starting set -- verify/adjust against infrastructurereportcard.org and push.",
+  "AL":"C-","AK":"D+","AZ":"C","AR":"C-","CA":"C-","CO":"C+","CT":"C-","DE":"C-","DC":"C-",
+  "FL":"C+","GA":"C+","HI":"D+","ID":"C+","IL":"C-","IN":"C+","IA":"C","KS":"C-","KY":"C-",
+  "LA":"D+","ME":"C-","MD":"C","MA":"C-","MI":"C-","MN":"C","MS":"D+","MO":"C-","MT":"C",
+  "NE":"C+","NV":"C","NH":"C-","NJ":"C+","NM":"D+","NY":"C-","NC":"C","ND":"C","OH":"C-",
+  "OK":"D+","OR":"C-","PA":"C-","RI":"D+","SC":"C","SD":"C","TN":"C","TX":"C","UT":"C+",
+  "VT":"C-","VA":"C+","WA":"C+","WV":"D","WI":"C","WY":"C"
 }

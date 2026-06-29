@@ -55,8 +55,8 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
-DEFAULT_WEIGHTS={"workforce":0.14,"infrastructure":0.10,"incentives":0.10,"real_estate":0.08,
-                 "demographics":0.07,"logistics":0.07,"cost":0.13,"safety":0.08,"market_size":0.11,"livability":0.12}
+DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.13,
+                 "demographics":0.06,"logistics":0.06,"cost":0.18,"safety":0.06,"market_size":0.07,"livability":0.08}
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -114,22 +114,17 @@ def edu_share(f,priority):
     return s/base*100
 def m_demographics(f,crit):
     pr=(crit.get("demographics") or {}).get("education_priority","none")
-    pov=f.get("poverty_rate"); hp=f.get("hh_poverty"); im=f.get("infant_mortality")
     return {"population":f.get("TOTPOP_CY"),"labor_force":f.get("CIVLBFR_CY"),
-            "education_attainment":edu_share(f,pr),"pop_growth":f.get("POPGRW20CY"),
-            "low_poverty":(-pov if pov is not None else None),
-            "low_household_poverty":(-hp if hp is not None else None),
-            "low_infant_mortality":(-im if im is not None else None)}
+            "education_attainment":edu_share(f,pr),"pop_growth":f.get("POPGRW20CY")}
 def m_workforce(f,crit):
     une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); inc=f.get("MEDHINC_CY")
     need=((crit.get("workforce") or {}).get("headcount") or {}).get("initial")
     adequacy=(lf/need if (lf is not None and need) else lf)
-    ct=f.get("critical_thinking"); sdi=f.get("sdi")
+    ct=f.get("critical_thinking")
     return {"labor_availability":(-une if une is not None else None),
             "labor_pool_adequacy":adequacy,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            "critical_thinking":ct,
-            "low_social_deprivation":(-sdi if sdi is not None else None)}
+            "critical_thinking":ct}
 def m_logistics(f,crit):
     if gsys(f)=="CA":
         inf=f.get("infra_ca")
@@ -167,10 +162,9 @@ def m_livability(f,crit):
             "life_expectancy":le}
 
 def m_market_size(f,crit):
-    pop=f.get("TOTPOP_CY"); inc=f.get("MEDHINC_CY")
+    pop=f.get("TOTPOP_CY")
     if pop is None: return None
-    return {"population_scale":pop,
-            "buying_power":(pop*inc if inc is not None else None)}
+    return {"population_scale":pop}
 
 def m_infrastructure(f,crit):
     g=INFRA_GRADES.get(f.get("ST_ABBREV"))
@@ -211,15 +205,15 @@ def serving_edos(geoid,g):
              "resolution_status":r.get("resolution_status"),
              "embed_url":r.get("embed_url") or ""} for r in rows]
 
-DIM_PHRASE={"workforce":"labor availability, workforce quality (critical thinking), and low social deprivation",
-            "demographics":"population, labor force, education, and community health (low poverty and infant mortality)",
+DIM_PHRASE={"workforce":"labor availability and workforce skills (critical thinking)",
+            "demographics":"population, labor force, and educational attainment",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality (ASCE state grade)",
             "real_estate":"real-estate cost (property taxes)",
             "cost":"operating cost (wages and cost of living)",
             "safety":"public safety (low crime)",
-            "market_size":"market size (population and buying power)",
+            "market_size":"market size (population scale)",
             "livability":"livability and community health (County Health Rankings)"}
 def build_rationale(rank,r,pending):
     s=r["sub_scores"]
