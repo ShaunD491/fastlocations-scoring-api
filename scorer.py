@@ -54,9 +54,9 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 
-DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size"]
-DEFAULT_WEIGHTS={"workforce":0.16,"infrastructure":0.11,"incentives":0.11,"real_estate":0.09,
-                 "demographics":0.09,"logistics":0.09,"cost":0.14,"safety":0.09,"market_size":0.12}
+DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
+DEFAULT_WEIGHTS={"workforce":0.14,"infrastructure":0.10,"incentives":0.10,"real_estate":0.08,
+                 "demographics":0.07,"logistics":0.07,"cost":0.13,"safety":0.08,"market_size":0.11,"livability":0.12}
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -156,6 +156,16 @@ def m_incentives(f,crit):
         pf=got/tot*100
     return {"incentive_breadth":rec["count"],"priority_match":pf}
 
+def m_livability(f,crit):
+    pd=f.get("premature_death"); pf=f.get("poor_fair_health")
+    pp=f.get("poor_phys_days"); pm=f.get("poor_mental_days"); le=f.get("life_expectancy")
+    if all(x is None for x in (pd,pf,pp,pm,le)): return None
+    return {"long_life":(-pd if pd is not None else None),
+            "good_health":(-pf if pf is not None else None),
+            "few_phys_unhealthy_days":(-pp if pp is not None else None),
+            "few_mental_unhealthy_days":(-pm if pm is not None else None),
+            "life_expectancy":le}
+
 def m_market_size(f,crit):
     pop=f.get("TOTPOP_CY"); inc=f.get("MEDHINC_CY")
     if pop is None: return None
@@ -209,7 +219,8 @@ DIM_PHRASE={"workforce":"labor availability, workforce quality (critical thinkin
             "real_estate":"real-estate cost (property taxes)",
             "cost":"operating cost (wages and cost of living)",
             "safety":"public safety (low crime)",
-            "market_size":"market size (population and buying power)"}
+            "market_size":"market size (population and buying power)",
+            "livability":"livability and community health (County Health Rankings)"}
 def build_rationale(rank,r,pending):
     s=r["sub_scores"]
     live=sorted([(d,s[d]) for d in DIMS if s[d] is not None],key=lambda x:x[1],reverse=True)
@@ -281,7 +292,8 @@ def run(criteria,top=10):
          "real_estate":score_dimension(cands,m_real_estate,criteria),
          "cost":score_dimension(cands,m_cost,criteria),
          "safety":score_dimension(cands,m_safety,criteria),
-         "market_size":score_dimension(cands,m_market_size,criteria)}
+         "market_size":score_dimension(cands,m_market_size,criteria),
+         "livability":score_dimension(cands,m_livability,criteria)}
 
     pref=set(geo.get("preferred_regions") or []); results=[]
     for f in cands:
@@ -300,7 +312,7 @@ def run(criteria,top=10):
     top_results=results[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
             "dimensions_pending_data":[],
             "results":top_results}
 
