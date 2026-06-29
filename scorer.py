@@ -17,7 +17,7 @@ Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
 (weights renormalise over non-null dims, never penalise); only counties/CDs served
 by a customer EDO are ranked; sub-scores surfaced individually.
 """
-import json,os,sys
+import json,os,sys,math,urllib.request,urllib.parse
 O=os.environ.get("FL_DATA_DIR") or os.path.dirname(os.path.abspath(__file__))
 def _load(fn): return json.load(open(os.path.join(O,fn)))
 
@@ -36,6 +36,20 @@ try:
 except FileNotFoundError:
     CA_INDEX={}
 INC=_load("incentives_index.json")                 # state/province -> programs
+try: PLACES=_load("us_places.json")                # "ST|normname" -> [lat,lon]
+except FileNotFoundError: PLACES={}
+import re as _re, unicodedata as _ud
+def _norm(x):
+    x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
+    return _re.sub(r"[^a-z0-9]","",x)
+_STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","california":"CA","colorado":"CO",
+"connecticut":"CT","delaware":"DE","districtofcolumbia":"DC","florida":"FL","georgia":"GA","hawaii":"HI",
+"idaho":"ID","illinois":"IL","indiana":"IN","iowa":"IA","kansas":"KS","kentucky":"KY","louisiana":"LA",
+"maine":"ME","maryland":"MD","massachusetts":"MA","michigan":"MI","minnesota":"MN","mississippi":"MS",
+"missouri":"MO","montana":"MT","nebraska":"NE","nevada":"NV","newhampshire":"NH","newjersey":"NJ",
+"newmexico":"NM","newyork":"NY","northcarolina":"NC","northdakota":"ND","ohio":"OH","oklahoma":"OK",
+"oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
+"texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety"]
 DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.12,"incentives":0.12,"real_estate":0.10,
@@ -43,6 +57,39 @@ DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.12,"incentives":0.12,"real_
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
+
+_GEO_CACHE={}
+def geocode_place(place):
+    place=(place or "").strip()
+    if not place: return None
+    if place in _GEO_CACHE: return _GEO_CACHE[place]
+    res=None
+    parts=[p.strip() for p in place.split(",")]
+    if len(parts)>=2:
+        city=_norm(parts[0]); stoken=parts[-1].strip()
+        st=stoken.upper() if len(stoken)==2 else _STATE2AB.get(_norm(stoken))
+        if st: res=PLACES.get(st+"|"+city)
+    if not res:                                 # city only -> first state match
+        nm="|"+_norm(parts[0])
+        for k,v in PLACES.items():
+            if k.endswith(nm): res=v; break
+    if not res:                                 # last resort: external geocoder (may fail on cloud hosts)
+        try:
+            url="https://nominatim.openstreetmap.org/search?"+urllib.parse.urlencode({"q":place,"format":"json","limit":1})
+            req=urllib.request.Request(url,headers={"User-Agent":"FastLocations/1.0 (site-selection)"})
+            with urllib.request.urlopen(req,timeout=8) as r:
+                data=json.load(r)
+            if data: res=[float(data[0]["lat"]),float(data[0]["lon"])]
+        except Exception: res=None
+    res=tuple(res) if res else None
+    _GEO_CACHE[place]=res; return res
+
+def haversine_mi(lat1,lon1,lat2,lon2):
+    R=3958.8
+    p1=math.radians(lat1); p2=math.radians(lat2)
+    dlat=math.radians(lat2-lat1); dlon=math.radians(lon2-lon1)
+    h=math.sin(dlat/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dlon/2)**2
+    return 2*R*math.asin(math.sqrt(h))
 
 def pct_rank(values):
     pairs=[(k,v) for k,v in values.items() if v is not None]
@@ -178,6 +225,18 @@ def run(criteria,top=10):
         rs=set(geo["required_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in rs]
     if geo.get("excluded_regions"):
         ex=set(geo["excluded_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] not in ex]
+    # market proximity: keep counties whose centroid is within max_miles of the place
+    prox=[]
+    for entry in (geo.get("market_proximity") or []):
+        pt=geocode_place(entry.get("to")); mx=entry.get("max_miles")
+        if pt and mx: prox.append((pt[0],pt[1],float(mx),entry.get("to")))
+    if prox:
+        def near(f):
+            d=ALLFEAT[f]; lat=d.get("lat"); lon=d.get("lon")
+            if lat is None or lon is None: return False  # no centroid -> cannot confirm within radius -> exclude
+            return all(haversine_mi(lat,lon,a,b)<=m for a,b,m,_ in prox)
+        cands=[f for f in cands if near(f)]
+        trace["market_proximity"]=[{"to":t,"max_miles":m} for a,b,m,t in prox]
     def has_port(d):
         if gsys(d)=="CA": return bool((d.get("infra_ca") or {}).get("ports"))
         return bool(d.get("infra") and d["infra"]["port"]["present"])

@@ -38,6 +38,12 @@ def home():
 def intake_js():
     return send_file(os.path.join(HERE,"intake.js"), mimetype="application/javascript")
 
+@app.get("/email-status")
+def email_status():
+    return {"resend_key_set": bool(os.environ.get("RESEND_API_KEY")),
+            "notify_email_set": bool(os.environ.get("FL_NOTIFY_EMAIL")),
+            "email_from": os.environ.get("EMAIL_FROM", "(default Resend test sender)")}
+
 @app.get("/health")
 def health():
     return {"status":"ok","counties":len(scorer.FEAT),"edos":len(scorer.MASTER),
@@ -88,8 +94,8 @@ def match():
     try: top=int(request.args.get("top",5))
     except ValueError: top=5
     out=scorer.run(crit,top=top)
-    try: send_match_email(crit, out)
-    except Exception: pass
+    try: out["email"]=send_match_email(crit, out)
+    except Exception as e: out["email"]={"sent": False, "reason": str(e)[:150]}
     return jsonify(out)
 
 if __name__=="__main__":
