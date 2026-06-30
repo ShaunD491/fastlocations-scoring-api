@@ -259,9 +259,10 @@
     const dimOrder = ['workforce','demographics','infrastructure','logistics','incentives','real_estate'];
     const live = (data.dimensions_live || []).join(', ');
     const pending = (data.dimensions_pending_data || []).join(', ') || 'none';
-    let html = '<h3>Top ' + data.results.length + ' matches</h3>' +
-      '<p class="cap">' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
-      ' counties passed the filters. Scored on: ' + live + '. Pending data shown as "-": ' + pending + '.</p>';
+    let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
+      '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
+      ' counties passed the filters. Scored on: ' + live + '. Pending data shown as "-": ' + pending + '.</p>' +
+      '<div id="flMap" class="flmap"></div>';
     data.results.forEach((r, i) => {
       const edo = r.serving_edos && r.serving_edos[0];
       const chips = dimOrder.map(function (d) {
@@ -284,12 +285,47 @@
       html += '<div class="result">' +
         '<div class="rhead"><span class="rank">' + (i + 1) + '</span>' +
         '<span class="place">' + r.county + ', ' + r.state + '</span>' +
-        '<span class="score">' + r.final_score + '</span></div>' +
+        '<span class="score"><span class="flscore-cap">FastLocations Score</span><span class="flscore-val">' + r.final_score + '</span></span></div>' +
         '<div class="subs">' + chips + '</div>' +
         (r.rationale ? '<p class="rationale">' + r.rationale + '</p>' : '') +
         '<div class="edo">' + edoHtml + '</div></div>';
     });
     wrap.innerHTML = html;
+    initResultsMap(data.results);
+  }
+
+  function initResultsMap(results) {
+    if (typeof L === 'undefined') return;            // Leaflet not loaded -> skip map
+    const el = document.getElementById('flMap');
+    if (!el) return;
+    if (el._map) { try { el._map.remove(); } catch (e) {} }
+    const map = L.map(el, { scrollWheelZoom: false });
+    el._map = map;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      { maxZoom: 18, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    const markers = [];
+    results.forEach(function (r, i) {
+      if (r.lat == null || r.lon == null) return;
+      const edo = r.serving_edos && r.serving_edos[0];
+      const dash = (edo && edo.objectid)
+        ? 'https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(edo.objectid) : null;
+      let pop = '<div style="font-size:13px;line-height:1.5">' +
+        '<b>' + (i + 1) + '. ' + r.county + ', ' + r.state + '</b><br>' +
+        'FastLocations Score: <b style="color:#cc2020">' + r.final_score + '</b>';
+      if (edo) pop += '<br>' + edo.organization;
+      if (dash) pop += '<br><a href="' + dash + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>';
+      pop += '</div>';
+      const icon = L.divIcon({ className: 'flpin', html: '<span>' + (i + 1) + '</span>', iconSize: [28, 28], iconAnchor: [14, 14] });
+      markers.push(L.marker([r.lat, r.lon], { icon: icon }).addTo(map).bindPopup(pop));
+    });
+    if (markers.length) {
+      const grp = L.featureGroup(markers);
+      map.fitBounds(grp.getBounds().pad(0.35));
+      if (markers.length === 1) map.setZoom(8);
+    } else {
+      map.setView([39.5, -98.35], 4);
+    }
+    setTimeout(function () { map.invalidateSize(); }, 250);
   }
 
   // ---- Print / Save as PDF ----

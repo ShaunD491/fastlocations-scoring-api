@@ -300,6 +300,7 @@ def run(criteria,top=10):
         final=min(round((total or 0)+bonus,2),100) if total is not None else None
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
+                        "lat":d.get("lat"),"lon":d.get("lon"),
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,
                         "final_score":final,"serving_edos":serving_edos(f,g)})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
