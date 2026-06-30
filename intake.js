@@ -295,9 +295,22 @@
   }
 
   function initResultsMap(results) {
-    if (typeof L === 'undefined') return;            // Leaflet not loaded -> skip map
     const el = document.getElementById('flMap');
     if (!el) return;
+    const plottable = (results || []).filter(function (r) { return r.lat != null && r.lon != null; });
+    if (typeof L === 'undefined' || !plottable.length) {
+      // Nothing to plot (Leaflet missing, or Canadian Census Divisions which have no centroids).
+      el.style.display = 'none';
+      if (results && results.length) {
+        const note = document.createElement('p');
+        note.className = 'cap';
+        note.style.margin = '0 0 14px';
+        note.textContent = 'Map view is available for U.S. county results only; Canadian Census Divisions are not yet geocoded.';
+        el.parentNode.insertBefore(note, el);
+      }
+      return;
+    }
+    el.style.display = '';
     if (el._map) { try { el._map.remove(); } catch (e) {} }
     const map = L.map(el, { scrollWheelZoom: false });
     el._map = map;

@@ -55,8 +55,8 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
-DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.13,
-                 "demographics":0.06,"logistics":0.06,"cost":0.18,"safety":0.06,"market_size":0.07,"livability":0.08}
+DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.15,
+                 "demographics":0.05,"logistics":0.08,"cost":0.20,"safety":0.05,"market_size":0.06,"livability":0.05}
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -113,9 +113,14 @@ def edu_share(f,priority):
     s=sum((f.get(k) or 0) for k in EDU.get(priority,EDU["none"]))
     return s/base*100
 def m_demographics(f,crit):
+    # Composition / quality only. Raw population scale is carried by market_size, and absolute
+    # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
+    # educational attainment, population growth, and labor-force participation.
     pr=(crit.get("demographics") or {}).get("education_priority","none")
-    return {"population":f.get("TOTPOP_CY"),"labor_force":f.get("CIVLBFR_CY"),
-            "education_attainment":edu_share(f,pr),"pop_growth":f.get("POPGRW20CY")}
+    pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
+    return {"education_attainment":edu_share(f,pr),
+            "pop_growth":f.get("POPGRW20CY"),
+            "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
     une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); inc=f.get("MEDHINC_CY")
     need=((crit.get("workforce") or {}).get("headcount") or {}).get("initial")
@@ -206,7 +211,7 @@ def serving_edos(geoid,g):
              "embed_url":r.get("embed_url") or ""} for r in rows]
 
 DIM_PHRASE={"workforce":"labor availability and workforce skills (critical thinking)",
-            "demographics":"population, labor force, and educational attainment",
+            "demographics":"educational attainment, growth, and labor-force participation",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality (ASCE state grade)",
