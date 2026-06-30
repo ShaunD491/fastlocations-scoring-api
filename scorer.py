@@ -41,6 +41,15 @@ try:                                               # StatCan Census Profile soci
         if _s: _v.update(_s)
 except FileNotFoundError:
     pass
+try:                                               # regional layers: Safety (StatCan CSI), Infrastructure (CMA=high), Livability (Numbeo cities)
+    CA_REG=_load("ca_regional.json")               # cduid -> {csi, infra_pts, livability?}
+    for _cid,_v in CA_FEAT.items():
+        _r=CA_REG.get(_cid)
+        if _r:
+            _v["ca_csi"]=_r.get("csi"); _v["ca_infra_pts"]=_r.get("infra_pts")
+            if _r.get("livability") is not None: _v["ca_livability"]=_r["livability"]
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -237,6 +246,9 @@ def m_incentives(f,crit):
             "priority_match":pf}
 
 def m_livability(f,crit):
+    if gsys(f)=="CA":                              # Numbeo 2026 most-livable Canadian cities (ranked CDs only)
+        lv=f.get("ca_livability")
+        return {"livability_rank":lv} if lv is not None else None
     pd=f.get("premature_death"); pf=f.get("poor_fair_health")
     pp=f.get("poor_phys_days"); pm=f.get("poor_mental_days"); le=f.get("life_expectancy")
     if all(x is None for x in (pd,pf,pp,pm,le)): return None
@@ -255,6 +267,9 @@ def m_market_size(f,crit):
     return {"population_scale":pop}
 
 def m_infrastructure(f,crit):
+    if gsys(f)=="CA":                              # CMA = highest, mid everywhere else (per provided rule)
+        p=f.get("ca_infra_pts")
+        return {"infra_grade":p} if p is not None else None
     g=INFRA_GRADES.get(f.get("ST_ABBREV"))
     pts=GRADE_PTS.get(g) if g else None
     if pts is None: return None
@@ -270,6 +285,9 @@ def m_cost(f,crit):
             "low_cost_of_living":(-wl if wl is not None else None)}
 
 def m_safety(f,crit):
+    if gsys(f)=="CA":                              # StatCan Crime Severity Index (CMA-precise, else province); lower=safer
+        cs=f.get("ca_csi")
+        return {"low_crime":-cs} if cs is not None else None
     cr=f.get("crime_rate")
     if cr is None: return None
     return {"low_crime":-cr}
