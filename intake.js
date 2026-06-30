@@ -148,7 +148,7 @@
         required_regions: mselSelected('req_regions'),
         preferred_regions: mselSelected('pref_regions'),
         excluded_regions: mselSelected('excl_regions'),
-        market_proximity: (prox_to && prox_miles != null) ? [{ to: prox_to, max_miles: prox_miles }] : []
+        market_proximity: (prox_to && prox_miles != null) ? [{ to: prox_to, max_miles: (currentCountry() === 'CA' ? prox_miles / 1.609 : prox_miles) }] : []
       },
       budget: { capex_usd: num('capex'), annual_opex_target_usd: num('opex') },
       weights: normalizedWeights()

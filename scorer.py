@@ -55,6 +55,8 @@ except FileNotFoundError: INFRA_GRADES={}
 GRADE_PTS={"A+":4.3,"A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D+":1.3,"D":1.0,"D-":0.7,"F":0.0}
 try: PLACES=_load("us_places.json")                # "ST|normname" -> [lat,lon]
 except FileNotFoundError: PLACES={}
+try: CA_PLACES=_load("ca_places.json")             # CA "PROV|normname" and bare "normname" -> [lat,lon]
+except FileNotFoundError: CA_PLACES={}
 import re as _re, unicodedata as _ud
 def _norm(x):
     x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
@@ -67,6 +69,7 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "newmexico":"NM","newyork":"NY","northcarolina":"NC","northdakota":"ND","ohio":"OH","oklahoma":"OK",
 "oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
+_CA_PROV={"ON","QC","BC","AB","MB","SK","NS","NB","NL","PE","NT","YT","NU"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
 DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.15,
@@ -76,6 +79,14 @@ DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
 # to the middle. Prevents tiny / college-town counties from topping generic searches. Tunable.
 SCALE_DAMP_K=100000
+CA_MARKET_WEIGHT=0.40   # Canada weights regional market access (catchment) up; see m_market_size (CA)
+# Coverage bonus: over-index jurisdictions served by a LOCAL or REGIONAL EDO customer (a specific
+# org to route the lead to) over those covered only by a broad State/Provincial agency. Added to
+# the final score from the most-specific serving EDO's category. US + Canada (CA orgs are all
+# provincial today, so they score 0 until local/regional Canadian EDOs are added).
+COVERAGE_BONUS={"Local Development Agency":10,"Chamber of Commerce":10,"Megasite":10,
+                "Industrial Park":10,"Port/Airport Authority":9,"Utility":9,
+                "Regional Development Agency":7,"State Agency":0}
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -87,14 +98,18 @@ def geocode_place(place):
     if place in _GEO_CACHE: return _GEO_CACHE[place]
     res=None
     parts=[p.strip() for p in place.split(",")]
-    if len(parts)>=2:
-        city=_norm(parts[0]); stoken=parts[-1].strip()
-        st=stoken.upper() if len(stoken)==2 else _STATE2AB.get(_norm(stoken))
-        if st: res=PLACES.get(st+"|"+city)
-    if not res:                                 # city only -> first state match
-        nm="|"+_norm(parts[0])
+    cityn=_norm(parts[0]); prov=parts[-1].strip().upper() if len(parts)>=2 else None
+    if prov in _CA_PROV and CA_PLACES:          # Canadian "City, PROV" -> bundled CA geocoder (Nominatim blocked on host)
+        res=CA_PLACES.get(prov+"|"+cityn) or CA_PLACES.get(cityn)
+    if not res and len(parts)>=2:               # US "City, ST"
+        st=prov if (prov and len(prov)==2 and prov not in _CA_PROV) else _STATE2AB.get(_norm(parts[-1]))
+        if st: res=PLACES.get(st+"|"+cityn)
+    if not res and prov not in _CA_PROV:        # US city-only loose match (skip for Canadian queries)
+        nm="|"+cityn
         for k,v in PLACES.items():
             if k.endswith(nm): res=v; break
+    if not res and CA_PLACES:                    # Canadian bare-name fallback
+        res=CA_PLACES.get(cityn)
     if not res:                                 # last resort: external geocoder (may fail on cloud hosts)
         try:
             url="https://nominatim.openstreetmap.org/search?"+urllib.parse.urlencode({"q":place,"format":"json","limit":1})
@@ -112,6 +127,18 @@ def haversine_mi(lat1,lon1,lat2,lon2):
     dlat=math.radians(lat2-lat1); dlon=math.radians(lon2-lon1)
     h=math.sin(dlat/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dlon/2)**2
     return 2*R*math.asin(math.sqrt(h))
+
+# Canadian regional market access: population reachable within ~250 km, distance-decayed
+# (scale 75 km). Lets CDs in dense corridors (around Toronto, Vancouver, Montreal, Calgary)
+# index higher on market size than their own population alone -- the metro's labor and customer
+# base is within reach. US market_size stays own-county population (its county fabric is finer).
+_CA_GEO=[v for v in CA_FEAT.values() if v.get("lat") is not None and v.get("TOTPOP_CY") is not None]
+for _v in _CA_GEO:
+    _la,_lo=_v["lat"],_v["lon"]; _acc=0.0
+    for _v2 in _CA_GEO:
+        _km=haversine_mi(_la,_lo,_v2["lat"],_v2["lon"])*1.60934
+        if _km<=250: _acc+=_v2["TOTPOP_CY"]*math.exp(-_km/75.0)
+    _v["catchment_pop"]=round(_acc)
 
 def pct_rank(values):
     pairs=[(k,v) for k,v in values.items() if v is not None]
@@ -212,6 +239,9 @@ def m_livability(f,crit):
             "life_expectancy":le}
 
 def m_market_size(f,crit):
+    if gsys(f)=="CA":                              # regional catchment (metro access), not just own CD
+        cp=f.get("catchment_pop")
+        if cp is not None: return {"population_scale":cp}
     pop=f.get("TOTPOP_CY")
     if pop is None: return None
     return {"population_scale":pop}
@@ -351,36 +381,42 @@ def run(criteria,top=10):
     for f in cands:
         d=ALLFEAT[f]; g=gsys(d)
         scores={dim:sub[dim][f] for dim in DIMS}
-        avail={dim:w[dim] for dim in DIMS if scores[dim] is not None and w.get(dim,0)>0}
+        # Canada emphasizes regional market access (catchment population) so CDs in the Toronto /
+        # Vancouver / Montreal orbits index higher; the user can still override the slider upward.
+        wf=w if g!="CA" else {**w,"market_size":max(w.get("market_size",0),CA_MARKET_WEIGHT)}
+        avail={dim:wf[dim] for dim in DIMS if scores[dim] is not None and wf.get(dim,0)>0}
         tw=sum(avail.values())
-        total=round(sum(scores[dim]*w[dim] for dim in avail)/tw,2) if tw else None
+        total=round(sum(scores[dim]*wf[dim] for dim in avail)/tw,2) if tw else None
         tmp.append((f,d,g,scores,total))
     tots=[t for _,_,_,_,t in tmp if t is not None]
     base=round(sum(tots)/len(tots),2) if tots else 50.0   # shrink target = candidate-set mean
     # pass 2: small-county reliability damping, then undamped preferred-region bonus
     for f,d,g,scores,total in tmp:
         bonus=8 if d["ST_ABBREV"] in pref else 0
+        edos=serving_edos(f,g)
+        cov=COVERAGE_BONUS.get(edos[0]["category"],0) if edos else 0   # local/regional coverage over-index
         rel=None; final=None
         if total is not None:
             pop=d.get("TOTPOP_CY") or 0
             rel=pop/(pop+SCALE_DAMP_K)
-            final=min(round(base+(total-base)*rel+bonus,2),100)
+            final=min(round(base+(total-base)*rel+bonus+cov,2),100)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),
-                        "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,
+                        "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,"coverage_bonus":cov,
                         "reliability":(round(rel,3) if rel is not None else None),
-                        "final_score":final,"serving_edos":serving_edos(f,g)})
+                        "final_score":final,"serving_edos":edos})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
-    # collapse to distinct serving EDOs: keep the best-scoring county per organization and roll
-    # past repeats, so the Top-N are N different customers to route the lead to.
-    seen=set(); deduped=[]
+    # Prefer distinct serving EDOs (roll past repeats so the Top-N are different customers), but
+    # BACKFILL with the next-best repeats if too few orgs exist -- e.g. one provincial EDO serves
+    # all of Ontario, so a province-filtered search must still return N counties, not one.
+    seen=set(); primary=[]; extra=[]
     for r in results:
         e=r["serving_edos"][0] if r["serving_edos"] else None
         key=e["objectid"] if e else ("_noedo_"+str(r["geoid"]))
-        if key in seen: continue
-        seen.add(key); deduped.append(r)
-    top_results=deduped[:top]
+        (extra if key in seen else primary).append(r)
+        seen.add(key)
+    top_results=(primary+extra)[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
             "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
