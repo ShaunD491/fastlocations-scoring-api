@@ -122,12 +122,24 @@ def m_demographics(f,crit):
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
-    une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); inc=f.get("MEDHINC_CY")
+    une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
     need=((crit.get("workforce") or {}).get("headcount") or {}).get("initial")
-    adequacy=(lf/need if (lf is not None and need) else lf)
+    # Staffability: can this market realistically supply the start-up headcount?
+    # Factors BOTH total population depth and labor-force adequacy vs. the need,
+    # each as a sufficiency ratio capped at 1.0 -- beyond a comfortable supply,
+    # extra size stops adding score (that is what market_size measures). `need`
+    # is constant across candidates, so an UNcapped ratio would just re-rank by raw
+    # size; the cap is what makes this a feasibility test, not a size proxy. When no
+    # headcount is given, this is null so raw size never leaks into workforce.
+    staff=None
+    if need and need>0:
+        parts=[]
+        if lf  is not None: parts.append((lf /need)/50.0)    # labor force ~50x need = ample supply
+        if pop is not None: parts.append((pop/need)/100.0)   # population  ~100x need = ample draw
+        if parts: staff=min(min(parts),1.0)                  # binding constraint, capped at "ample"
     ct=f.get("critical_thinking")
     return {"labor_availability":(-une if une is not None else None),
-            "labor_pool_adequacy":adequacy,
+            "staffability":staff,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
             "critical_thinking":ct}
 def m_logistics(f,crit):
@@ -210,7 +222,7 @@ def serving_edos(geoid,g):
              "resolution_status":r.get("resolution_status"),
              "embed_url":r.get("embed_url") or ""} for r in rows]
 
-DIM_PHRASE={"workforce":"labor availability and workforce skills (critical thinking)",
+DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount, and workforce skills",
             "demographics":"educational attainment, growth, and labor-force participation",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
