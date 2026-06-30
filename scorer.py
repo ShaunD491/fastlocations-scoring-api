@@ -57,6 +57,11 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
 DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.15,
                  "demographics":0.05,"logistics":0.08,"cost":0.20,"safety":0.05,"market_size":0.06,"livability":0.05}
+# Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
+# by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
+# percentile metrics are noisy and the market can't realistically host most projects) are pulled
+# to the middle. Prevents tiny / college-town counties from topping generic searches. Tunable.
+SCALE_DAMP_K=100000
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -307,18 +312,30 @@ def run(criteria,top=10):
          "livability":score_dimension(cands,m_livability,criteria)}
 
     pref=set(geo.get("preferred_regions") or []); results=[]
+    # pass 1: raw weighted totals
+    tmp=[]
     for f in cands:
         d=ALLFEAT[f]; g=gsys(d)
         scores={dim:sub[dim][f] for dim in DIMS}
         avail={dim:w[dim] for dim in DIMS if scores[dim] is not None and w.get(dim,0)>0}
         tw=sum(avail.values())
         total=round(sum(scores[dim]*w[dim] for dim in avail)/tw,2) if tw else None
+        tmp.append((f,d,g,scores,total))
+    tots=[t for _,_,_,_,t in tmp if t is not None]
+    base=round(sum(tots)/len(tots),2) if tots else 50.0   # shrink target = candidate-set mean
+    # pass 2: small-county reliability damping, then undamped preferred-region bonus
+    for f,d,g,scores,total in tmp:
         bonus=8 if d["ST_ABBREV"] in pref else 0
-        final=min(round((total or 0)+bonus,2),100) if total is not None else None
+        rel=None; final=None
+        if total is not None:
+            pop=d.get("TOTPOP_CY") or 0
+            rel=pop/(pop+SCALE_DAMP_K)
+            final=min(round(base+(total-base)*rel+bonus,2),100)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,
+                        "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":serving_edos(f,g)})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
     top_results=results[:top]
