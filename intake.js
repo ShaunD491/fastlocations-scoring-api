@@ -278,7 +278,7 @@
         const dash = edo.objectid
           ? ' &middot; <a href="https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(edo.objectid) + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>'
           : '';
-        edoHtml = 'Route lead to: ' + name + ' <span class="cat">(' + edo.category + ')</span>' + dash;
+        edoHtml = 'Best EDO match: ' + name + ' <span class="cat">(' + edo.category + ')</span>' + dash;
       } else {
         edoHtml = '<span class="cat">No EDO customer currently serves this county</span>';
       }

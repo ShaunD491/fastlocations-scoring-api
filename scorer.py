@@ -27,6 +27,13 @@ try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
     CA_FEAT={}
+try:                                               # population-weighted CD centroids (from DA centroids)
+    CA_CENT=_load("ca_cd_centroids.json")          # cduid -> [lat,lon]
+    for _cid,_v in CA_FEAT.items():
+        _c=CA_CENT.get(_cid)
+        if _c: _v["lat"],_v["lon"]=_c[0],_c[1]
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -338,7 +345,15 @@ def run(criteria,top=10):
                         "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":serving_edos(f,g)})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
-    top_results=results[:top]
+    # collapse to distinct serving EDOs: keep the best-scoring county per organization and roll
+    # past repeats, so the Top-N are N different customers to route the lead to.
+    seen=set(); deduped=[]
+    for r in results:
+        e=r["serving_edos"][0] if r["serving_edos"] else None
+        key=e["objectid"] if e else ("_noedo_"+str(r["geoid"]))
+        if key in seen: continue
+        seen.add(key); deduped.append(r)
+    top_results=deduped[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
             "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
