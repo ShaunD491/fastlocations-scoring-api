@@ -79,7 +79,7 @@ DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
 # to the middle. Prevents tiny / college-town counties from topping generic searches. Tunable.
 SCALE_DAMP_K=100000
-CA_MARKET_WEIGHT=0.40   # Canada weights regional market access (catchment) up; see m_market_size (CA)
+CA_MARKET_WEIGHT=0.20   # Canada weights regional market access (catchment) up; see m_market_size (CA)
 # Coverage bonus: over-index jurisdictions served by a LOCAL or REGIONAL EDO customer (a specific
 # org to route the lead to) over those covered only by a broad State/Provincial agency. Added to
 # the final score from the most-specific serving EDO's category. US + Canada (CA orgs are all
@@ -220,13 +220,21 @@ def m_logistics(f,crit):
 def m_incentives(f,crit):
     rec=INC.get(f.get("ST_ABBREV"))
     if not rec: return None
+    tc=rec.get("type_counts") or {}
     prio=(crit.get("incentives") or {}).get("priorities") or []
     pf=None
     if prio:
+        # depth-weighted: each ranked priority scores by HOW MANY programs of that type exist
+        # (saturating at 3), weighted by the user's ranking order -- not just present/absent.
         n=len(prio); tot=n*(n+1)/2.0
-        got=sum((n-i) for i,t in enumerate(prio) if rec["types_present"].get(t))
+        got=sum((n-i)*min(tc.get(t,0),3)/3.0 for i,t in enumerate(prio))
         pf=got/tot*100
-    return {"incentive_breadth":rec["count"],"priority_match":pf}
+    # value-aware: breadth (how many) is now only one of four signals, balanced by the diversity
+    # of incentive types offered and the value tier (largest program $ advertised).
+    return {"incentive_breadth":rec.get("count"),
+            "incentive_diversity":rec.get("type_diversity"),
+            "incentive_value":rec.get("value_tier"),
+            "priority_match":pf}
 
 def m_livability(f,crit):
     pd=f.get("premature_death"); pf=f.get("poor_fair_health")

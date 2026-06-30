@@ -256,12 +256,14 @@
       wrap.innerHTML = '<h3>No matches</h3><p class="cap">No counties passed the filters. Loosen the required regions or lower the population / labor-force thresholds.</p>';
       return;
     }
-    const dimOrder = ['workforce','demographics','infrastructure','logistics','incentives','real_estate'];
-    const live = (data.dimensions_live || []).join(', ');
-    const pending = (data.dimensions_pending_data || []).join(', ') || 'none';
+    const allDims = ['workforce','cost','real_estate','incentives','infrastructure','logistics','market_size','safety','demographics','livability'];
+    // Only show dimensions that have data for at least one result. This hides dimensions with no
+    // coverage for the selected region (e.g. infrastructure, safety, livability for Canada) instead
+    // of implying data that isn't there.
+    const dimOrder = allDims.filter(function (d) { return data.results.some(function (r) { return r.sub_scores[d] != null; }); });
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
-      ' counties passed the filters. Scored on: ' + live + '. Pending data shown as "-": ' + pending + '.</p>' +
+      ' candidates passed the filters. Scored on the factors with data for the selected region.</p>' +
       '<div id="flMap" class="flmap"></div>';
     data.results.forEach((r, i) => {
       const edo = r.serving_edos && r.serving_edos[0];
