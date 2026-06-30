@@ -34,6 +34,13 @@ try:                                               # population-weighted CD cent
         if _c: _v["lat"],_v["lon"]=_c[0],_c[1]
 except FileNotFoundError:
     pass
+try:                                               # StatCan Census Profile socio-economics by CD (98-401-X2021004)
+    CA_SOCIO=_load("ca_socio.json")                # cduid -> {income,dwelling_value,bachelor_share,participation,unemployment,labour_force,pop_growth}
+    for _cid,_v in CA_FEAT.items():
+        _s=CA_SOCIO.get(_cid)
+        if _s: _v.update(_s)
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -128,14 +135,28 @@ def m_demographics(f,crit):
     # Composition / quality only. Raw population scale is carried by market_size, and absolute
     # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
     # educational attainment, population growth, and labor-force participation.
+    if gsys(f)=="CA":                              # StatCan: bachelor's share, 2016-21 growth, participation rate
+        if f.get("bachelor_share") is None and f.get("pop_growth") is None: return None
+        return {"education_attainment":f.get("bachelor_share"),
+                "pop_growth":f.get("pop_growth"),
+                "labor_force_participation":f.get("participation")}
     pr=(crit.get("demographics") or {}).get("education_priority","none")
     pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
     return {"education_attainment":edu_share(f,pr),
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
-    une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
     need=((crit.get("workforce") or {}).get("headcount") or {}).get("initial")
+    if gsys(f)=="CA":                              # StatCan: unemployment (availability) + staffability
+        une=f.get("unemployment"); lf=f.get("labour_force"); pop=f.get("TOTPOP_CY")
+        staff=None
+        if need and need>0:
+            parts=[]
+            if lf  is not None: parts.append((lf /need)/50.0)
+            if pop is not None: parts.append((pop/need)/100.0)
+            if parts: staff=min(min(parts),1.0)
+        return {"labor_availability":(-une if une is not None else None),"staffability":staff}
+    une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
     # Staffability: can this market realistically supply the start-up headcount?
     # Factors BOTH total population depth and labor-force adequacy vs. the need,
     # each as a sufficiency ratio capped at 1.0 -- beyond a comfortable supply,
@@ -202,6 +223,9 @@ def m_infrastructure(f,crit):
     return {"infra_grade":pts}
 
 def m_cost(f,crit):
+    if gsys(f)=="CA":                              # StatCan: median household income as the labor-cost proxy
+        inc=f.get("income")
+        return {"low_labor_cost":-inc} if inc is not None else None
     inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
     if inc is None and wl is None: return None
     return {"low_labor_cost":(-inc if inc is not None else None),
@@ -213,6 +237,9 @@ def m_safety(f,crit):
     return {"low_crime":-cr}
 
 def m_real_estate(f,crit):
+    if gsys(f)=="CA":                              # StatCan: median dwelling value as the real-estate-cost proxy
+        dv=f.get("dwelling_value")
+        return {"low_dwelling_cost":-dv} if dv is not None else None
     pt=f.get("property_tax_rate")
     if pt is None: return None
     return {"low_property_tax":-pt}
@@ -239,8 +266,8 @@ DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount,
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality (ASCE state grade)",
-            "real_estate":"real-estate cost (property taxes)",
-            "cost":"operating cost (wages and cost of living)",
+            "real_estate":"real-estate cost",
+            "cost":"labor and operating cost",
             "safety":"public safety (low crime)",
             "market_size":"market size (population scale)",
             "livability":"livability and community health (County Health Rankings)"}
