@@ -23,6 +23,12 @@ def _load(fn): return json.load(open(os.path.join(O,fn)))
 
 FEAT=_load("county_features.json")                 # US, keyed by 5-digit FIPS
 for v in FEAT.values(): v["geo_system"]="US"
+try:                                               # regional market catchment (population reachable ~110km, decayed)
+    _USC=_load("us_catchment.json")                # fips -> catchment_pop; lets fragmented multi-county MSAs (NYC, Boston, SF) aggregate
+    for _k,_v in FEAT.items():
+        if _k in _USC: _v["catchment_pop"]=_USC[_k]
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -178,7 +184,8 @@ def m_demographics(f,crit):
                 "labor_force_participation":f.get("participation")}
     pr=(crit.get("demographics") or {}).get("education_priority","none")
     pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
-    return {"education_attainment":edu_share(f,pr),
+    edu=edu_share(f,pr)                              # education weighted double so mature, highly-educated
+    return {"education_attainment":edu,"education_attainment2":edu,   # regions (Northeast/east coast) index up, not penalized for slow growth
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
@@ -206,11 +213,11 @@ def m_workforce(f,crit):
         if lf  is not None: parts.append((lf /need)/50.0)    # labor force ~50x need = ample supply
         if pop is not None: parts.append((pop/need)/100.0)   # population  ~100x need = ample draw
         if parts: staff=min(min(parts),1.0)                  # binding constraint, capped at "ample"
-    ct=f.get("critical_thinking")
+    ct=f.get("critical_thinking")                   # weighted double (counts ~2x in the workforce score)
     return {"labor_availability":(-une if une is not None else None),
             "staffability":staff,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            "critical_thinking":ct}
+            "critical_thinking":ct,"critical_thinking2":ct}
 def m_logistics(f,crit):
     if gsys(f)=="CA":
         inf=f.get("infra_ca")
@@ -238,11 +245,12 @@ def m_incentives(f,crit):
         n=len(prio); tot=n*(n+1)/2.0
         got=sum((n-i)*min(tc.get(t,0),3)/3.0 for i,t in enumerate(prio))
         pf=got/tot*100
-    # value-aware: breadth (how many) is now only one of four signals, balanced by the diversity
-    # of incentive types offered and the value tier (largest program $ advertised).
-    return {"incentive_breadth":rec.get("count"),
+    # QUALITY, not quantity: raw program count is intentionally excluded. Score reflects the value
+    # tier (largest program $ advertised, weighted double), the range of incentive types offered,
+    # and how well those types match the project's ranked priorities.
+    vt=rec.get("value_tier")
+    return {"incentive_value":vt,"incentive_value2":vt,
             "incentive_diversity":rec.get("type_diversity"),
-            "incentive_value":rec.get("value_tier"),
             "priority_match":pf}
 
 def m_livability(f,crit):
@@ -259,9 +267,8 @@ def m_livability(f,crit):
             "life_expectancy":le}
 
 def m_market_size(f,crit):
-    if gsys(f)=="CA":                              # regional catchment (metro access), not just own CD
-        cp=f.get("catchment_pop")
-        if cp is not None: return {"population_scale":cp}
+    cp=f.get("catchment_pop")                       # regional catchment (metro access) for US and CA
+    if cp is not None: return {"population_scale":cp}
     pop=f.get("TOTPOP_CY")
     if pop is None: return None
     return {"population_scale":pop}
@@ -386,9 +393,9 @@ def run(criteria,top=10):
         return True
     cands=[f for f in cands if ok(f)]
     trace["candidates_after_filters"]=len(cands)
-    cands=[f for f in cands if index_for(gsys(ALLFEAT[f])).get(f)]   # served by a customer EDO
-    trace["candidates_with_customer_edo"]=len(cands)
-    if not cands: return {"trace":trace,"results":[],"note":"no candidates with a customer EDO passed filters"}
+    served=set(f for f in cands if index_for(gsys(ALLFEAT[f])).get(f))   # served by a customer EDO
+    trace["candidates_with_customer_edo"]=len(served)
+    if not cands: return {"trace":trace,"results":[],"other_notable":[],"note":"no candidates passed filters"}
 
     sub={"workforce":score_dimension(cands,m_workforce,criteria),
          "demographics":score_dimension(cands,m_demographics,criteria),
@@ -433,21 +440,24 @@ def run(criteria,top=10):
                         "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":edos})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
-    # Prefer distinct serving EDOs (roll past repeats so the Top-N are different customers), but
-    # BACKFILL with the next-best repeats if too few orgs exist -- e.g. one provincial EDO serves
-    # all of Ontario, so a province-filtered search must still return N counties, not one.
-    seen=set(); primary=[]; extra=[]
+    # PRIMARY = counties served by an EDO customer, collapsed to distinct serving EDOs (roll past
+    # repeats so the Top-N are different customers) with backfill; OTHER NOTABLE = the top-scoring
+    # counties with NO EDO customer (unrelated to AI+Plus accounts) -- surfaced separately.
+    seen=set(); primary=[]; extra=[]; other=[]
     for r in results:
+        if r["geoid"] not in served:
+            other.append(r); continue
         e=r["serving_edos"][0] if r["serving_edos"] else None
         key=e["objectid"] if e else ("_noedo_"+str(r["geoid"]))
-        (extra if key in seen else primary).append(r)
-        seen.add(key)
+        (extra if key in seen else primary).append(r); seen.add(key)
     top_results=(primary+extra)[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
+    other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
+                    "final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
             "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
             "dimensions_pending_data":[],
-            "results":top_results}
+            "results":top_results,"other_notable":other_notable}
 
 if __name__=="__main__":
     crit=json.load(open(sys.argv[1])) if len(sys.argv)>1 else {}

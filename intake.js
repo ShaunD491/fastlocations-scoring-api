@@ -292,6 +292,18 @@
         (r.rationale ? '<p class="rationale">' + r.rationale + '</p>' : '') +
         '<div class="edo">' + edoHtml + '</div></div>';
     });
+    // Other notable matches: top-scoring counties NOT tied to an AI+Plus / EDO account.
+    var other = data.other_notable || [];
+    if (other.length) {
+      html += '<div class="othersec"><h3>Other Notable Matches</h3>' +
+        '<p class="cap">High-scoring locations not currently tied to an AI+Plus account.</p>';
+      other.forEach(function (o) {
+        html += '<div class="otherrow"><span class="place">' + o.county + ', ' + o.state + '</span>' +
+          '<span class="score"><span class="flscore-cap">FastLocations Score</span>' +
+          '<span class="flscore-val">' + o.final_score + '</span></span></div>';
+      });
+      html += '</div>';
+    }
     wrap.innerHTML = html;
     initResultsMap(data.results);
   }

@@ -195,6 +195,12 @@
   .flscore-cap { font-size: 8.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--muted-2); }
   .flscore-val { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.05; color: var(--fl-red); }
   .flmap { height: 340px; width: 100%; border: 1px solid var(--line); border-radius: 12px; margin: 4px 0 18px; overflow: hidden; }
+  .othersec { margin-top: 22px; border-top: 1px dashed var(--line); padding-top: 16px; }
+  .othersec h3 { margin: 0 0 2px; }
+  .otherrow { display: flex; justify-content: space-between; align-items: center; padding: 8px 6px 8px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-bottom: 8px; }
+  .otherrow .place { font-weight: 600; font-size: 15px; color: #3a4658; }
+  .otherrow .score { display: flex; flex-direction: column; align-items: center; background: linear-gradient(135deg,#eef3fb,#ffffff); border: 1px solid #dce6f5; border-radius: 10px; padding: 3px 12px; min-width: 92px; }
+  .otherrow .flscore-val { font-size: 20px; }
   .flpin span { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--fl-blue); color: #fff; font-weight: 700; font-size: 13px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 5px rgba(0,0,0,.4); }
   .leaflet-popup-content a { color: var(--fl-blue); font-weight: 600; }
   .subs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
@@ -449,7 +455,7 @@
     <p class="section-sub">Set the relative importance of each factor. These weights drive how candidates are ranked.</p>
     <div class="weights-note">Drag to set priority. The values normalize to 100% automatically - you don't have to make them add up yourself.</div>
     <div id="weights">
-      <div class="weight-row"><span class="wlabel">Workforce<span class="wdesc">Labor availability, skills &amp; critical thinking</span></span><input type="range" data-w="workforce" min="0" max="100" value="18" /><span class="wval">18%</span></div>
+      <div class="weight-row"><span class="wlabel">Workforce<span class="wdesc">Labor availability, skills &amp; hiring capacity</span></span><input type="range" data-w="workforce" min="0" max="100" value="18" /><span class="wval">18%</span></div>
       <div class="weight-row"><span class="wlabel">Cost<span class="wdesc">Wages &amp; cost of living</span></span><input type="range" data-w="cost" min="0" max="100" value="20" /><span class="wval">20%</span></div>
       <div class="weight-row"><span class="wlabel">Real estate<span class="wdesc">Property-tax burden</span></span><input type="range" data-w="real_estate" min="0" max="100" value="15" /><span class="wval">15%</span></div>
       <div class="weight-row"><span class="wlabel">Incentives<span class="wdesc">Program breadth &amp; match to your priorities</span></span><input type="range" data-w="incentives" min="0" max="100" value="10" /><span class="wval">10%</span></div>
