@@ -286,7 +286,7 @@
       }
       html += '<div class="result">' +
         '<div class="rhead"><span class="rank">' + (i + 1) + '</span>' +
-        '<span class="place">' + r.county + ', ' + r.state + '</span>' +
+        '<span class="place">' + r.county + ', ' + r.state + (r.msa ? ' <span class="msa">(' + r.msa + ' MSA)</span>' : '') + '</span>' +
         '<span class="score"><span class="flscore-cap">FastLocations Score</span><span class="flscore-val">' + r.final_score + '</span></span></div>' +
         '<div class="subs">' + chips + '</div>' +
         (r.rationale ? '<p class="rationale">' + r.rationale + '</p>' : '') +
@@ -298,7 +298,7 @@
       html += '<div class="othersec"><h3>Other Notable Matches</h3>' +
         '<p class="cap">High-scoring locations not currently tied to an AI+Plus account.</p>';
       other.forEach(function (o) {
-        html += '<div class="otherrow"><span class="place">' + o.county + ', ' + o.state + '</span>' +
+        html += '<div class="otherrow"><span class="place">' + o.county + ', ' + o.state + (o.msa ? ' <span class="msa">(' + o.msa + ' MSA)</span>' : '') + '</span>' +
           '<span class="score"><span class="flscore-cap">FastLocations Score</span>' +
           '<span class="flscore-val">' + o.final_score + '</span></span></div>';
       });

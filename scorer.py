@@ -70,6 +70,8 @@ except FileNotFoundError: INFRA_GRADES={}
 GRADE_PTS={"A+":4.3,"A":4.0,"A-":3.7,"B+":3.3,"B":3.0,"B-":2.7,"C+":2.3,"C":2.0,"C-":1.7,"D+":1.3,"D":1.0,"D-":0.7,"F":0.0}
 try: PLACES=_load("us_places.json")                # "ST|normname" -> [lat,lon]
 except FileNotFoundError: PLACES={}
+try: MSA_MAP=_load("fips_to_msa.json")             # US county FIPS -> Metropolitan Statistical Area name
+except FileNotFoundError: MSA_MAP={}
 try: CA_PLACES=_load("ca_places.json")             # CA "PROV|normname" and bare "normname" -> [lat,lon]
 except FileNotFoundError: CA_PLACES={}
 import re as _re, unicodedata as _ud
@@ -435,7 +437,7 @@ def run(criteria,top=10):
             final=min(round(base+(total-base)*rel+bonus+cov,2),100)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
-                        "lat":d.get("lat"),"lon":d.get("lon"),
+                        "lat":d.get("lat"),"lon":d.get("lon"),"msa":(MSA_MAP.get(f) if g=="US" else None),
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,"coverage_bonus":cov,
                         "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":edos})
@@ -453,7 +455,7 @@ def run(criteria,top=10):
     top_results=(primary+extra)[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
-                    "final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
+                    "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
             "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
             "dimensions_pending_data":[],
