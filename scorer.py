@@ -434,7 +434,11 @@ def run(criteria,top=10):
         if total is not None:
             pop=d.get("TOTPOP_CY") or 0
             rel=pop/(pop+SCALE_DAMP_K)
-            final=min(round(base+(total-base)*rel+bonus+cov,2),100)
+            damped=base+(total-base)*rel
+            # Apply preferred + coverage bonuses to the REMAINING headroom, not as flat points, so a
+            # near-100 score can't clamp (which would tie the top matches at 100 and hide the real
+            # ordering). At typical scores this still adds ~the same points; near the top it tapers.
+            final=round(damped+(100-damped)*min((bonus+cov)/40.0,1.0),2)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),"msa":(MSA_MAP.get(f) if g=="US" else None),
