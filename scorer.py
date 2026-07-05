@@ -450,8 +450,12 @@ def run(criteria,top=10):
         cov=COVERAGE_BONUS.get(edos[0]["category"],0) if edos else 0   # local/regional coverage over-index
         rel=None; final=None
         if total is not None:
-            pop=d.get("TOTPOP_CY") or 0
-            rel=pop/(pop+SCALE_DAMP_K)
+            # Reliability from the county's MARKET reach (regional catchment), not just its own
+            # population. A small county inside a big metro (Arlington DC, Nassau NYC, a NJ suburb)
+            # is a reliable, deep market and must not be damped like a thin rural county -- only
+            # genuinely isolated small markets (catchment ~ own pop) get shrunk toward the mean.
+            mkt=d.get("catchment_pop") or d.get("TOTPOP_CY") or 0
+            rel=mkt/(mkt+SCALE_DAMP_K)
             damped=base+(total-base)*rel
             # Apply preferred + coverage bonuses to the REMAINING headroom, not as flat points, so a
             # near-100 score can't clamp (which would tie the top matches at 100 and hide the real
