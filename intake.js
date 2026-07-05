@@ -179,7 +179,6 @@
   function validate(c) {
     const errs = [];
     if (!c.project.project_name) errs.push("Add a project name.");
-    if (c.workforce.headcount.initial == null) errs.push("Add a starting headcount - labor matching needs it.");
     const conflict = c.geography.required_regions.filter(r => c.geography.excluded_regions.includes(r));
     if (conflict.length) errs.push("A region is in both Required and Excluded: " + conflict.join(", "));
     return errs;

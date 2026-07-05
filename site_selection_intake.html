@@ -94,6 +94,9 @@
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 20px; }
   .full { grid-column: 1 / -1; }
   .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  /* In multi-column rows, reserve two lines for labels so a wrapping label doesn't push its input
+     out of alignment with its neighbours; the input sits at the bottom of the label block. */
+  .grid-3 .field > label:first-child { min-height: 2.7em; margin-bottom: auto; }
   label { font-size: 13px; font-weight: 600; color: #3a4658; }
   label .opt { font-weight: 400; color: #9aa6b5; font-size: 12px; }
   label .req { color: var(--fl-red); font-weight: 700; margin-left: 1px; }
@@ -311,7 +314,7 @@
     <div class="section-head"><div class="section-num">3</div><h2>Workforce</h2><span class="badge scored">Screens &amp; scores</span></div>
     <p class="section-sub">Headcount, skills, and wage expectations drive the labor match.</p>
     <div class="grid">
-      <div class="field"><label>Headcount at start <span class="req">*</span></label><input type="number" name="hc_initial" min="0" placeholder="e.g. 300" /></div>
+      <div class="field"><label>Headcount at start <span class="opt">(optional)</span></label><input type="number" name="hc_initial" min="0" placeholder="e.g. 300" /></div>
       <div class="field"><label>Headcount by year 5 <span class="opt">(optional)</span></label><input type="number" name="hc_year5" min="0" placeholder="e.g. 550" /></div>
       <div class="field"><label>Shift pattern</label>
         <select name="shift">
