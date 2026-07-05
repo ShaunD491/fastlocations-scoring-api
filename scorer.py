@@ -380,8 +380,17 @@ def run(criteria,top=10):
     w={**DEFAULT_WEIGHTS,**(criteria.get("weights") or {})}
     geo=criteria.get("geography") or {}; demo=criteria.get("demographics") or {}; infra=criteria.get("infrastructure") or {}
     countries=set(geo.get("countries") or ["US","CA"])
-    cands=[f for f in ALLFEAT if (("US" in countries and gsys(ALLFEAT[f])=="US") or
-                                  ("CA" in countries and gsys(ALLFEAT[f])=="CA"))]
+    refset=[f for f in ALLFEAT if (("US" in countries and gsys(ALLFEAT[f])=="US") or
+                                   ("CA" in countries and gsys(ALLFEAT[f])=="CA"))]
+    # NATIONAL ANCHOR: score every dimension against the WHOLE selected-country set, independent of
+    # the query's region / proximity / threshold filters. So a county's sub-scores and FastLocations
+    # Score mean the same thing in a nationwide search and in a "Texas only" search -- the number is
+    # its standing against the country, not just against the other counties that passed the filter.
+    sub={dim:score_dimension(refset,ex,criteria) for dim,ex in (
+            ("workforce",m_workforce),("demographics",m_demographics),("logistics",m_logistics),
+            ("incentives",m_incentives),("infrastructure",m_infrastructure),("real_estate",m_real_estate),
+            ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability))}
+    cands=list(refset)
     trace={"candidates_start":len(cands)}
     if geo.get("required_regions"):
         rs=set(geo["required_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in rs]
@@ -419,17 +428,6 @@ def run(criteria,top=10):
     trace["candidates_with_customer_edo"]=len(served)
     if not cands: return {"trace":trace,"results":[],"other_notable":[],"note":"no candidates passed filters"}
 
-    sub={"workforce":score_dimension(cands,m_workforce,criteria),
-         "demographics":score_dimension(cands,m_demographics,criteria),
-         "logistics":score_dimension(cands,m_logistics,criteria),
-         "incentives":score_dimension(cands,m_incentives,criteria),
-         "infrastructure":score_dimension(cands,m_infrastructure,criteria),
-         "real_estate":score_dimension(cands,m_real_estate,criteria),
-         "cost":score_dimension(cands,m_cost,criteria),
-         "safety":score_dimension(cands,m_safety,criteria),
-         "market_size":score_dimension(cands,m_market_size,criteria),
-         "livability":score_dimension(cands,m_livability,criteria)}
-
     pref=set(geo.get("preferred_regions") or []); results=[]
     # pass 1: raw weighted totals
     tmp=[]
@@ -443,8 +441,8 @@ def run(criteria,top=10):
         tw=sum(avail.values())
         total=round(sum(scores[dim]*wf[dim] for dim in avail)/tw,2) if tw else None
         tmp.append((f,d,g,scores,total))
-    tots=[t for _,_,_,_,t in tmp if t is not None]
-    base=round(sum(tots)/len(tots),2) if tots else 50.0   # shrink target = candidate-set mean
+    base=50.0   # damping shrink target = fixed national center (percentile scores average to ~50),
+                # not the filtered-set mean, so scores stay absolute/comparable across queries.
     # pass 2: small-county reliability damping, then undamped preferred-region bonus
     for f,d,g,scores,total in tmp:
         bonus=8 if d["ST_ABBREV"] in pref else 0
