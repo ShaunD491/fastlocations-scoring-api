@@ -55,6 +55,12 @@ try:                                               # drought snapshot: percent o
         if _k in _DRT: _v["not_in_drought"]=_DRT[_k]
 except FileNotFoundError:
     pass
+try:                                               # chronic groundwater depletion flag (curated worst-case counties)
+    _GW=_load("county_groundwater.json")           # fips -> 1 (aquifer overdraft / depletion risk)
+    for _k in _GW:
+        if _k in FEAT: FEAT[_k]["gw_depleted"]=True
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -338,9 +344,11 @@ def m_infrastructure(f,crit):
     if ci.get("renewable") and f.get("renew_share") is not None:
         out["renewable_share"]=f["renew_share"]
     # water availability only counts when the project flags drought sensitivity (opt-in): the drought
-    # feed is a point-in-time snapshot, so it never distorts a search that didn't ask for it.
-    if ci.get("drought") and f.get("not_in_drought") is not None:
-        out["water_resilience"]=f["not_in_drought"]
+    # feed is a point-in-time snapshot, so it never distorts a search that didn't ask for it. When
+    # opted in, we score BOTH current surface drought and chronic groundwater (aquifer) depletion.
+    if ci.get("drought"):
+        if f.get("not_in_drought") is not None: out["water_resilience"]=f["not_in_drought"]
+        out["groundwater_ok"]=0.0 if f.get("gw_depleted") else 100.0
     return out or None
 
 def m_cost(f,crit):
@@ -446,8 +454,8 @@ def run(criteria,top=10):
     rtw=(criteria.get("workforce") or {}).get("right_to_work")   # None | "preferred" | "required"
     if rtw=="required":
         cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in RTW_STATES]
-    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # majority of county not in drought
-        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50]
+    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # majority not in drought AND no chronic depletion
+        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50 and not ALLFEAT[f].get("gw_depleted")]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):
