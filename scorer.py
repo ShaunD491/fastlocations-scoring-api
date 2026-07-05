@@ -61,6 +61,13 @@ try:                                               # chronic groundwater depleti
         if _k in FEAT: FEAT[_k]["gw_depleted"]=True
 except FileNotFoundError:
     pass
+try:                                               # USGS well trends: share of monitored wells with declining groundwater (2000-2020)
+    _GWT=_load("county_groundwater_trend.json")    # fips -> {wells, pct_declining}
+    for _k,_v in FEAT.items():
+        _t=_GWT.get(_k)
+        if _t: _v["gw_pct_declining"]=_t.get("pct_declining")
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -348,7 +355,9 @@ def m_infrastructure(f,crit):
     # opted in, we score BOTH current surface drought and chronic groundwater (aquifer) depletion.
     if ci.get("drought"):
         if f.get("not_in_drought") is not None: out["water_resilience"]=f["not_in_drought"]
-        out["groundwater_ok"]=0.0 if f.get("gw_depleted") else 100.0
+        pd=f.get("gw_pct_declining")               # graded: fewer wells declining = healthier aquifer
+        if pd is not None: out["groundwater_health"]=100.0-pd
+        elif f.get("gw_depleted"): out["groundwater_health"]=0.0   # curated hotspot fallback where no wells
     return out or None
 
 def m_cost(f,crit):
@@ -454,8 +463,10 @@ def run(criteria,top=10):
     rtw=(criteria.get("workforce") or {}).get("right_to_work")   # None | "preferred" | "required"
     if rtw=="required":
         cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in RTW_STATES]
-    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # majority not in drought AND no chronic depletion
-        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50 and not ALLFEAT[f].get("gw_depleted")]
+    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # not in drought, not a depletion hotspot, most wells not declining
+        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50
+               and not ALLFEAT[f].get("gw_depleted")
+               and (ALLFEAT[f].get("gw_pct_declining") or 0)<=66]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):
