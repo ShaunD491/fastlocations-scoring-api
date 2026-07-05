@@ -34,6 +34,21 @@ try:                                               # regional market catchment (
         if _k in _USC: _v["catchment_pop"]=_USC[_k]
 except FileNotFoundError:
     pass
+try:                                               # ACS workforce availability + hours (County_1.csv)
+    _WKF=_load("county_workforce.json")            # fips -> {mean_hours, pct_nilf, recruitable, civ_lf, unemp_n}
+    for _k,_v in FEAT.items():
+        _wk=_WKF.get(_k)
+        if _wk: _v["mean_hours"]=_wk.get("mean_hours"); _v["pct_nilf"]=_wk.get("pct_nilf")
+        if _wk: _v["recruitable"]=_wk.get("recruitable"); _v["civ_lf"]=_wk.get("civ_lf")
+except FileNotFoundError:
+    pass
+try:                                               # generation capacity within ~60mi (power plants >=100MW)
+    _PWR=_load("county_power.json")                # fips -> {power_mw, renew_mw, renew_share}
+    for _k,_v in FEAT.items():
+        _pw=_PWR.get(_k)
+        if _pw: _v["power_mw"]=_pw.get("power_mw"); _v["renew_share"]=_pw.get("renew_share")
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -92,6 +107,9 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 _CA_PROV={"ON","QC","BC","AB","MB","SK","NS","NB","NL","PE","NT","YT","NU"}
+# Right-to-work states (26, current 2025 -- Michigan repealed its law Feb 2024 and is NOT included).
+RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV","NC","ND",
+            "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
 DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.15,
@@ -205,7 +223,9 @@ def m_demographics(f,crit):
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
-    need=((crit.get("workforce") or {}).get("headcount") or {}).get("initial")
+    wfc=(crit.get("workforce") or {})
+    need=(wfc.get("headcount") or {}).get("initial")
+    shift=wfc.get("shift_pattern")
     if gsys(f)=="CA":                              # StatCan: unemployment (availability) + staffability
         une=f.get("unemployment"); lf=f.get("labour_force"); pop=f.get("TOTPOP_CY")
         staff=None
@@ -216,6 +236,7 @@ def m_workforce(f,crit):
             if parts: staff=min(min(parts),1.0)
         return {"labor_availability":(-une if une is not None else None),"staffability":staff}
     une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
+    recruit=f.get("recruitable"); civlf=f.get("civ_lf")
     # Staffability: can this market realistically supply the start-up headcount?
     # Factors BOTH total population depth and labor-force adequacy vs. the need,
     # each as a sufficiency ratio capped at 1.0 -- beyond a comfortable supply,
@@ -226,11 +247,20 @@ def m_workforce(f,crit):
     staff=None
     if need and need>0:
         parts=[]
-        if lf  is not None: parts.append((lf /need)/50.0)    # labor force ~50x need = ample supply
-        if pop is not None: parts.append((pop/need)/100.0)   # population  ~100x need = ample draw
-        if parts: staff=min(min(parts),1.0)                  # binding constraint, capped at "ample"
+        if lf      is not None: parts.append((lf     /need)/50.0)   # labor force ~50x need = ample supply
+        if pop     is not None: parts.append((pop    /need)/100.0)  # population  ~100x need = ample draw
+        if recruit is not None: parts.append((recruit/need)/30.0)   # AVAILABLE pool (unemployed + latent) ~30x need = ample to hire
+        if parts: staff=min(min(parts),1.0)                          # binding constraint, capped at "ample"
+    # employee availability: recruitable slack (unemployed + a share of not-in-labor-force) relative
+    # to the existing workforce -- how much headroom there is to hire without poaching.
+    avail=(recruit/civlf if (recruit is not None and civlf) else None)
+    # shift fit: mean usual hours worked -- only counts when the project runs multiple / continuous
+    # shifts (a full-time, shift-accustomed workforce), otherwise it drops out.
+    shift_fit=f.get("mean_hours") if shift in ("two","three","continuous") else None
     return {"labor_availability":(-une if une is not None else None),
             "staffability":staff,
+            "employee_availability":avail,
+            "shift_fit":shift_fit,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
             "critical_thinking":f.get("critical_thinking")}   # weighted 2x via METRIC_WEIGHTS
 def m_logistics(f,crit):
@@ -291,10 +321,16 @@ def m_infrastructure(f,crit):
     if gsys(f)=="CA":                              # CMA = highest, mid everywhere else (per provided rule)
         p=f.get("ca_infra_pts")
         return {"infra_grade":p} if p is not None else None
-    g=INFRA_GRADES.get(f.get("ST_ABBREV"))
-    pts=GRADE_PTS.get(g) if g else None
-    if pts is None: return None
-    return {"infra_grade":pts}
+    # US: blend the ASCE STATE grade with LOCAL power-generation capacity (plants >=100MW within
+    # ~60mi) so infrastructure is county-specific, not just a flat state value. If the project
+    # flags renewable/ESG power as a priority, the local renewable share also counts.
+    g=INFRA_GRADES.get(f.get("ST_ABBREV")); pts=GRADE_PTS.get(g) if g else None
+    out={}
+    if pts is not None: out["infra_grade"]=pts
+    if f.get("power_mw") is not None: out["power_capacity"]=f["power_mw"]
+    if (crit.get("infrastructure") or {}).get("renewable") and f.get("renew_share") is not None:
+        out["renewable_share"]=f["renew_share"]
+    return out or None
 
 def m_cost(f,crit):
     if gsys(f)=="CA":                              # StatCan: median household income as the labor-cost proxy
@@ -396,6 +432,9 @@ def run(criteria,top=10):
         rs=set(geo["required_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in rs]
     if geo.get("excluded_regions"):
         ex=set(geo["excluded_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] not in ex]
+    rtw=(criteria.get("workforce") or {}).get("right_to_work")   # None | "preferred" | "required"
+    if rtw=="required":
+        cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in RTW_STATES]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):
@@ -416,9 +455,14 @@ def run(criteria,top=10):
         return bool(d.get("infra") and d["infra"]["airports"]["total"])
     def ok(f):
         d=ALLFEAT[f]
-        # filters only apply where the datum exists -> absent data never excludes (no penalty)
-        if demo.get("min_population") and d.get("TOTPOP_CY") is not None and d["TOTPOP_CY"]<demo["min_population"]: return False
-        if demo.get("min_labor_force") and d.get("CIVLBFR_CY") is not None and d["CIVLBFR_CY"]<demo["min_labor_force"]: return False
+        # filters only apply where the datum exists -> absent data never excludes (no penalty).
+        # min population / labor force are "within the labor-draw radius": tested against the regional
+        # CATCHMENT (population reachable ~65 mi), not just the county's own headcount.
+        reg_pop=d.get("catchment_pop") or d.get("TOTPOP_CY")
+        part=(d["CIVLBFR_CY"]/d["TOTPOP_CY"] if (d.get("CIVLBFR_CY") is not None and d.get("TOTPOP_CY")) else 0.48)
+        reg_lf=(reg_pop*part if reg_pop is not None else None)
+        if demo.get("min_population") and reg_pop is not None and reg_pop<demo["min_population"]: return False
+        if demo.get("min_labor_force") and reg_lf is not None and reg_lf<demo["min_labor_force"]: return False
         if infra.get("port_required") and not has_port(d): return False
         if infra.get("commercial_airport_max_miles") is not None and not has_airport(d): return False
         return True
@@ -428,7 +472,9 @@ def run(criteria,top=10):
     trace["candidates_with_customer_edo"]=len(served)
     if not cands: return {"trace":trace,"results":[],"other_notable":[],"note":"no candidates passed filters"}
 
-    pref=set(geo.get("preferred_regions") or []); results=[]
+    pref=set(geo.get("preferred_regions") or [])
+    if rtw=="preferred": pref|=RTW_STATES     # right-to-work states get the same +8 preference bonus
+    results=[]
     # pass 1: raw weighted totals
     tmp=[]
     for f in cands:

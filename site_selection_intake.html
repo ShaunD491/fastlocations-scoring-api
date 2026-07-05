@@ -83,6 +83,11 @@
   }
   .section-head h2 { font-size: 23px; margin: 0; }
   .section-sub { color: var(--muted-2); font-size: 13.5px; margin: 2px 0 22px 48px; }
+  .badge { margin-left: auto; align-self: center; font-size: 10.5px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; }
+  .badge.scored { background: #e7f2ea; color: #1f7a44; border: 1px solid #bfe0cb; }
+  .badge.context { background: #eef1f6; color: #5a6b86; border: 1px solid #d7deea; }
+  .ctx-head { margin: 20px 0 12px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: 13px; font-weight: 700; color: #5a6b86; }
+  .ctx-head .opt { font-weight: 400; }
 
   /* ---- Fields ---- */
   .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 20px; }
@@ -272,14 +277,14 @@
         </div>
       </div>
       <div class="field full"><label>Project description &amp; anything the fields below don't capture</label>
-        <textarea name="notes" placeholder="Free text. This is also read by the AI parser, so capture nuance here - e.g. 'must be near an OEM assembly plant', 'union environment acceptable', 'ESG/renewable power a priority'."></textarea>
+        <textarea name="notes" placeholder="Free text - context for our team and, if you submit, the economic development organization. Capture anything the fields don't - e.g. 'must be near an OEM assembly plant', 'prefer a build-to-suit'. (Note: this box is not read by the scoring algorithm; use the fields and priorities below for what drives the match.)"></textarea>
       </div>
     </div>
   </section>
 
   <!-- 2. REAL ESTATE -->
   <section class="card">
-    <div class="section-head"><div class="section-num">2</div><h2>Real Estate</h2></div>
+    <div class="section-head"><div class="section-num">2</div><h2>Real Estate</h2><span class="badge context">Context</span></div>
     <p class="section-sub">What you're looking for on the ground. Leave a bound blank for "no limit".</p>
     <div class="grid">
       <div class="field"><label>Facility type</label>
@@ -303,7 +308,7 @@
 
   <!-- 3. WORKFORCE -->
   <section class="card">
-    <div class="section-head"><div class="section-num">3</div><h2>Workforce</h2></div>
+    <div class="section-head"><div class="section-num">3</div><h2>Workforce</h2><span class="badge scored">Screens &amp; scores</span></div>
     <p class="section-sub">Headcount, skills, and wage expectations drive the labor match.</p>
     <div class="grid">
       <div class="field"><label>Headcount at start <span class="req">*</span></label><input type="number" name="hc_initial" min="0" placeholder="e.g. 300" /></div>
@@ -314,6 +319,13 @@
           <option value="two">Two shifts</option>
           <option value="three">Three shifts</option>
           <option value="continuous">Continuous (24/7)</option>
+        </select>
+      </div>
+      <div class="field"><label>Labor environment <span class="opt">(right-to-work)</span></label>
+        <select name="right_to_work">
+          <option value="">No preference</option>
+          <option value="preferred">Prefer right-to-work states</option>
+          <option value="required">Right-to-work states only</option>
         </select>
       </div>
       <div class="field"><label>Target wage <span class="opt">(optional)</span></label>
@@ -345,8 +357,22 @@
 
   <!-- 4. INFRASTRUCTURE -->
   <section class="card">
-    <div class="section-head"><div class="section-num">4</div><h2>Infrastructure & Utilities</h2></div>
-    <p class="section-sub">Often the deciding factor - and the data most likely to be thin. Specify only what matters.</p>
+    <div class="section-head"><div class="section-num">4</div><h2>Infrastructure & Utilities</h2><span class="badge scored">Screens &amp; scores</span></div>
+    <p class="section-sub">Infrastructure is scored from each county's state grade plus nearby power generation. The first row below screens or scores; the utility figures under it are passed to the EDO as context.</p>
+    <div class="grid-3">
+      <div class="field"><label>Commercial airport <span class="opt">(within max <span class="unit">miles</span>)</span></label><input type="number" name="air_miles" min="0" placeholder="e.g. 60" /></div>
+      <div class="field"><label>Renewable / ESG power</label>
+        <select name="renewable">
+          <option value="">No preference</option>
+          <option value="preferred">Prefer greener grids</option>
+          <option value="required">Renewable capacity required</option>
+        </select>
+      </div>
+      <div class="field" style="justify-content:flex-end">
+        <div class="checkrow" style="margin-bottom:0"><input type="checkbox" id="port" name="port" /><label for="port">Port access required</label></div>
+      </div>
+    </div>
+    <div class="ctx-head">Project context <span class="opt">- shared with the EDO on submit, not used to screen or rank</span></div>
     <div class="grid-3">
       <div class="field"><label>Power demand <span class="opt">(MW)</span></label><input type="number" name="power_mw" min="0" step="0.1" placeholder="e.g. 15" /></div>
       <div class="field"><label>Power reliability</label>
@@ -363,17 +389,15 @@
         <select name="rail"><option value="none">Not needed</option><option value="served">Rail-served site</option><option value="adjacent">Adjacent to line</option></select>
       </div>
       <div class="field"><label>Highway access <span class="opt">(max <span class="unit">miles</span>)</span></label><input type="number" name="hwy_miles" min="0" placeholder="e.g. 5" /></div>
-      <div class="field"><label>Commercial airport <span class="opt">(max <span class="unit">miles</span>)</span></label><input type="number" name="air_miles" min="0" placeholder="e.g. 60" /></div>
       <div class="field" style="justify-content:flex-end">
-        <div class="checkrow" style="margin-bottom:4px"><input type="checkbox" id="gas" name="gas" /><label for="gas">Natural gas required</label></div>
-        <div class="checkrow" style="margin-bottom:0"><input type="checkbox" id="port" name="port" /><label for="port">Port access required</label></div>
+        <div class="checkrow" style="margin-bottom:0"><input type="checkbox" id="gas" name="gas" /><label for="gas">Natural gas required</label></div>
       </div>
     </div>
   </section>
 
   <!-- 5. MARKET / DEMOGRAPHICS -->
   <section class="card">
-    <div class="section-head"><div class="section-num">5</div><h2>Market & Demographics</h2></div>
+    <div class="section-head"><div class="section-num">5</div><h2>Market & Demographics</h2><span class="badge scored">Screens &amp; scores</span></div>
     <p class="section-sub">Defines the labor draw and community thresholds to screen on.</p>
     <div class="grid">
       <div class="field"><label>Labor draw radius <span class="opt">(<span class="unit">miles</span>)</span></label><input type="number" name="draw_radius" min="0" placeholder="e.g. 45" /></div>
@@ -392,7 +416,7 @@
 
   <!-- 6. INCENTIVES -->
   <section class="card">
-    <div class="section-head"><div class="section-num">6</div><h2>Incentives</h2></div>
+    <div class="section-head"><div class="section-num">6</div><h2>Incentives</h2><span class="badge scored">Screens &amp; scores</span></div>
     <p class="section-sub">Select in priority order - your first pick is weighted highest.</p>
     <div class="field full"><label>Incentive priorities</label>
       <div class="chips" data-group="incentives" id="incChips">
@@ -420,8 +444,8 @@
 
   <!-- 7. GEOGRAPHY -->
   <section class="card">
-    <div class="section-head"><div class="section-num">7</div><h2>Geography</h2></div>
-    <p class="section-sub">Required = only score these states &middot; Preferred = rank these higher &middot; Excluded = remove these states. The list matches your selected country. Hold Ctrl (Cmd on Mac) to pick several.</p>
+    <div class="section-head"><div class="section-num">7</div><h2>Geography</h2><span class="badge scored">Screens &amp; scores</span></div>
+    <p class="section-sub">Required = only score these states/provinces &middot; Preferred = rank these higher &middot; Excluded = remove these. The list matches your selected country. Click a box to pick several.</p>
     <div class="grid">
       <div class="field"><label>Country <span class="req">*</span> <span class="opt">(choose one)</span></label>
         <div class="chips" data-group="countries">
@@ -442,7 +466,7 @@
 
   <!-- 8. BUDGET -->
   <section class="card">
-    <div class="section-head"><div class="section-num">8</div><h2>Budget</h2></div>
+    <div class="section-head"><div class="section-num">8</div><h2>Budget</h2><span class="badge context">Context</span></div>
     <p class="section-sub">Optional, but sharpens the incentive and real-estate matching.</p>
     <div class="grid">
       <div class="field"><label>Capital investment <span class="opt">(USD)</span></label><input type="number" name="capex" min="0" placeholder="e.g. 220000000" /></div>
@@ -460,9 +484,9 @@
       <div class="weight-row"><span class="wlabel">Cost<span class="wdesc">Wages &amp; cost of living</span></span><input type="range" data-w="cost" min="0" max="100" value="20" /><span class="wval">20%</span></div>
       <div class="weight-row"><span class="wlabel">Real estate<span class="wdesc">Property-tax burden</span></span><input type="range" data-w="real_estate" min="0" max="100" value="15" /><span class="wval">15%</span></div>
       <div class="weight-row"><span class="wlabel">Incentives<span class="wdesc">Program breadth &amp; match to your priorities</span></span><input type="range" data-w="incentives" min="0" max="100" value="10" /><span class="wval">10%</span></div>
-      <div class="weight-row"><span class="wlabel">Infrastructure<span class="wdesc">Infrastructure quality (ASCE state grade)</span></span><input type="range" data-w="infrastructure" min="0" max="100" value="8" /><span class="wval">8%</span></div>
+      <div class="weight-row"><span class="wlabel">Infrastructure<span class="wdesc">State grade + local power generation</span></span><input type="range" data-w="infrastructure" min="0" max="100" value="8" /><span class="wval">8%</span></div>
       <div class="weight-row"><span class="wlabel">Logistics<span class="wdesc">Highway, airport, port &amp; commute access</span></span><input type="range" data-w="logistics" min="0" max="100" value="8" /><span class="wval">8%</span></div>
-      <div class="weight-row"><span class="wlabel">Market size<span class="wdesc">Population scale of the local market</span></span><input type="range" data-w="market_size" min="0" max="100" value="6" /><span class="wval">6%</span></div>
+      <div class="weight-row"><span class="wlabel">Market size<span class="wdesc">Regional market reach (metro catchment)</span></span><input type="range" data-w="market_size" min="0" max="100" value="6" /><span class="wval">6%</span></div>
       <div class="weight-row"><span class="wlabel">Livability<span class="wdesc">Community health &amp; quality of life</span></span><input type="range" data-w="livability" min="0" max="100" value="5" /><span class="wval">5%</span></div>
       <div class="weight-row"><span class="wlabel">Safety<span class="wdesc">Public safety, from local crime rates</span></span><input type="range" data-w="safety" min="0" max="100" value="5" /><span class="wval">5%</span></div>
       <div class="weight-row"><span class="wlabel">Demographics<span class="wdesc">Education, growth &amp; labor-force participation</span></span><input type="range" data-w="demographics" min="0" max="100" value="5" /><span class="wval">5%</span></div>

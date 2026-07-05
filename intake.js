@@ -85,6 +85,23 @@
   sliders.forEach(s => s.addEventListener('input', refreshWeights));
   refreshWeights();
 
+  // ---- Use-type presets: picking a use type re-sets the weight sliders to a sensible default ----
+  const USE_PRESETS = {
+    manufacturing:          { workforce:22, cost:20, real_estate:12, incentives:12, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:5 },
+    warehouse_distribution: { workforce:14, cost:16, real_estate:14, incentives:8,  infrastructure:6,  logistics:24, market_size:8,  livability:3, safety:4, demographics:3 },
+    data_center:            { workforce:8,  cost:16, real_estate:10, incentives:12, infrastructure:26, logistics:6,  market_size:8,  livability:3, safety:4, demographics:7 },
+    office:                 { workforce:20, cost:14, real_estate:12, incentives:6,  infrastructure:6,  logistics:6,  market_size:12, livability:9, safety:7, demographics:8 },
+    r_and_d:                { workforce:24, cost:12, real_estate:10, incentives:10, infrastructure:8,  logistics:5,  market_size:8,  livability:8, safety:5, demographics:10 },
+    flex:                   { workforce:18, cost:18, real_estate:15, incentives:10, infrastructure:8,  logistics:10, market_size:6,  livability:5, safety:5, demographics:5 },
+    mixed:                  { workforce:18, cost:20, real_estate:15, incentives:10, infrastructure:8,  logistics:8,  market_size:6,  livability:5, safety:5, demographics:5 }
+  };
+  const useSel = $('use_primary');
+  if (useSel) useSel.addEventListener('change', function () {
+    const p = USE_PRESETS[useSel.value]; if (!p) return;
+    sliders.forEach(function (s) { if (p[s.dataset.w] != null) s.value = p[s.dataset.w]; });
+    refreshWeights();
+  });
+
   function normalizedWeights() {
     const raw = sliders.map(s => Number(s.value));
     const sum = raw.reduce((a, b) => a + b, 0) || 1;
@@ -121,6 +138,7 @@
         headcount: { initial: num('hc_initial'), year_5: num('hc_year5') },
         skill_profile: checkedVals('skills'),
         shift_pattern: $('shift').value,
+        right_to_work: str('right_to_work'),
         target_wage: {
           value: num('wage_value'), basis: $('wage_basis').value, relation: "at_or_below_market"
         }
@@ -132,7 +150,8 @@
         rail: $('rail').value, broadband_min_gbps: num('broadband_gbps'),
         highway_access_max_miles: num('hwy_miles'),
         commercial_airport_max_miles: num('air_miles'),
-        port_required: $('port').checked
+        port_required: $('port').checked,
+        renewable: str('renewable')
       },
       demographics: {
         labor_draw_radius_miles: num('draw_radius'),
