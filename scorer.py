@@ -49,6 +49,12 @@ try:                                               # generation capacity within 
         if _pw: _v["power_mw"]=_pw.get("power_mw"); _v["renew_share"]=_pw.get("renew_share")
 except FileNotFoundError:
     pass
+try:                                               # drought snapshot: percent of county area NOT in drought
+    _DRT=_load("county_drought.json")              # fips -> pct_not_in_drought (point-in-time; refresh periodically)
+    for _k,_v in FEAT.items():
+        if _k in _DRT: _v["not_in_drought"]=_DRT[_k]
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -324,12 +330,17 @@ def m_infrastructure(f,crit):
     # US: blend the ASCE STATE grade with LOCAL power-generation capacity (plants >=100MW within
     # ~60mi) so infrastructure is county-specific, not just a flat state value. If the project
     # flags renewable/ESG power as a priority, the local renewable share also counts.
+    ci=(crit.get("infrastructure") or {})
     g=INFRA_GRADES.get(f.get("ST_ABBREV")); pts=GRADE_PTS.get(g) if g else None
     out={}
     if pts is not None: out["infra_grade"]=pts
     if f.get("power_mw") is not None: out["power_capacity"]=f["power_mw"]
-    if (crit.get("infrastructure") or {}).get("renewable") and f.get("renew_share") is not None:
+    if ci.get("renewable") and f.get("renew_share") is not None:
         out["renewable_share"]=f["renew_share"]
+    # water availability only counts when the project flags drought sensitivity (opt-in): the drought
+    # feed is a point-in-time snapshot, so it never distorts a search that didn't ask for it.
+    if ci.get("drought") and f.get("not_in_drought") is not None:
+        out["water_resilience"]=f["not_in_drought"]
     return out or None
 
 def m_cost(f,crit):
@@ -435,6 +446,8 @@ def run(criteria,top=10):
     rtw=(criteria.get("workforce") or {}).get("right_to_work")   # None | "preferred" | "required"
     if rtw=="required":
         cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in RTW_STATES]
+    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # majority of county not in drought
+        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):

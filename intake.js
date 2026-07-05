@@ -151,7 +151,8 @@
         highway_access_max_miles: num('hwy_miles'),
         commercial_airport_max_miles: num('air_miles'),
         port_required: $('port').checked,
-        renewable: str('renewable')
+        renewable: str('renewable'),
+        drought: str('drought')
       },
       demographics: {
         labor_draw_radius_miles: num('draw_radius'),
