@@ -5,17 +5,22 @@ scorer.py — FastLocations deterministic site-matching scorer  (ProjectCriteria
 Dual-spine: ranks US counties (FIPS) and Canadian Census Divisions (CDUID), then
 rolls each up to the serving EDO customer from organizations.json.
 
-Weighted dimensions (per schema `weights`):
-  workforce      US only (labor/wage/education metrics; CA has no such data -> null)
-  demographics   US: pop/labor/education/growth ; CA: population
-  logistics      US: airports+ports ; CA: airports+ports+grid counts
-  incentives     US states + CA provinces (state/province-keyed programs)
-  infrastructure PENDING (power) -> null
-  real_estate    PENDING (sites)  -> null
+Ten weighted dimensions (percentile-ranked within the candidate set, then weighted):
+  workforce      US: unemployment, staffability, prime-age share, critical thinking ; CA: unemployment + staffability
+  demographics   US: education (2x), growth, participation ; CA: bachelor share, growth, participation
+  infrastructure US: ASCE state grade ; CA: CMA = high, mid elsewhere
+  logistics      US: airports + ports + commute ; CA: airport/port/grid counts
+  incentives     value tier (2x) + type diversity + priority match (state/province-keyed)
+  real_estate    US: property-tax rate ; CA: median dwelling value
+  cost           US: median income + wealth index ; CA: median income
+  safety         US: crime rate ; CA: StatCan Crime Severity Index
+  market_size    regional catchment population (US and CA)
+  livability     US: County Health Rankings outcomes ; CA: Numbeo most-livable cities (ranked CDs only)
 
 Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
-(weights renormalise over non-null dims, never penalise); only counties/CDs served
-by a customer EDO are ranked; sub-scores surfaced individually.
+(weights renormalise over non-null dims, never penalise). Results split into PRIMARY
+(served by a customer EDO, distinct orgs) and OTHER NOTABLE (top non-customer counties).
+Small-county reliability damping + local/regional coverage bonus applied to the final.
 """
 import json,os,sys,math,urllib.request,urllib.parse
 O=os.environ.get("FL_DATA_DIR") or os.path.dirname(os.path.abspath(__file__))
@@ -160,7 +165,17 @@ for _v in _CA_GEO:
 def pct_rank(values):
     pairs=[(k,v) for k,v in values.items() if v is not None]
     if len(pairs)<2: return {k:(50.0 if v is not None else None) for k,v in values.items()}
-    s=sorted(pairs,key=lambda x:x[1]); n=len(s); rank={k:i/(n-1)*100 for i,(k,_) in enumerate(s)}
+    s=sorted(pairs,key=lambda x:x[1]); n=len(s)
+    # AVERAGE-RANK ties: every candidate sharing a value gets the same percentile (the mean of the
+    # positions it spans), so state-broadcast dimensions (infrastructure, incentives) and other
+    # low-cardinality metrics don't get arbitrary within-tie spread from sort order.
+    rank={}; i=0
+    while i<n:
+        j=i
+        while j+1<n and s[j+1][1]==s[i][1]: j+=1
+        p=((i+j)/2.0)/(n-1)*100
+        for t in range(i,j+1): rank[s[t][0]]=p
+        i=j+1
     return {k:(round(rank[k],1) if v is not None else None) for k,v in values.items()}
 def avg(xs):
     xs=[x for x in xs if x is not None]; return round(sum(xs)/len(xs),1) if xs else None
@@ -186,8 +201,7 @@ def m_demographics(f,crit):
                 "labor_force_participation":f.get("participation")}
     pr=(crit.get("demographics") or {}).get("education_priority","none")
     pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
-    edu=edu_share(f,pr)                              # education weighted double so mature, highly-educated
-    return {"education_attainment":edu,"education_attainment2":edu,   # regions (Northeast/east coast) index up, not penalized for slow growth
+    return {"education_attainment":edu_share(f,pr),   # weighted 2x via METRIC_WEIGHTS (lifts mature, highly-educated NE/east coast)
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
 def m_workforce(f,crit):
@@ -215,11 +229,10 @@ def m_workforce(f,crit):
         if lf  is not None: parts.append((lf /need)/50.0)    # labor force ~50x need = ample supply
         if pop is not None: parts.append((pop/need)/100.0)   # population  ~100x need = ample draw
         if parts: staff=min(min(parts),1.0)                  # binding constraint, capped at "ample"
-    ct=f.get("critical_thinking")                   # weighted double (counts ~2x in the workforce score)
     return {"labor_availability":(-une if une is not None else None),
             "staffability":staff,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            "critical_thinking":ct,"critical_thinking2":ct}
+            "critical_thinking":f.get("critical_thinking")}   # weighted 2x via METRIC_WEIGHTS
 def m_logistics(f,crit):
     if gsys(f)=="CA":
         inf=f.get("infra_ca")
@@ -250,8 +263,7 @@ def m_incentives(f,crit):
     # QUALITY, not quantity: raw program count is intentionally excluded. Score reflects the value
     # tier (largest program $ advertised, weighted double), the range of incentive types offered,
     # and how well those types match the project's ranked priorities.
-    vt=rec.get("value_tier")
-    return {"incentive_value":vt,"incentive_value2":vt,
+    return {"incentive_value":rec.get("value_tier"),   # weighted 2x via METRIC_WEIGHTS
             "incentive_diversity":rec.get("type_diversity"),
             "priority_match":pf}
 
@@ -309,6 +321,14 @@ def m_real_estate(f,crit):
     if pt is None: return None
     return {"low_property_tax":-pt}
 
+# Per-metric weights WITHIN a dimension (default 1). Lets a metric count for more without the old
+# duplicate-key hack: education dominates demographics; critical thinking and value tier count 2x.
+METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0}
+def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
+    num=den=0.0
+    for v,wt in pairs:
+        if v is not None: num+=v*wt; den+=wt
+    return round(num/den,1) if den else None
 def score_dimension(cands,extract,crit):
     raws={ff:extract(ALLFEAT[ff],crit) for ff in cands}
     keys=set()
@@ -316,7 +336,7 @@ def score_dimension(cands,extract,crit):
         if r: keys|=set(r.keys())
     if not keys: return {ff:None for ff in cands}
     pcts={k:pct_rank({ff:(raws[ff].get(k) if raws[ff] else None) for ff in cands}) for k in keys}
-    return {ff:avg([pcts[k][ff] for k in keys]) for ff in cands}
+    return {ff:_wavg([(pcts[k][ff],METRIC_WEIGHTS.get(k,1.0)) for k in keys]) for ff in cands}
 
 def serving_edos(geoid,g):
     rows=[MASTER[i] for i in index_for(g).get(geoid,[]) if i in MASTER]
@@ -330,12 +350,12 @@ DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount,
             "demographics":"educational attainment, growth, and labor-force participation",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
-            "infrastructure":"infrastructure quality (ASCE state grade)",
+            "infrastructure":"infrastructure quality",
             "real_estate":"real-estate cost",
             "cost":"labor and operating cost",
             "safety":"public safety (low crime)",
-            "market_size":"market size (population scale)",
-            "livability":"livability and community health (County Health Rankings)"}
+            "market_size":"market size (regional catchment)",
+            "livability":"livability and community health"}
 def build_rationale(rank,r,pending):
     s=r["sub_scores"]
     live=sorted([(d,s[d]) for d in DIMS if s[d] is not None],key=lambda x:x[1],reverse=True)
