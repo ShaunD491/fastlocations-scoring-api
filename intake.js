@@ -283,6 +283,7 @@
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
       ' candidates passed the filters. Scored on the factors with data for the selected region.</p>' +
+      '<div class="recalibrate">Not seeing the right fit? Change any input above - your factor weightings, filters, or priorities - then choose <b>Generate matches</b> again to refine these results.</div>' +
       '<div id="flMap" class="flmap"></div>';
     data.results.forEach((r, i) => {
       const edo = r.serving_edos && r.serving_edos[0];
@@ -296,7 +297,8 @@
       const edos = r.serving_edos || [];
       const LOCAL = ['Local Development Agency', 'Chamber of Commerce', 'Port/Airport Authority', 'Megasite', 'Industrial Park'];
       const REGIONAL = ['Regional Development Agency'];
-      const STATEU = ['State Agency', 'Utility'];
+      const UTILITY = ['Utility'];
+      const STATE = ['State Agency'];
       const pick = function (cats) { for (var j = 0; j < edos.length; j++) { if (cats.indexOf(edos[j].category) >= 0) return edos[j]; } return null; };
       const edoLine = function (label, e) {
         if (!e) return '';
@@ -308,10 +310,11 @@
           : '';
         return '<div class="edoline"><span class="edolabel">' + label + ':</span> ' + name + ' <span class="cat">(' + e.category + ')</span>' + dash + '</div>';
       };
-      const local = pick(LOCAL), regional = pick(REGIONAL), stateu = pick(STATEU);
+      const local = pick(LOCAL), regional = pick(REGIONAL), utility = pick(UTILITY), state = pick(STATE);
       let edoHtml;
-      if (local || regional || stateu) {
-        edoHtml = edoLine('Best Local EDO match', local) + edoLine('Best Regional EDO match', regional) + edoLine('Best State/Utility EDO match', stateu);
+      if (local || regional || utility || state) {
+        edoHtml = edoLine('Best Local EDO match', local) + edoLine('Best Regional EDO match', regional) +
+                  edoLine('Best Utility EDO match', utility) + edoLine('Best State EDO match', state);
       } else if (edos[0]) {
         edoHtml = edoLine('Best EDO match', edos[0]);
       } else {
