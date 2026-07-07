@@ -291,15 +291,29 @@
         return '<span class="sub' + (v == null ? ' na' : '') + '">' + d.replace(/_/g, ' ') +
                ' ' + (v == null ? '-' : v) + '</span>';
       }).join('');
-      let edoHtml;
-      if (edo) {
-        const name = edo.embed_url
-          ? '<a href="' + edo.embed_url + '" target="_blank" rel="noopener"><b>' + edo.organization + '</b></a>'
-          : '<b>' + edo.organization + '</b>';
-        const dash = edo.objectid
-          ? ' &middot; <a href="https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(edo.objectid) + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>'
+      // Best serving EDO per tier (list is pre-sorted smallest-territory first, so the first match
+      // in each tier is the most specific / best for that tier).
+      const edos = r.serving_edos || [];
+      const LOCAL = ['Local Development Agency', 'Chamber of Commerce', 'Port/Airport Authority', 'Megasite', 'Industrial Park'];
+      const REGIONAL = ['Regional Development Agency'];
+      const STATEU = ['State Agency', 'Utility'];
+      const pick = function (cats) { for (var j = 0; j < edos.length; j++) { if (cats.indexOf(edos[j].category) >= 0) return edos[j]; } return null; };
+      const edoLine = function (label, e) {
+        if (!e) return '';
+        var name = e.embed_url
+          ? '<a href="' + e.embed_url + '" target="_blank" rel="noopener"><b>' + e.organization + '</b></a>'
+          : '<b>' + e.organization + '</b>';
+        var dash = e.objectid
+          ? ' &middot; <a href="https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(e.objectid) + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>'
           : '';
-        edoHtml = 'Best EDO match: ' + name + ' <span class="cat">(' + edo.category + ')</span>' + dash;
+        return '<div class="edoline"><span class="edolabel">' + label + ':</span> ' + name + ' <span class="cat">(' + e.category + ')</span>' + dash + '</div>';
+      };
+      const local = pick(LOCAL), regional = pick(REGIONAL), stateu = pick(STATEU);
+      let edoHtml;
+      if (local || regional || stateu) {
+        edoHtml = edoLine('Best Local EDO match', local) + edoLine('Best Regional EDO match', regional) + edoLine('Best State/Utility EDO match', stateu);
+      } else if (edos[0]) {
+        edoHtml = edoLine('Best EDO match', edos[0]);
       } else {
         edoHtml = '<span class="cat">No EDO customer currently serves this county</span>';
       }
