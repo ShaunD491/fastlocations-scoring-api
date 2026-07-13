@@ -113,6 +113,10 @@ try: MSA_MAP=_load("fips_to_msa.json")             # US county FIPS -> Metropoli
 except FileNotFoundError: MSA_MAP={}
 try: CA_PLACES=_load("ca_places.json")             # CA "PROV|normname" and bare "normname" -> [lat,lon]
 except FileNotFoundError: CA_PLACES={}
+try:    # EDO objectids whose territory currently has properties listed on the FastLocations dashboard.
+    _PJ=_load("orgs_with_properties.json")         # regenerated from properties/properties.js by build_property_orgs.py
+    PROPERTY_ORGS=set(str(x) for x in (_PJ.get("objectids") if isinstance(_PJ,dict) else _PJ))
+except FileNotFoundError: PROPERTY_ORGS=set()
 import re as _re, unicodedata as _ud
 def _norm(x):
     x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
@@ -146,6 +150,12 @@ CA_MARKET_WEIGHT=0.20   # Canada weights regional market access (catchment) up; 
 COVERAGE_BONUS={"Local Development Agency":10,"Chamber of Commerce":10,"Megasite":10,
                 "Industrial Park":10,"Port/Airport Authority":9,"Utility":9,
                 "Regional Development Agency":7,"State Agency":0}
+# Property-access bonus: a county whose serving EDO customer has properties listed on the
+# FastLocations dashboard (see orgs_with_properties.json, regenerated from properties/properties.js)
+# earns a lift for demonstrable, ready site availability. Applied to score HEADROOM like the other
+# bonuses, so it only meaningfully elevates already-close matches -- "good access to available
+# properties" -- and never rescues a poor fit. Moderate = on par with the preferred-region bonus.
+PROPERTY_BONUS=8
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -438,6 +448,10 @@ def build_rationale(rank,r,pending):
         out.append(f'Data for {nice} is not in the model for this location, so the score reflects only the available factors rather than penalizing those gaps.')
     edo=r["serving_edos"][0] if r["serving_edos"] else None
     if edo: out.append(f'A lead here would route to {edo["organization"]} ({edo["category"]}).')
+    if r.get("has_listed_properties"):
+        who=r.get("property_edos") or []
+        src=who[0] if who else "its serving EDO"
+        out.append(f'It also has available properties currently listed on FastLocations through {src}, indicating ready site availability, which lifts its match.')
     return " ".join(out)
 
 def run(criteria,top=10):
@@ -526,6 +540,8 @@ def run(criteria,top=10):
         bonus=8 if d["ST_ABBREV"] in pref else 0
         edos=serving_edos(f,g)
         cov=COVERAGE_BONUS.get(edos[0]["category"],0) if edos else 0   # local/regional coverage over-index
+        prop_edos=[e for e in edos if e["objectid"] in PROPERTY_ORGS]  # serving EDO(s) with live property listings
+        prop=PROPERTY_BONUS if prop_edos else 0
         rel=None; final=None
         if total is not None:
             # Reliability from the county's MARKET reach (regional catchment), not just its own
@@ -538,11 +554,13 @@ def run(criteria,top=10):
             # Apply preferred + coverage bonuses to the REMAINING headroom, not as flat points, so a
             # near-100 score can't clamp (which would tie the top matches at 100 and hide the real
             # ordering). At typical scores this still adds ~the same points; near the top it tapers.
-            final=round(damped+(100-damped)*min((bonus+cov)/40.0,1.0),2)
+            final=round(damped+(100-damped)*min((bonus+cov+prop)/40.0,1.0),2)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),"msa":(MSA_MAP.get(f) if g=="US" else None),
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,"coverage_bonus":cov,
+                        "property_bonus":prop,"has_listed_properties":bool(prop_edos),
+                        "property_edos":[e["organization"] for e in prop_edos],
                         "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":edos})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)

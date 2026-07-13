@@ -88,6 +88,28 @@ def test_shift_affects_ranking():
     b = [r["geoid"] for r in scorer.run({"geography": {"countries": ["US"]}, "workforce": {"headcount": {"initial": 500}, "shift_pattern": "continuous"}}, top=8)["results"]]
     assert a != b, "shift pattern did not affect ranking"
 
+def test_property_access_bonus():
+    # A county whose serving EDO has properties listed gets a property-access bonus that lifts (never
+    # lowers) its score and flips the has_listed_properties flag. Inject an objectid to simulate the
+    # dashboard list, since orgs_with_properties.json may be empty in a fresh checkout.
+    saved = scorer.PROPERTY_ORGS
+    try:
+        scorer.PROPERTY_ORGS = set()               # clean baseline, independent of the shipped list
+        base = scorer.run(US, top=30)["results"]
+        served = next((r for r in base if r["serving_edos"]), None)
+        assert served is not None
+        before = _find(base, served["county"], served["state"])
+        assert before["has_listed_properties"] is False and before["property_bonus"] == 0
+        oid = served["serving_edos"][0]["objectid"]
+        scorer.PROPERTY_ORGS = {oid}               # simulate exactly this org having listings
+        after = _find(scorer.run(US, top=30)["results"], served["county"], served["state"])
+    finally:
+        scorer.PROPERTY_ORGS = saved
+    assert after and after["has_listed_properties"] is True
+    assert after["property_bonus"] == scorer.PROPERTY_BONUS
+    assert after["property_edos"], "flagged county should name the property org"
+    assert after["final_score"] >= before["final_score"] - 1e-6, "bonus must not lower the score"
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0

@@ -1,0 +1,321 @@
+{
+  "_comment": "EDO objectids whose territory currently has properties listed on the FastLocations dashboard. Regenerated from properties.js by build_property_orgs.py. The scorer gives counties served by one of these EDOs a moderate property-access bonus.",
+  "generated": "2026-07-13T13:11:29",
+  "source": "properties.js",
+  "objectids": [
+    "5",
+    "14",
+    "15",
+    "17",
+    "53",
+    "82",
+    "109",
+    "116",
+    "126",
+    "131",
+    "4341",
+    "4352",
+    "4379",
+    "4390",
+    "4399",
+    "4406",
+    "4425",
+    "4428",
+    "4429",
+    "4434",
+    "4438",
+    "4443",
+    "4449",
+    "4452",
+    "4458",
+    "4492",
+    "4493",
+    "4500",
+    "4503",
+    "4506",
+    "4508",
+    "4509",
+    "4537",
+    "4538",
+    "4553",
+    "4561",
+    "4564",
+    "4566"
+  ],
+  "resolved": [
+    {
+      "label": "Aurora, CO",
+      "objectid": "4493",
+      "organization": "Aurora Economic Development Council",
+      "state": "CO",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Greenville, NC",
+      "objectid": "4399",
+      "organization": "Greenville ENC Alliance",
+      "state": "NC",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Hoosier Energy, IN",
+      "objectid": "4509",
+      "organization": "Hoosier Energy",
+      "state": "IN",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Upstate South Carolina",
+      "objectid": "126",
+      "organization": "Upstate South Carolina Alliance",
+      "state": "SC",
+      "confidence": "high"
+    },
+    {
+      "label": "San Jacinto, CA",
+      "objectid": "4458",
+      "organization": "San Jacinto's Economic Development Department",
+      "state": "CA",
+      "confidence": "high"
+    },
+    {
+      "label": "Burlington, Ontario",
+      "objectid": "17",
+      "organization": "Burlington Economic Development and Tourism",
+      "state": "ON",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Advantage Valley, WV",
+      "objectid": "4434",
+      "organization": "Advantage Valley",
+      "state": "WV",
+      "confidence": "high"
+    },
+    {
+      "label": "REDI Blue Ash, OH",
+      "objectid": "4449",
+      "organization": "REDI Cincinnati",
+      "state": "OH",
+      "confidence": "override"
+    },
+    {
+      "label": "REDI Cincinnati, OH",
+      "objectid": "4449",
+      "organization": "REDI Cincinnati",
+      "state": "OH",
+      "confidence": "high"
+    },
+    {
+      "label": "Salt River, AZ",
+      "objectid": "15",
+      "organization": "Salt River Project",
+      "state": "AZ",
+      "confidence": "high"
+    },
+    {
+      "label": "Illinois EDC",
+      "objectid": "4443",
+      "organization": "Illinois EDC",
+      "state": "IL",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Delaware Prosperity",
+      "objectid": "116",
+      "organization": "Delaware Prosperity Partnership",
+      "state": "DE",
+      "confidence": "high"
+    },
+    {
+      "label": "Massachusetts",
+      "objectid": "82",
+      "organization": "Massachusetts Alliance for Economic Development",
+      "state": "MA",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Excite Sussex, DE",
+      "objectid": "4390",
+      "organization": "Sussex County Economic Development",
+      "state": "DE",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Maine",
+      "objectid": "109",
+      "organization": "Maine & Co.",
+      "state": "ME",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Dearborn County, IN",
+      "objectid": "4492",
+      "organization": "One Dearborn",
+      "state": "IN",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Central Virginia",
+      "objectid": "4438",
+      "organization": "Central Virginia Partnership",
+      "state": "VA",
+      "confidence": "high"
+    },
+    {
+      "label": "VEDP, VA",
+      "objectid": "5",
+      "organization": "Virginia Economic Development Partnership",
+      "state": "VA",
+      "confidence": "override"
+    },
+    {
+      "label": "NE Indiana",
+      "objectid": "4379",
+      "organization": "Northeast Indiana Regional Partnership",
+      "state": "IN",
+      "confidence": "override"
+    },
+    {
+      "label": "Advance SW, IA",
+      "objectid": "4341",
+      "organization": "Advance Southwest Iowa Corporation",
+      "state": "IA",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Evergy, KS",
+      "objectid": "4537",
+      "organization": "Evergy",
+      "state": "KS",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Lehigh Valley, PA",
+      "objectid": "4506",
+      "organization": "Lehigh Valley Economic Development Corp.",
+      "state": "PA",
+      "confidence": "high"
+    },
+    {
+      "label": "Nova Scotia",
+      "objectid": "4452",
+      "organization": "Invest Nova Scotia",
+      "state": "NS",
+      "confidence": "high"
+    },
+    {
+      "label": "Entergy, TX",
+      "objectid": "4503",
+      "organization": "Entergy Texas",
+      "state": "TX",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Entergy, LA",
+      "objectid": "4500",
+      "organization": "Entergy Louisiana",
+      "state": "LA",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Seattle, WA",
+      "objectid": "131",
+      "organization": "Greater Seattle Partners",
+      "state": "WA",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Bay EDA, CA",
+      "objectid": "53",
+      "organization": "Bay Economic Development Alliance",
+      "state": "FL",
+      "confidence": "override"
+    },
+    {
+      "label": "Wyoming EDA",
+      "objectid": "4406",
+      "organization": "Wyoming Economic Development Association",
+      "state": "WY",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Florida Power",
+      "objectid": "14",
+      "organization": "Florida Power & Light",
+      "state": "FL",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Iowa EDA",
+      "objectid": "4352",
+      "organization": "Iowa Economic Development Auth.",
+      "state": "IA",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Alliant Energy",
+      "objectid": "4429",
+      "organization": "Alliant Energy",
+      "state": "IA",
+      "confidence": "override"
+    },
+    {
+      "label": "Alliant Energy",
+      "objectid": "4538",
+      "organization": "Alliant Energy",
+      "state": "WI",
+      "confidence": "override"
+    },
+    {
+      "label": "Cedar Rapids, IA",
+      "objectid": "4428",
+      "organization": "Cedar Rapids Metro Economic Alliance",
+      "state": "IA",
+      "confidence": "high"
+    },
+    {
+      "label": "North Dakota DoC",
+      "objectid": "4508",
+      "organization": "North Dakota Dept. of Commerce",
+      "state": "ND",
+      "confidence": "high"
+    },
+    {
+      "label": "Kentucky I-71",
+      "objectid": "4425",
+      "organization": "Kentucky I-71 Economic Development Alliance",
+      "state": "KY",
+      "confidence": "high"
+    },
+    {
+      "label": "Ontario East",
+      "objectid": "4561",
+      "organization": "Ontario East EDC",
+      "state": "ON",
+      "confidence": "high"
+    },
+    {
+      "label": "Cambridge, ON",
+      "objectid": "4553",
+      "organization": "Cambridge Economic Development",
+      "state": "ON",
+      "confidence": "state+token"
+    },
+    {
+      "label": "Thunder Bay, ON",
+      "objectid": "4566",
+      "organization": "Thunder Bay CEDC",
+      "state": "ON",
+      "confidence": "high"
+    },
+    {
+      "label": "St. Thomas, ON",
+      "objectid": "4564",
+      "organization": "St. Thomas Economic Development Corp.",
+      "state": "ON",
+      "confidence": "high"
+    }
+  ],
+  "unresolved": []
+}
