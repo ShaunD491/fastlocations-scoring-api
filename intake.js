@@ -287,11 +287,17 @@
       '<div id="flMap" class="flmap"></div>';
     data.results.forEach((r, i) => {
       const edo = r.serving_edos && r.serving_edos[0];
-      const chips = dimOrder.map(function (d) {
-        const v = r.sub_scores[d];
-        return '<span class="sub' + (v == null ? ' na' : '') + '">' + d.replace(/_/g, ' ') +
-               ' ' + (v == null ? '-' : v) + '</span>';
-      }).join('');
+      // Rank this location's factors by strength (strongest first) and show a relative rank number
+      // instead of the absolute percentile. Factors with no data go last, unranked.
+      const scored = dimOrder.filter(function (d) { return r.sub_scores[d] != null; })
+                             .sort(function (a, b) { return r.sub_scores[b] - r.sub_scores[a]; });
+      const unscored = dimOrder.filter(function (d) { return r.sub_scores[d] == null; });
+      const chips = scored.map(function (d, k) {
+        return '<span class="sub" title="Relative strength on this location (1 = strongest factor)">' +
+               d.replace(/_/g, ' ') + ' <b class="rank">#' + (k + 1) + '</b></span>';
+      }).concat(unscored.map(function (d) {
+        return '<span class="sub na">' + d.replace(/_/g, ' ') + ' –</span>';
+      })).join('');
       // Best serving EDO per tier (list is pre-sorted smallest-territory first, so the first match
       // in each tier is the most specific / best for that tier).
       const edos = r.serving_edos || [];
@@ -300,6 +306,7 @@
       const UTILITY = ['Utility'];
       const STATE = ['State Agency'];
       const pick = function (cats) { for (var j = 0; j < edos.length; j++) { if (cats.indexOf(edos[j].category) >= 0) return edos[j]; } return null; };
+      const propEdos = r.property_edos || [];   // org names whose territory has listings on the dashboard
       const edoLine = function (label, e) {
         if (!e) return '';
         var name = e.embed_url
@@ -308,7 +315,10 @@
         var dash = e.objectid
           ? ' &middot; <a href="https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(e.objectid) + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>'
           : '';
-        return '<div class="edoline"><span class="edolabel">' + label + ':</span> ' + name + ' <span class="cat">(' + e.category + ')</span>' + dash + '</div>';
+        var propTag = propEdos.indexOf(e.organization) >= 0
+          ? ' <span class="proptag">(&#9733; Properties Available)</span>'
+          : '';
+        return '<div class="edoline"><span class="edolabel">' + label + ':</span> ' + name + ' <span class="cat">(' + e.category + ')</span>' + dash + propTag + '</div>';
       };
       const local = pick(LOCAL), regional = pick(REGIONAL), utility = pick(UTILITY), state = pick(STATE);
       let edoHtml;

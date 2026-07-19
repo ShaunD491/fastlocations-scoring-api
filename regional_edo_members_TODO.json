@@ -1,0 +1,443 @@
+{
+  "_comment": "WORKLIST: Regional Development Agencies still needing member counties. Fill the 'counties' object ({\"ST\": [\"County\", ...]}) and a 'source' URL, then MOVE the entry into the 'members' block of regional_edo_members.json and run:  python build_regional_territories.py  &&  python build_edo_indexes.py . Virginia independent cities must be written like 'Petersburg city'. Leave any entry you don't fill - unresolved agencies keep home-county-only territory and stay discounted by the scorer.",
+  "todo": {
+    "102": {
+      "org": "Birmingham Business Alliance",
+      "state": "AL",
+      "home_county": "Jefferson County",
+      "website": "http://www.birminghambusinessalliance.com/",
+      "source": "",
+      "counties": {
+        "AL": []
+      }
+    },
+    "4532": {
+      "org": "Economic Development Partnership of Alabama",
+      "state": "AL",
+      "home_county": "Jefferson County",
+      "website": "https://edpa.org/",
+      "source": "",
+      "counties": {
+        "AL": []
+      }
+    },
+    "92": {
+      "org": "Southwest Arkansas Development Alliance",
+      "state": "AR",
+      "home_county": "Columbia County",
+      "website": "https://www.southwestar.org/",
+      "source": "",
+      "counties": {
+        "AR": []
+      }
+    },
+    "4455": {
+      "org": "San Diego Regional Economic Development Corp",
+      "state": "CA",
+      "home_county": "San Diego County",
+      "website": "http://www.sandiegobusiness.org/",
+      "source": "",
+      "counties": {
+        "CA": []
+      }
+    },
+    "91": {
+      "org": "Silicon Valley Economic Development Alliance",
+      "state": "CA",
+      "home_county": "Santa Clara County",
+      "website": "https://www.siliconvalleyonline.org/",
+      "source": "",
+      "counties": {
+        "CA": []
+      }
+    },
+    "122": {
+      "org": "Yuba-Sutter Economic Development Corp.",
+      "state": "CA",
+      "home_county": "Sutter County",
+      "website": "https://www.ysedc.org/",
+      "source": "",
+      "counties": {
+        "CA": []
+      }
+    },
+    "4415": {
+      "org": "Southeast Georgia Alliance",
+      "state": "GA",
+      "home_county": "Glynn County",
+      "website": "https://sega-alliance.com",
+      "source": "",
+      "counties": {
+        "GA": []
+      }
+    },
+    "4351": {
+      "org": "Greater Des Moines Partnership",
+      "state": "IA",
+      "home_county": "Polk County",
+      "website": "https://www.desmoinesmetro.com",
+      "source": "",
+      "counties": {
+        "IA": []
+      },
+      "_note": "'12 counties' - count known, names not published in searchable text"
+    },
+    "56": {
+      "org": "Boise Valley Economic Partnership",
+      "state": "ID",
+      "home_county": "Ada County",
+      "website": "http://www.bvep.org/",
+      "source": "",
+      "counties": {
+        "ID": []
+      }
+    },
+    "87": {
+      "org": "Greater Peoria EDC",
+      "state": "IL",
+      "home_county": "Peoria County",
+      "website": "https://www.greaterpeoriaedc.org/",
+      "source": "",
+      "counties": {
+        "IL": []
+      }
+    },
+    "40": {
+      "org": "Rockford Area Economic Development Council",
+      "state": "IL",
+      "home_county": "Winnebago County",
+      "website": "https://rockfordil.com/",
+      "source": "",
+      "counties": {
+        "IL": []
+      }
+    },
+    "85": {
+      "org": "Central Indiana Corporate Partnership",
+      "state": "IN",
+      "home_county": "Marion County",
+      "website": "https://www.cicpindiana.com/",
+      "source": "",
+      "counties": {
+        "IN": []
+      }
+    },
+    "66": {
+      "org": "Indy Economic Development",
+      "state": "IN",
+      "home_county": "Marion County",
+      "website": "http://www.indyecondev.com/",
+      "source": "",
+      "counties": {
+        "IN": []
+      }
+    },
+    "4478": {
+      "org": "Central Louisiana Economic Development Alliance",
+      "state": "LA",
+      "home_county": "Rapides Parish",
+      "website": "https://www.cenla.org",
+      "source": "",
+      "counties": {
+        "LA": []
+      }
+    },
+    "4505": {
+      "org": "Cornerstone Alliance",
+      "state": "MI",
+      "home_county": "Berrien County",
+      "website": "https://cstonealliance.org/",
+      "source": "",
+      "counties": {
+        "MI": []
+      }
+    },
+    "28": {
+      "org": "Detroit Regional Partnership",
+      "state": "MI",
+      "home_county": "Wayne County",
+      "website": "http://www.detroitregionalpartnership.com/",
+      "source": "",
+      "counties": {
+        "MI": []
+      },
+      "_note": "'11-county Detroit region' - count known, names on their Our Communities page"
+    },
+    "4371": {
+      "org": "Flint & Genesee Economic Alliance",
+      "state": "MI",
+      "home_county": "Genesee County",
+      "website": "https://www.flintandgenesee.org",
+      "source": "",
+      "counties": {
+        "MI": []
+      }
+    },
+    "4386": {
+      "org": "Great Lakes Bay Regional Alliance",
+      "state": "MI",
+      "home_county": "Bay County",
+      "website": "https://www.greatlakesbay.com",
+      "source": "",
+      "counties": {
+        "MI": []
+      }
+    },
+    "72": {
+      "org": "Lansing Economic Area Partnership",
+      "state": "MI",
+      "home_county": "Ingham County",
+      "website": "http://www.purelansing.com/",
+      "source": "",
+      "counties": {
+        "MI": []
+      }
+    },
+    "128": {
+      "org": "The Right Place, Inc.",
+      "state": "MI",
+      "home_county": "Kent County",
+      "website": "https://www.rightplace.org/",
+      "source": "",
+      "counties": {
+        "MI": []
+      }
+    },
+    "4437": {
+      "org": "Charlotte Regional Business Alliance",
+      "state": "NC",
+      "home_county": "Mecklenburg County",
+      "website": "https://charlotteregion.com",
+      "source": "",
+      "counties": {
+        "NC": []
+      },
+      "_note": "CONFLICTING: published as both 14 and 16 counties across NC+SC - confirm with the Alliance"
+    },
+    "70": {
+      "org": "NCEast Alliance",
+      "state": "NC",
+      "home_county": "Pitt County",
+      "website": "http://www.nceast.org/",
+      "source": "",
+      "counties": {
+        "NC": []
+      },
+      "_note": "29 counties. Partial list found: Beaufort, Carteret, Craven, Edgecombe, Greene, Jones, Lenoir, Nash, Onslow, Pamlico, Pitt, Wayne, Wilson"
+    },
+    "4361": {
+      "org": "North Carolina's Southeast",
+      "state": "NC",
+      "home_county": "Bladen County",
+      "website": "https://www.ncse.org",
+      "source": "",
+      "counties": {
+        "NC": []
+      },
+      "_note": "cap raised 18 -> 20 counties. Partial: Bladen, Brunswick, Columbus, Jones, New Hanover, Onslow, Pender, Richmond, Robeson, Sampson"
+    },
+    "107": {
+      "org": "Grand Forks Region EDC",
+      "state": "ND",
+      "home_county": "Grand Forks County",
+      "website": "http://www.grandforks.org/",
+      "source": "",
+      "counties": {
+        "ND": []
+      }
+    },
+    "4462": {
+      "org": "Central Nebraska Economic Development District",
+      "state": "NE",
+      "home_county": "Holt County",
+      "website": "http://cnedd.org/",
+      "source": "",
+      "counties": {
+        "NE": []
+      }
+    },
+    "71": {
+      "org": "Northeast Nebraska Economic Development District",
+      "state": "NE",
+      "home_county": "Madison County",
+      "website": "http://www.nenedd.org/",
+      "source": "",
+      "counties": {
+        "NE": []
+      }
+    },
+    "4477": {
+      "org": "Albuquerque Regional Economic Alliance",
+      "state": "NM",
+      "home_county": "Bernalillo County",
+      "website": "https://www.abq.org",
+      "source": "",
+      "counties": {
+        "NM": []
+      }
+    },
+    "103": {
+      "org": "Centerstate CEO",
+      "state": "NY",
+      "home_county": "Onondaga County",
+      "website": "http://www.centerstateceo.com/",
+      "source": "",
+      "counties": {
+        "NY": []
+      }
+    },
+    "4419": {
+      "org": "Invest Buffalo Niagara",
+      "state": "NY",
+      "home_county": "Erie County",
+      "website": "https://www.buffaloniagara.org",
+      "source": "",
+      "counties": {
+        "NY": []
+      },
+      "_note": "'eight counties of Western New York' - count known, names not published in searchable text"
+    },
+    "127": {
+      "org": "Greater Cleveland Partnership",
+      "state": "OH",
+      "home_county": "Cuyahoga County",
+      "website": "https://greatercle.com/",
+      "source": "",
+      "counties": {
+        "OH": []
+      }
+    },
+    "8": {
+      "org": "ONE COLUMBUS",
+      "state": "OH",
+      "home_county": "Franklin County",
+      "website": "https://columbusregion.com/about-us/what-we-do/regional-economic-development/",
+      "source": "",
+      "counties": {
+        "OH": []
+      }
+    },
+    "4326": {
+      "org": "Team NEO",
+      "state": "OH",
+      "home_county": "Cuyahoga County",
+      "website": "https://teamneo.org",
+      "source": "",
+      "counties": {
+        "OH": []
+      },
+      "_note": "CONFLICTING: published as both 14 and 18 counties - confirm against Team NEO's own region page"
+    },
+    "4363": {
+      "org": "Enid Regional Development Alliance",
+      "state": "OK",
+      "home_county": "Garfield County",
+      "website": "https://www.growenid.com",
+      "source": "",
+      "counties": {
+        "OK": []
+      }
+    },
+    "80": {
+      "org": "Greater Portland Inc.",
+      "state": "OR",
+      "home_county": "Multnomah County",
+      "website": "https://greaterportlandinc.com/",
+      "source": "",
+      "counties": {
+        "OR": []
+      }
+    },
+    "83": {
+      "org": "Pittsburgh Regional Alliance",
+      "state": "PA",
+      "home_county": "Allegheny County",
+      "website": "https://pittsburghregion.org/",
+      "source": "",
+      "counties": {
+        "PA": []
+      }
+    },
+    "104": {
+      "org": "Central South Carolina Alliance",
+      "state": "SC",
+      "home_county": "Richland County",
+      "website": "http://www.centralsc.org/",
+      "source": "",
+      "counties": {
+        "SC": []
+      }
+    },
+    "61": {
+      "org": "East Tennessee Economic Development Agency",
+      "state": "TN",
+      "home_county": "Knox County",
+      "website": "http://www.eteda.org/",
+      "source": "",
+      "counties": {
+        "TN": []
+      }
+    },
+    "108": {
+      "org": "Hays Caldwell Economic Development Partnership",
+      "state": "TX",
+      "home_county": "Hays County",
+      "website": "https://hayscaldwelledp.com/",
+      "source": "",
+      "counties": {
+        "TX": []
+      }
+    },
+    "124": {
+      "org": "The Borderplex Alliance",
+      "state": "TX",
+      "home_county": "El Paso County",
+      "website": "http://www.borderplexalliance.org/",
+      "source": "",
+      "counties": {
+        "TX": []
+      },
+      "_note": "bi-national; the county list I found belonged to Borderplex Community Capital (a different org) - confirm the Alliance's own footprint"
+    },
+    "73": {
+      "org": "Roanoke Regional Partnership",
+      "state": "VA",
+      "home_county": "Roanoke city",
+      "website": "http://www.roanoke.org/",
+      "source": "",
+      "counties": {
+        "VA": []
+      }
+    },
+    "4345": {
+      "org": "Southern Virginia Regional Alliance",
+      "state": "VA",
+      "home_county": "Danville city",
+      "website": "https://svra.org/",
+      "source": "",
+      "counties": {
+        "VA": []
+      }
+    },
+    "45": {
+      "org": "Centergy, Inc.",
+      "state": "WI",
+      "home_county": "Marathon County",
+      "website": "https://www.centergy.net/",
+      "source": "",
+      "counties": {
+        "WI": []
+      }
+    },
+    "34": {
+      "org": "Polymer Alliance Zone Inc.",
+      "state": "WV",
+      "home_county": "Wood County",
+      "website": "http://www.pazwv.org/",
+      "source": "",
+      "counties": {
+        "WV": []
+      }
+    }
+  }
+}

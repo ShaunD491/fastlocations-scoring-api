@@ -200,6 +200,7 @@
   .rhead .rank { width: 26px; height: 26px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--fl-blue); color: #fff; font-weight: 700; font-size: 13px; }
   .rhead .place { font-weight: 600; font-size: 16px; color: var(--ink); flex: 1; }
   .msa { font-weight: 400; font-size: 12.5px; color: var(--muted-2); }
+  .proptag { font-size: 12px; font-weight: 600; color: #1a7a3c; white-space: nowrap; }
   .rhead .score { display: flex; flex-direction: column; align-items: center; background: linear-gradient(135deg,#eef3fb,#ffffff); border: 1px solid #dce6f5; border-radius: 10px; padding: 4px 12px; min-width: 96px; box-shadow: 0 1px 3px rgba(20,63,120,.12); }
   .flscore-cap { font-size: 8.5px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--muted-2); }
   .flscore-val { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.05; color: var(--fl-red); }
@@ -215,6 +216,7 @@
   .subs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 8px; }
   .sub { font-size: 11.5px; font-weight: 600; color: #2f6bbf; background: #eef3fb; border: 1px solid #dce6f5; border-radius: 999px; padding: 3px 9px; text-transform: capitalize; }
   .sub.na { color: #9aa6b5; background: #f4f6f9; border-color: var(--line); }
+  .sub .rank { color: var(--fl-blue); font-weight: 700; }
   .edo { font-size: 13px; color: #44546a; border-top: 1px dashed var(--line); padding-top: 8px; }
   .edo .cat { color: var(--muted-2); font-size: 12px; }
   .edoline { margin-bottom: 3px; }
@@ -246,12 +248,47 @@
     a { color: #000; text-decoration: underline; }
   }
 </style>
+<!-- FL unified nav (dashboard style) v1 -->
+<style id="flnav-css">
+.flnav-topbar{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid #e3e8f0;font-family:'Inter',system-ui,-apple-system,sans-serif;}
+.flnav-row{max-width:1320px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.flnav-brand{display:flex;align-items:center;gap:12px;white-space:nowrap;text-decoration:none;}
+.flnav-brand:hover{text-decoration:none;}
+.flnav-logo{height:48px;width:auto;display:block;}
+.flnav-title{font-weight:700;font-size:16px;letter-spacing:-.3px;color:#1a2233;padding-left:13px;border-left:1px solid #cfd6e2;}
+.flnav-title span{color:#1a54a0;font-style:italic;font-weight:600;}
+.flnav-links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
+.flnav-links a{color:#5b6576;font-size:13.5px;font-weight:600;padding:7px 13px;border-radius:8px;text-decoration:none;transition:.15s;}
+.flnav-links a:hover{color:#1a2233;background:#f6f8fc;text-decoration:none;}
+.flnav-links a.active{color:#1a54a0;background:rgba(26,84,160,.10);}
+.flnav-toggle{display:none;}.flnav-burger{display:none;margin-left:auto;cursor:pointer;width:40px;height:34px;padding:6px;border-radius:8px;flex-direction:column;justify-content:center;gap:5px;box-sizing:border-box;}.flnav-burger span{display:block;height:3px;width:100%;border-radius:2px;background:#5b6576;}.flnav-burger:hover{background:#f6f8fc;}@media (max-width:680px){.flnav-row{padding:10px 16px;gap:12px;}.flnav-title{display:none;}.flnav-burger{display:flex;}.flnav-links{display:none;order:3;flex-basis:100%;flex-direction:column;gap:2px;margin-left:0;padding:6px 0 2px;}.flnav-toggle:checked ~ .flnav-links{display:flex;}.flnav-links a{padding:11px 12px;}}
+</style>
 </head>
 <body>
 
+<!-- FL unified nav (dashboard style) -->
+<header class="flnav-topbar">
+  <div class="flnav-row">
+    <a href="https://www.fastlocations.ai/" class="flnav-brand">
+      <img class="flnav-logo" src="https://www.fastlocations.ai/img/logo_fastLocations_small_1.png" alt="FastLocations"
+           onerror="this.src='https://placehold.co/140x48/ffffff/1a54a0?text=FastLocations'">
+      <span class="flnav-title">Site Selection <span>Intake</span></span>
+    </a>
+    <input type="checkbox" id="flnav-toggle" class="flnav-toggle"><label for="flnav-toggle" class="flnav-burger" aria-label="Toggle menu"><span></span><span></span><span></span></label><nav class="flnav-links">
+      <a href="https://www.fastlocations.ai/">FastLocations Map</a>
+      <a href="https://www.fastlocations.ai/Projects/site_selection_intake.html" class="active">My Project</a>
+      <a href="https://www.fastlocations.ai/dash/start.html">Dashboards</a>
+      <a href="https://www.fastlocations.ai/properties/properties.html">Properties</a>
+      <a href="https://www.fastlocations.ai/incentives/incentives.html">Incentives</a>
+      <a href="https://www.fastlocations.ai/FastReads.html">FastReads</a>
+      <a href="https://www.fastlocations.ai/FL_Help.htm">Help</a>
+      <a href="https://www.fastlocations.ai/subscribe.html">Activate</a>
+    </nav>
+  </div>
+</header>
+
 <header class="masthead">
   <div class="wrap">
-    <a href="https://www.fastlocations.ai" target="_blank" rel="noopener" class="brand"><img src="https://www.arcgis.com/sharing/rest/content/items/2fcdb00b6e444d699f6704f6e2fda716/resources/images/widget_2/1766160233490.png" alt="FastLocations.ai" /></a>
     <h1>Your Project Requirements</h1>
     <p>Tell us what your project needs. We compare it against demographic, infrastructure, real estate, and incentive data across North America and return the five strongest matches - each with a FastLocations Score and the reasoning behind it. Your project details remain strictly confidential and are never shared with any economic development organization unless you choose to submit your project to FastLocations.</p>
   </div>

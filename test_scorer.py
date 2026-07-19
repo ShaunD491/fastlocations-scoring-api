@@ -106,9 +106,18 @@ def test_property_access_bonus():
     finally:
         scorer.PROPERTY_ORGS = saved
     assert after and after["has_listed_properties"] is True
-    assert after["property_bonus"] == scorer.PROPERTY_BONUS
+    assert 0 < after["property_bonus"] <= scorer.PROPERTY_BONUS, "bonus is scope-scaled, capped at PROPERTY_BONUS"
     assert after["property_edos"], "flagged county should name the property org"
     assert after["final_score"] >= before["final_score"] - 1e-6, "bonus must not lower the score"
+
+def test_property_bonus_scales_with_scope():
+    # Listings held by a broad statewide agency blanket every county in the state and must count for
+    # far less than a single-county EDO's -- otherwise one statewide customer lifts a whole state.
+    narrow = scorer.property_scope_factor({"territory_county_count": 1})
+    regional = scorer.property_scope_factor({"territory_county_count": 10})
+    statewide = scorer.property_scope_factor({"territory_county_count": 133})
+    assert 0 < statewide < regional < narrow <= 1.0
+    assert narrow > statewide * 4, "statewide listings should be heavily discounted"
 
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

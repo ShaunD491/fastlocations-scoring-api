@@ -154,8 +154,26 @@ COVERAGE_BONUS={"Local Development Agency":10,"Chamber of Commerce":10,"Megasite
 # FastLocations dashboard (see orgs_with_properties.json, regenerated from properties/properties.js)
 # earns a lift for demonstrable, ready site availability. Applied to score HEADROOM like the other
 # bonuses, so it only meaningfully elevates already-close matches -- "good access to available
-# properties" -- and never rescues a poor fit. Moderate = on par with the preferred-region bonus.
-PROPERTY_BONUS=8
+# properties" -- and never rescues a poor fit.
+PROPERTY_BONUS=5.0
+# ...but SCALED BY SPECIFICITY. Listings held by a statewide agency blanket every county in that
+# state, so they say nothing about which county is better -- without this, one statewide customer
+# (e.g. VEDP, 133 VA county-equivalents) lifts an entire state and swamps the rankings. A single-
+# county EDO's listings are a real, local signal; a 100-county agency's are nearly noise.
+# factor = 1/(1 + territory_counties/K); the most specific property-holding EDO wins.
+PROPERTY_SCOPE_K=25.0
+# An EDO flagged '..._INCOMPLETE' carries territory_county_count=1 because its real territory was
+# never resolved -- NOT because it serves one county. Treating that 1 as precision would hand a
+# multi-state utility the maximum single-county specificity credit. So an unresolved territory is
+# scored at a typical size for its KIND: utility service areas are large, regional partnerships are
+# ~10 counties. (Utilities resolved from EIA-861 carry real counts and skip this entirely.)
+INCOMPLETE_TERRITORY_ASSUMED=25.0
+INCOMPLETE_ASSUMED_BY_CATEGORY={"Utility":40.0,"Regional Development Agency":10.0}
+def property_scope_factor(edo):
+    n=edo.get("territory_county_count") or 1
+    if str(edo.get("territory_basis") or "").endswith("INCOMPLETE"):
+        n=max(n,INCOMPLETE_ASSUMED_BY_CATEGORY.get(edo.get("category"),INCOMPLETE_TERRITORY_ASSUMED))
+    return 1.0/(1.0+(n/PROPERTY_SCOPE_K))
 
 def gsys(f): return f.get("geo_system","US")
 def index_for(g): return FIPS_INDEX if g=="US" else CA_INDEX
@@ -417,6 +435,7 @@ def serving_edos(geoid,g):
     rows.sort(key=lambda r:(r.get("territory_county_count") or 9999))
     return [{"objectid":r["objectid"],"organization":r["organization"],"category":r["category"],
              "territory_county_count":r.get("territory_county_count"),
+             "territory_basis":r.get("territory_basis"),      # '..._INCOMPLETE' => territory unresolved
              "resolution_status":r.get("resolution_status"),
              "embed_url":r.get("embed_url") or ""} for r in rows]
 
@@ -541,7 +560,8 @@ def run(criteria,top=10):
         edos=serving_edos(f,g)
         cov=COVERAGE_BONUS.get(edos[0]["category"],0) if edos else 0   # local/regional coverage over-index
         prop_edos=[e for e in edos if e["objectid"] in PROPERTY_ORGS]  # serving EDO(s) with live property listings
-        prop=PROPERTY_BONUS if prop_edos else 0
+        # credit the most SPECIFIC property-holding EDO; statewide listings barely move the needle
+        prop=round(PROPERTY_BONUS*max((property_scope_factor(e) for e in prop_edos),default=0.0),2)
         rel=None; final=None
         if total is not None:
             # Reliability from the county's MARKET reach (regional catchment), not just its own

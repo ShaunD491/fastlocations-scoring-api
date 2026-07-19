@@ -1,0 +1,84 @@
+{
+  "_comment": "Member/service counties for Regional Development Agency EDOs, which the original build left as 'home_county_only_INCOMPLETE' (1 county) despite being multi-county by definition. Each entry is researched from the agency's own site or an authoritative source, recorded in 'source'. NEVER add counties without a verifiable source. Resolve into edo_master_table_dual.json with build_regional_territories.py, then rerun build_edo_indexes.py. County names are matched case/suffix-insensitively; Virginia independent cities must be written as e.g. 'Charlottesville city'.",
+  "members": {
+    "4379": {
+      "org": "Northeast Indiana Regional Partnership",
+      "source": "https://neindiana.com/about-us/who-we-are/",
+      "counties": {
+        "IN": ["Adams", "Allen", "DeKalb", "Huntington", "Kosciusko", "LaGrange", "Noble", "Steuben", "Wabash", "Wells", "Whitley"]
+      }
+    },
+    "126": {
+      "org": "Upstate South Carolina Alliance",
+      "source": "https://www.upstatescalliance.com/",
+      "counties": {
+        "SC": ["Abbeville", "Anderson", "Cherokee", "Greenville", "Greenwood", "Laurens", "Oconee", "Pickens", "Spartanburg", "Union"]
+      }
+    },
+    "4449": {
+      "org": "REDI Cincinnati",
+      "source": "https://redicincinnati.com/data-resources/county-profiles/",
+      "counties": {
+        "OH": ["Brown", "Butler", "Clermont", "Hamilton", "Warren"],
+        "KY": ["Boone", "Bracken", "Campbell", "Gallatin", "Grant", "Kenton", "Pendleton"],
+        "IN": ["Dearborn", "Franklin", "Ohio"]
+      }
+    },
+    "4434": {
+      "org": "Advantage Valley",
+      "source": "https://advantagevalley.com/about/",
+      "counties": {
+        "WV": ["Boone", "Cabell", "Clay", "Jackson", "Kanawha", "Lincoln", "Mason", "Putnam", "Wayne"]
+      }
+    },
+    "4425": {
+      "org": "Kentucky I-71 Economic Development Alliance (KIEDA)",
+      "source": "https://www.ky71alliance.com/the-alliance",
+      "counties": {
+        "KY": ["Carroll", "Gallatin", "Henry", "Oldham", "Owen", "Trimble"]
+      }
+    },
+    "4341": {
+      "org": "Advance Southwest Iowa Corporation",
+      "source": "https://advancesouthwestiowa.com/",
+      "counties": {
+        "IA": ["Pottawattamie", "Mills", "Fremont", "Page", "Cass", "Shelby", "Harrison"]
+      }
+    },
+    "33": {
+      "org": "One East Kentucky",
+      "source": "https://www.oneeastky.com/about/",
+      "counties": {
+        "KY": ["Floyd", "Johnson", "Knott", "Lawrence", "Letcher", "Magoffin", "Martin", "Perry", "Pike"]
+      }
+    },
+    "4329": {
+      "org": "South Carolina I-77 Alliance",
+      "source": "https://i77alliance.com/about/",
+      "counties": {
+        "SC": ["Chester", "Fairfield", "Lancaster", "Richland", "York"]
+      }
+    },
+    "4328": {
+      "org": "Virginia's Gateway Region",
+      "source": "https://www.gatewayregion.com/",
+      "counties": {
+        "VA": ["Brunswick", "Dinwiddie", "Greensville", "Prince George", "Sussex", "Colonial Heights city", "Emporia city", "Hopewell city", "Petersburg city"]
+      }
+    },
+    "50": {
+      "org": "Greater New Orleans, Inc.",
+      "source": "https://gnoinc.org/explore-the-region/",
+      "counties": {
+        "LA": ["Jefferson", "Orleans", "Plaquemines", "St. Bernard", "St. Charles", "St. James", "St. John the Baptist", "St. Tammany", "Tangipahoa", "Washington"]
+      }
+    },
+    "4438": {
+      "org": "Central Virginia Partnership for Economic Development",
+      "source": "https://www.centralvirginia.org/about-the-partnership/central-virginia-partnership-for-economic-development/",
+      "counties": {
+        "VA": ["Albemarle", "Culpeper", "Fluvanna", "Greene", "Louisa", "Madison", "Nelson", "Orange", "Charlottesville city"]
+      }
+    }
+  }
+}

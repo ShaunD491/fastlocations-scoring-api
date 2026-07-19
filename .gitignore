@@ -32,3 +32,6 @@ FL Project Search/
 !county_groundwater.json
 !county_groundwater_trend.json
 !orgs_with_properties.json
+# curated territory source data (build-time, not loaded at runtime, but must be version-controlled)
+!regional_edo_members.json
+!regional_edo_members_TODO.json
