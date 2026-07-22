@@ -1,6 +1,6 @@
 {
   "_comment": "EDO objectids whose territory currently has properties listed on the FastLocations dashboard. Regenerated from properties.js by build_property_orgs.py. The scorer gives counties served by one of these EDOs a moderate property-access bonus.",
-  "generated": "2026-07-13T13:11:29",
+  "generated": "2026-07-22T14:57:41",
   "source": "properties.js",
   "objectids": [
     "5",
@@ -11,6 +11,7 @@
     "82",
     "109",
     "116",
+    "120",
     "126",
     "131",
     "4341",
@@ -31,6 +32,7 @@
     "4492",
     "4493",
     "4500",
+    "4502",
     "4503",
     "4506",
     "4508",
@@ -177,6 +179,20 @@
       "confidence": "override"
     },
     {
+      "label": "Bowling Freen, OH",
+      "objectid": "120",
+      "organization": "Bowling Green Economic Development",
+      "state": "OH",
+      "confidence": "state+token"
+    },
+    {
+      "label": "NBay Future, MI",
+      "objectid": "4502",
+      "organization": "Bay Future",
+      "state": "MI",
+      "confidence": "state+token"
+    },
+    {
       "label": "Advance SW, IA",
       "objectid": "4341",
       "organization": "Advance Southwest Iowa Corporation",
@@ -317,5 +333,10 @@
       "confidence": "high"
     }
   ],
-  "unresolved": []
+  "unresolved": [
+    {
+      "label": "Beloit, MI",
+      "best_guess": "#86 Greater Beloit Economic Development Corp."
+    }
+  ]
 }

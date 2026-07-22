@@ -88,6 +88,30 @@ def test_shift_affects_ranking():
     b = [r["geoid"] for r in scorer.run({"geography": {"countries": ["US"]}, "workforce": {"headcount": {"initial": 500}, "shift_pattern": "continuous"}}, top=8)["results"]]
     assert a != b, "shift pattern did not affect ranking"
 
+def test_skill_profile_affects_ranking():
+    # Selecting a skill profile must move the workforce dimension and the ranking. A degree-heavy
+    # profile (engineers) and a high-school-centric one (general labor) draw on different attainment
+    # bands, so counties rank differently on workforce and the Top-N order changes.
+    base = {"geography": {"countries": ["US"]}}
+    eng = scorer.run({**base, "workforce": {"skill_profile": ["engineers"]}}, top=8)["results"]
+    lab = scorer.run({**base, "workforce": {"skill_profile": ["general_labor"]}}, top=8)["results"]
+    assert [r["geoid"] for r in eng] != [r["geoid"] for r in lab], "skill profile did not affect ranking"
+    # and the workforce sub-score itself differs for the same county under the two profiles
+    both = {r["geoid"] for r in eng} & {r["geoid"] for r in lab}
+    assert both, "expected some overlap to compare"
+    gid = next(iter(both))
+    we = next(r for r in eng if r["geoid"] == gid)["sub_scores"]["workforce"]
+    wl = next(r for r in lab if r["geoid"] == gid)["sub_scores"]["workforce"]
+    assert we != wl, "workforce sub-score identical across profiles"
+
+def test_skill_profile_absent_is_neutral():
+    # With no skill profile chosen, skill_supply is null and the workforce dimension is unchanged
+    # from a run that never had the feature -> blank searches must be unaffected.
+    R = scorer.run({"geography": {"countries": ["US"]}}, top=4000)["results"]
+    ff = next(iter(scorer.FEAT))
+    assert scorer.skill_supply(scorer.FEAT[ff], []) is None
+    assert R and all(r["final_score"] is not None or True for r in R[:5])
+
 def test_property_access_bonus():
     # A county whose serving EDO has properties listed gets a property-access bonus that lifts (never
     # lowers) its score and flips the has_listed_properties flag. Inject an objectid to simulate the

@@ -117,6 +117,10 @@ try:    # EDO objectids whose territory currently has properties listed on the F
     _PJ=_load("orgs_with_properties.json")         # regenerated from properties/properties.js by build_property_orgs.py
     PROPERTY_ORGS=set(str(x) for x in (_PJ.get("objectids") if isinstance(_PJ,dict) else _PJ))
 except FileNotFoundError: PROPERTY_ORGS=set()
+try: BEA_COST=_load("county_bea.json")             # fips -> {earn_pow_pc, pcpi, pcpi_growth10}; BEA CAINC30 via build_bea_cost.py
+except FileNotFoundError: BEA_COST={}
+try: OCC=_load("county_occupation.json")           # fips -> occupation-group employment shares (%); Census ACS S2401 via build_occupation.py
+except FileNotFoundError: OCC={}
 import re as _re, unicodedata as _ud
 def _norm(x):
     x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
@@ -255,6 +259,79 @@ def edu_share(f,priority):
     if not base: return None
     s=sum((f.get(k) or 0) for k in EDU.get(priority,EDU["none"]))
     return s/base*100
+
+# Skill profile -> the county educational-attainment bands that actually supply that kind of worker.
+# We DON'T have county occupation (BLS OES / SOC) counts in the loaded data, so skill availability is
+# proxied honestly by attainment share, not invented. Each profile lists the ESRI attainment keys whose
+# summed share (over EDUCBASECY) is that profile's local labor pool. Counties rank very differently on
+# HS-share vs. bachelor-share, so selecting different profiles genuinely re-ranks the workforce dimension.
+# `cog` (0..1) marks how degree/cognition-heavy the role is; used to give a coarse Canadian signal
+# (bachelor_share) for high-skill profiles, where StatCan gives no trades-level breakdown.
+SKILL_BANDS={
+    "general_labor":      (["HSGRAD_CY","SMCOLL_CY"],                   0.0),
+    "assembly_production":(["HSGRAD_CY","SMCOLL_CY"],                   0.0),
+    "logistics_warehouse":(["HSGRAD_CY","SMCOLL_CY"],                   0.0),
+    "machine_operators":  (["HSGRAD_CY","SMCOLL_CY","ASSCDEG_CY"],      0.2),
+    "customer_service":   (["HSGRAD_CY","SMCOLL_CY","ASSCDEG_CY"],      0.2),
+    "skilled_trades":     (["SMCOLL_CY","ASSCDEG_CY"],                  0.3),
+    "technicians":        (["SMCOLL_CY","ASSCDEG_CY","BACHDEG_CY"],     0.5),
+    "professional":       (["SMCOLL_CY","ASSCDEG_CY","BACHDEG_CY"],     0.5),
+    "healthcare":         (["ASSCDEG_CY","BACHDEG_CY","GRADDEG_CY"],    0.7),
+    "management":         (["BACHDEG_CY","GRADDEG_CY"],                 0.7),
+    "finance_accounting": (["BACHDEG_CY","GRADDEG_CY"],                 0.8),
+    "engineers":          (["BACHDEG_CY","GRADDEG_CY"],                 1.0),
+    "it_software":        (["BACHDEG_CY","GRADDEG_CY"],                 1.0),
+    "scientists_rd":      (["GRADDEG_CY","BACHDEG_CY"],                 1.0),
+}
+# Skill profile -> Census ACS S2401 occupation groups that actually DO that work (see build_occupation.py).
+# Real occupational supply, not an attainment stand-in: selecting "engineers" reads the county's
+# architecture/engineering employment share, "assembly_production" reads production, etc.
+PROFILE_OCC={
+    "general_labor":      ["prod","material"],
+    "assembly_production":["prod"],
+    "logistics_warehouse":["transport","material"],
+    "machine_operators":  ["prod"],
+    "customer_service":   ["sales","office"],
+    "skilled_trades":     ["construct","maint"],
+    "technicians":        ["maint","hlthtech"],
+    "professional":       ["edary","busfin"],
+    "healthcare":         ["hlthpr","hlthsup"],
+    "management":         ["mgmt"],
+    "finance_accounting": ["busfin"],
+    "engineers":          ["eng"],
+    "it_software":        ["comp"],
+    "scientists_rd":      ["sci"],
+}
+def _attainment_supply(f,profiles):
+    """Fallback: mean attainment-band share across selected profiles (used where occupation data
+    is absent, e.g. Canada or an unmatched county)."""
+    base=f.get("EDUCBASECY") or 0
+    if not base or not profiles: return None
+    shares=[]
+    for p in profiles:
+        spec=SKILL_BANDS.get(p)
+        if not spec: continue
+        s=sum((f.get(k) or 0) for k in spec[0])
+        shares.append(s/base*100)
+    return round(sum(shares)/len(shares),3) if shares else None
+def skill_supply(f,profiles):
+    """Occupation-group employment share of the selected profiles (Census S2401), averaged across
+    profiles. Falls back to educational-attainment share when the county has no occupation record.
+    None when no profile chosen -> dimension omits it (never penalized)."""
+    if not profiles: return None
+    occ=OCC.get(f.get("fips") or "")
+    if occ:
+        shares=[]
+        for p in profiles:
+            groups=PROFILE_OCC.get(p)
+            if not groups: continue
+            shares.append(sum((occ.get(g) or 0.0) for g in groups))   # % of employed in those occupations
+        if shares: return round(sum(shares)/len(shares),3)
+    return _attainment_supply(f,profiles)
+def skill_cognition(profiles):
+    """Mean cognition weight of the selected profiles (0..1); drives the coarse Canadian signal."""
+    cs=[SKILL_BANDS[p][1] for p in (profiles or []) if p in SKILL_BANDS]
+    return sum(cs)/len(cs) if cs else None
 def m_demographics(f,crit):
     # Composition / quality only. Raw population scale is carried by market_size, and absolute
     # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
@@ -273,6 +350,7 @@ def m_workforce(f,crit):
     wfc=(crit.get("workforce") or {})
     need=(wfc.get("headcount") or {}).get("initial")
     shift=wfc.get("shift_pattern")
+    profiles=wfc.get("skill_profile") or []
     if gsys(f)=="CA":                              # StatCan: unemployment (availability) + staffability
         une=f.get("unemployment"); lf=f.get("labour_force"); pop=f.get("TOTPOP_CY")
         staff=None
@@ -281,7 +359,12 @@ def m_workforce(f,crit):
             if lf  is not None: parts.append((lf /need)/50.0)
             if pop is not None: parts.append((pop/need)/100.0)
             if parts: staff=min(min(parts),1.0)
-        return {"labor_availability":(-une if une is not None else None),"staffability":staff}
+        # No StatCan trades-level breakdown by CD, so skill fit is only expressible for degree-heavy
+        # profiles via bachelor_share; trades/labor profiles stay null (honest gap, not a penalty).
+        cog=skill_cognition(profiles)
+        ca_skill=f.get("bachelor_share") if (cog is not None and cog>=0.5) else None
+        return {"labor_availability":(-une if une is not None else None),"staffability":staff,
+                "skill_supply":ca_skill}
     une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
     recruit=f.get("recruitable"); civlf=f.get("civ_lf")
     # Staffability: can this market realistically supply the start-up headcount?
@@ -309,7 +392,10 @@ def m_workforce(f,crit):
             "employee_availability":avail,
             "shift_fit":shift_fit,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            "critical_thinking":f.get("critical_thinking")}   # weighted 2x via METRIC_WEIGHTS
+            "critical_thinking":f.get("critical_thinking"),   # weighted 2x via METRIC_WEIGHTS
+            # supply of the SELECTED skill profiles (attainment-band share). Null unless the intake
+            # picks at least one profile, so blank searches score exactly as before.
+            "skill_supply":skill_supply(f,profiles)}
 def m_logistics(f,crit):
     if gsys(f)=="CA":
         inf=f.get("infra_ca")
@@ -393,8 +479,11 @@ def m_cost(f,crit):
         inc=f.get("income")
         return {"low_labor_cost":-inc} if inc is not None else None
     inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
-    if inc is None and wl is None: return None
-    return {"low_labor_cost":(-inc if inc is not None else None),
+    bea=BEA_COST.get(f.get("fips") or "") or {}
+    epw=bea.get("earn_pow_pc")                     # BEA earnings by place of work per capita = employer wage level
+    if inc is None and wl is None and epw is None: return None
+    return {"low_labor_cost":(-inc if inc is not None else None),        # household income (residence)
+            "low_employer_wages":(-epw if epw is not None else None),    # BEA place-of-work earnings (~0.17 corr w/ MEDHINC)
             "low_cost_of_living":(-wl if wl is not None else None)}
 
 def m_safety(f,crit):
@@ -415,7 +504,7 @@ def m_real_estate(f,crit):
 
 # Per-metric weights WITHIN a dimension (default 1). Lets a metric count for more without the old
 # duplicate-key hack: education dominates demographics; critical thinking and value tier count 2x.
-METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0}
+METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,"skill_supply":1.5}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
