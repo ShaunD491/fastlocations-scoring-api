@@ -32,6 +32,8 @@ OVERRIDES = {
     "Bay EDA, CA": "53",       # Bay Economic Development Alliance (FL) -- data is Panama City Beach FL; label ", CA" appears to be a typo
     "REDI Blue Ash, OH": "4449",  # REDI Cincinnati manages the Blue Ash listings (regional EDO customer)
     "Alliant Energy": ["4429", "4538"],  # Alliant serves both IA (#4429) and WI (#4538); credit both territories
+    "Georgia Power": "4489",           # utility; disambiguate common label variants to Georgia Power (#4489)
+    "Georgia Power, GA": "4489",
 }
 
 US_ST = {'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA',
@@ -40,7 +42,10 @@ US_ST = {'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','
 'AB','BC','MB','NB','NL','NS','NT','NU','ON','PE','QC','SK','YT'}
 STMAP = {'colorado':'CO','ontario':'ON','iowa':'IA','indiana':'IN','virginia':'VA','wyoming':'WY',
 'kentucky':'KY','pennsylvania':'PA','maine':'ME','massachusetts':'MA','delaware':'DE',
-'nova scotia':'NS','north dakota':'ND','seattle':'WA','florida':'FL','illinois':'IL'}
+'nova scotia':'NS','north dakota':'ND','seattle':'WA','florida':'FL','illinois':'IL',
+'georgia':'GA','alabama':'AL','arizona':'AZ','texas':'TX','louisiana':'LA','kansas':'KS',
+'ohio':'OH','michigan':'MI','wisconsin':'WI','washington':'WA','oregon':'OR','tennessee':'TN',
+'carolina':'NC','nebraska':'NE','oklahoma':'OK','arkansas':'AR','mississippi':'MS'}
 STOP = {"the","of","inc","llc","edc","eda","edo","development","economic","corporation","corp",
 "county","authority","alliance","partnership","commission","group","agency","office","dept",
 "department","doc","energy","power","company","co","and","for","greater","area","region",
@@ -86,14 +91,29 @@ def parse_labels(js_path):
     """Extract active DATASETS labels from a properties.js FILE."""
     return parse_labels_text(open(js_path, encoding="utf-8").read())
 
+def extract_labels(text):
+    """Dataset labels from either a properties.js file (parse the JS DATASETS array) OR a
+    datasets.json registry (a JSON array of {label,...} or {"datasets":[...]}). Lets PROPERTIES_JS_URL
+    point at whichever the dashboard treats as source of truth."""
+    t = text.lstrip()
+    if t[:1] in "[{":                                 # looks like JSON (datasets.json)
+        try:
+            j = json.loads(t)
+            arr = j if isinstance(j, list) else (j.get("datasets") if isinstance(j, dict) else None)
+            if isinstance(arr, list):
+                return [d.get("label") for d in arr if isinstance(d, dict) and d.get("label")]
+        except Exception:
+            pass
+    return parse_labels_text(text)                    # else parse the JS DATASETS block
+
 def resolve_objectids(js_text, master):
-    """properties.js TEXT + master EDO list -> set of objectid strings that have properties.
-    Reuses OVERRIDES + the same fuzzy matcher as the CLI build. The scorer calls this at runtime so
-    the live dashboard's properties.js is the single source of truth -- no orgs_with_properties.json
+    """properties.js/datasets.json TEXT + master EDO list -> set of objectid strings that have
+    properties. Reuses OVERRIDES + the same fuzzy matcher as the CLI build. The scorer calls this at
+    runtime so the live dashboard registry is the single source of truth -- no orgs_with_properties.json
     to regenerate or commit. Unresolved labels are simply skipped (no badge; fail-safe)."""
     by_id = {r["objectid"]: r for r in master}
     out = set()
-    for lab in parse_labels_text(js_text):
+    for lab in extract_labels(js_text):
         if lab in OVERRIDES:
             v = OVERRIDES[lab]
             for oid in ([v] if isinstance(v, str) else v):
