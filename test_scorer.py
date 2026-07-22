@@ -116,19 +116,19 @@ def test_property_access_bonus():
     # A county whose serving EDO has properties listed gets a property-access bonus that lifts (never
     # lowers) its score and flips the has_listed_properties flag. Inject an objectid to simulate the
     # dashboard list, since orgs_with_properties.json may be empty in a fresh checkout.
-    saved = scorer.PROPERTY_ORGS
+    saved = scorer.get_property_orgs                 # run() now pulls the org set from this (live properties.js)
     try:
-        scorer.PROPERTY_ORGS = set()               # clean baseline, independent of the shipped list
+        scorer.get_property_orgs = lambda: set()     # clean baseline, independent of the shipped list
         base = scorer.run(US, top=30)["results"]
         served = next((r for r in base if r["serving_edos"]), None)
         assert served is not None
         before = _find(base, served["county"], served["state"])
         assert before["has_listed_properties"] is False and before["property_bonus"] == 0
         oid = served["serving_edos"][0]["objectid"]
-        scorer.PROPERTY_ORGS = {oid}               # simulate exactly this org having listings
+        scorer.get_property_orgs = lambda o=oid: {o}  # simulate exactly this org having listings
         after = _find(scorer.run(US, top=30)["results"], served["county"], served["state"])
     finally:
-        scorer.PROPERTY_ORGS = saved
+        scorer.get_property_orgs = saved
     assert after and after["has_listed_properties"] is True
     assert 0 < after["property_bonus"] <= scorer.PROPERTY_BONUS, "bonus is scope-scaled, capped at PROPERTY_BONUS"
     assert after["property_edos"], "flagged county should name the property org"

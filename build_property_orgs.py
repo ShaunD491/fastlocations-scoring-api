@@ -63,9 +63,8 @@ def label_state(lab):
             return ab
     return None
 
-def parse_labels(js_path):
-    """Extract active DATASETS labels from properties.js (skips commented-out lines and NAV links)."""
-    js = open(js_path, encoding="utf-8").read()
+def parse_labels_text(js):
+    """Extract active DATASETS labels from properties.js TEXT (skips commented-out lines/NAV links)."""
     i = js.index("DATASETS")
     block = js[i: js.index("];", i)]
     labels = []
@@ -81,6 +80,29 @@ def parse_labels(js_path):
     for l in labels:
         if l not in seen:
             seen.add(l); out.append(l)
+    return out
+
+def parse_labels(js_path):
+    """Extract active DATASETS labels from a properties.js FILE."""
+    return parse_labels_text(open(js_path, encoding="utf-8").read())
+
+def resolve_objectids(js_text, master):
+    """properties.js TEXT + master EDO list -> set of objectid strings that have properties.
+    Reuses OVERRIDES + the same fuzzy matcher as the CLI build. The scorer calls this at runtime so
+    the live dashboard's properties.js is the single source of truth -- no orgs_with_properties.json
+    to regenerate or commit. Unresolved labels are simply skipped (no badge; fail-safe)."""
+    by_id = {r["objectid"]: r for r in master}
+    out = set()
+    for lab in parse_labels_text(js_text):
+        if lab in OVERRIDES:
+            v = OVERRIDES[lab]
+            for oid in ([v] if isinstance(v, str) else v):
+                if oid in by_id:
+                    out.add(oid)
+            continue
+        b = best_match(lab, master)
+        if b and ((b[2] and b[3].get("state") == b[2] and b[1] >= 1) or b[1] >= 2):
+            out.add(b[3]["objectid"])
     return out
 
 def best_match(lab, master):

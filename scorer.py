@@ -113,10 +113,40 @@ try: MSA_MAP=_load("fips_to_msa.json")             # US county FIPS -> Metropoli
 except FileNotFoundError: MSA_MAP={}
 try: CA_PLACES=_load("ca_places.json")             # CA "PROV|normname" and bare "normname" -> [lat,lon]
 except FileNotFoundError: CA_PLACES={}
-try:    # EDO objectids whose territory currently has properties listed on the FastLocations dashboard.
-    _PJ=_load("orgs_with_properties.json")         # regenerated from properties/properties.js by build_property_orgs.py
-    PROPERTY_ORGS=set(str(x) for x in (_PJ.get("objectids") if isinstance(_PJ,dict) else _PJ))
-except FileNotFoundError: PROPERTY_ORGS=set()
+# Property orgs come LIVE from the dashboard's properties.js (single source of truth): set
+# PROPERTIES_JS_URL to its public URL and the scorer re-reads it every PROPERTY_TTL_SEC seconds,
+# resolving dataset labels -> EDO objectids itself. So adding/removing a property org on the
+# dashboard updates the badges automatically, with no rebuild, no orgs_with_properties.json, and
+# no Railway push. If the URL is unset or a fetch fails, it falls back to the bundled JSON snapshot.
+import time as _time
+PROPERTIES_JS_URL=os.environ.get("PROPERTIES_JS_URL","").strip()
+PROPERTY_TTL=int(os.environ.get("PROPERTY_TTL_SEC","900"))
+try:
+    _PJ=_load("orgs_with_properties.json")         # fallback snapshot (build_property_orgs.py output)
+    _PROPERTY_FALLBACK=set(str(x) for x in (_PJ.get("objectids") if isinstance(_PJ,dict) else _PJ))
+except FileNotFoundError: _PROPERTY_FALLBACK=set()
+PROPERTY_ORGS=_PROPERTY_FALLBACK                   # back-compat name; run() uses get_property_orgs()
+_prop_cache={"orgs":None,"ts":0.0}
+def _fetch_property_orgs():
+    if not PROPERTIES_JS_URL: return None
+    try:
+        import build_property_orgs as _bpo
+        req=urllib.request.Request(PROPERTIES_JS_URL,headers={"User-Agent":"FastLocations-scorer/1.0"})
+        with urllib.request.urlopen(req,timeout=8) as r:
+            txt=r.read().decode("utf-8","replace")
+        orgs=_bpo.resolve_objectids(txt,list(MASTER.values()))
+        return orgs or None                        # empty result -> treat as failure, keep fallback
+    except Exception:
+        return None
+def get_property_orgs():
+    now=_time.time()
+    if _prop_cache["orgs"] is not None and (now-_prop_cache["ts"])<PROPERTY_TTL:
+        return _prop_cache["orgs"]
+    orgs=_fetch_property_orgs()
+    if orgs is None:                               # unset URL or fetch failed
+        orgs=_prop_cache["orgs"] if _prop_cache["orgs"] is not None else _PROPERTY_FALLBACK
+    _prop_cache["orgs"]=orgs; _prop_cache["ts"]=now
+    return orgs
 try: BEA_COST=_load("county_bea.json")             # fips -> {earn_pow_pc, pcpi, pcpi_growth10}; BEA CAINC30 via build_bea_cost.py
 except FileNotFoundError: BEA_COST={}
 try: OCC=_load("county_occupation.json")           # fips -> occupation-group employment shares (%); Census ACS S2401 via build_occupation.py
@@ -564,6 +594,7 @@ def build_rationale(rank,r,pending):
 
 def run(criteria,top=10):
     w={**DEFAULT_WEIGHTS,**(criteria.get("weights") or {})}
+    prop_set=get_property_orgs()   # live property-org set (dashboard properties.js), cached w/ TTL
     geo=criteria.get("geography") or {}; demo=criteria.get("demographics") or {}; infra=criteria.get("infrastructure") or {}
     countries=set(geo.get("countries") or ["US","CA"])
     refset=[f for f in ALLFEAT if (("US" in countries and gsys(ALLFEAT[f])=="US") or
@@ -648,7 +679,7 @@ def run(criteria,top=10):
         bonus=8 if d["ST_ABBREV"] in pref else 0
         edos=serving_edos(f,g)
         cov=COVERAGE_BONUS.get(edos[0]["category"],0) if edos else 0   # local/regional coverage over-index
-        prop_edos=[e for e in edos if e["objectid"] in PROPERTY_ORGS]  # serving EDO(s) with live property listings
+        prop_edos=[e for e in edos if e["objectid"] in prop_set]  # serving EDO(s) with live property listings
         # credit the most SPECIFIC property-holding EDO; statewide listings barely move the needle
         prop=round(PROPERTY_BONUS*max((property_scope_factor(e) for e in prop_edos),default=0.0),2)
         rel=None; final=None
