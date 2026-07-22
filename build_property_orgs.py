@@ -91,38 +91,47 @@ def parse_labels(js_path):
     """Extract active DATASETS labels from a properties.js FILE."""
     return parse_labels_text(open(js_path, encoding="utf-8").read())
 
-def extract_labels(text):
-    """Dataset labels from either a properties.js file (parse the JS DATASETS array) OR a
-    datasets.json registry (a JSON array of {label,...} or {"datasets":[...]}). Lets PROPERTIES_JS_URL
-    point at whichever the dashboard treats as source of truth."""
+def extract_entries(text):
+    """Dataset entries from a datasets.json registry (JSON list, or {"datasets":[...]}) as dicts, or
+    from a properties.js file (JS DATASETS array) as [{"label":...}]. datasets.json entries carry an
+    explicit `dashId` (the EDO objectid) which is authoritative; properties.js entries have only labels."""
     t = text.lstrip()
-    if t[:1] in "[{":                                 # looks like JSON (datasets.json)
+    if t[:1] in "[{":                                 # JSON registry (datasets.json)
         try:
             j = json.loads(t)
             arr = j if isinstance(j, list) else (j.get("datasets") if isinstance(j, dict) else None)
             if isinstance(arr, list):
-                return [d.get("label") for d in arr if isinstance(d, dict) and d.get("label")]
+                return [d for d in arr if isinstance(d, dict)]
         except Exception:
             pass
-    return parse_labels_text(text)                    # else parse the JS DATASETS block
+    return [{"label": l} for l in parse_labels_text(text)]   # else the JS DATASETS block
+
+def _label_to_objectids(lab, master, by_id):
+    """Fuzzy label -> objectid(s) via OVERRIDES + matcher. Returns a list (0-2 ids)."""
+    if not lab:
+        return []
+    if lab in OVERRIDES:
+        v = OVERRIDES[lab]
+        return [o for o in ([v] if isinstance(v, str) else v) if o in by_id]
+    b = best_match(lab, master)
+    if b and ((b[2] and b[3].get("state") == b[2] and b[1] >= 1) or b[1] >= 2):
+        return [b[3]["objectid"]]
+    return []
 
 def resolve_objectids(js_text, master):
-    """properties.js/datasets.json TEXT + master EDO list -> set of objectid strings that have
-    properties. Reuses OVERRIDES + the same fuzzy matcher as the CLI build. The scorer calls this at
-    runtime so the live dashboard registry is the single source of truth -- no orgs_with_properties.json
-    to regenerate or commit. Unresolved labels are simply skipped (no badge; fail-safe)."""
+    """datasets.json/properties.js TEXT + master EDO list -> set of objectid strings that have
+    properties. Prefers each entry's explicit `dashId` (the EDO objectid the scraper wrote -- exact,
+    no matching needed); falls back to fuzzy label matching (+OVERRIDES) when dashId is absent, e.g. a
+    properties.js DATASETS entry. The scorer calls this at runtime so the live dashboard registry is
+    the single source of truth -- no orgs_with_properties.json to regenerate or commit. Anything that
+    doesn't resolve is simply skipped (no badge; fail-safe)."""
     by_id = {r["objectid"]: r for r in master}
     out = set()
-    for lab in extract_labels(js_text):
-        if lab in OVERRIDES:
-            v = OVERRIDES[lab]
-            for oid in ([v] if isinstance(v, str) else v):
-                if oid in by_id:
-                    out.add(oid)
-            continue
-        b = best_match(lab, master)
-        if b and ((b[2] and b[3].get("state") == b[2] and b[1] >= 1) or b[1] >= 2):
-            out.add(b[3]["objectid"])
+    for d in extract_entries(js_text):
+        did = d.get("dashId") or d.get("dashid") or d.get("objectid")
+        if did is not None and str(did) in by_id:     # authoritative: scraper-supplied objectid
+            out.add(str(did)); continue
+        out.update(_label_to_objectids(d.get("label"), master, by_id))
     return out
 
 def best_match(lab, master):
