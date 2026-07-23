@@ -1,0 +1,45 @@
+{
+  "_comment": "Curated Canadian census-division (CDUID) water-supply stress: chronic groundwater/capacity risk. severity 1-3 (1=elevated, 2=high, 3=severe, e.g. active development/water-servicing freeze). Wired into m_infrastructure (CA) water_security + the infrastructure.drought filter, mirroring the US county_groundwater hotspots. CDs not listed are treated as unstressed. Add entries as new regions are confirmed; cite a source.",
+  "3530": {
+    "severity": 3,
+    "region": "Waterloo Region, Ontario",
+    "note": "Groundwater/capacity crisis: ~80% of supply is groundwater; municipal system ran near 97% capacity for 3 consecutive years (safe target 80%); deep Waterloo Moraine aquifers (e.g. AFB2) down by metres; localized dry private wells and shrinking wetlands; temporary freeze on new water-servicing agreements and development approvals across parts of Kitchener/Waterloo and townships. Compounded by rapid growth: Kitchener-Cambridge-Waterloo CMA grew ~4.9% in 2024, Kitchener ~6% (2nd-fastest-growing city in Canada).",
+    "source": "Region of Waterloo groundwater interference policy update; EngageWR Water Supply Strategy; StatCan 2024 population estimates"
+  },
+  "5929": {
+    "severity": 2,
+    "region": "Sunshine Coast, British Columbia",
+    "note": "Recurring drought since 2022; local state of emergency declared when supply hit historic lows. Small coastal supply with limited storage and repeated summer shortfalls.",
+    "source": "CBC (Sunshine Coast state of emergency, 2022)"
+  },
+  "4811": {
+    "severity": 2,
+    "region": "Edmonton region (Alberta Division No. 11)",
+    "note": "Glacier-fed North Saskatchewan River supply; research flags heightened late-summer instability from glacier retreat for the >1 million Albertans reliant on the Bighorn Dam. Structural/forward-looking supply risk.",
+    "source": "The Weather Network (glacier retreat / Bighorn Dam supply risk)"
+  },
+  "4806": {
+    "severity": 2,
+    "region": "Calgary region (Alberta Division No. 6)",
+    "note": "Glacier-fed Bow River supply; southern-Alberta drought cycles and glacier retreat reduce late-summer river stability underpinning municipal supply, hydropower and irrigation.",
+    "source": "The Weather Network; southern AB drought reporting"
+  },
+  "4802": {
+    "severity": 2,
+    "region": "Lethbridge region (Alberta Division No. 2)",
+    "note": "Southern Alberta drought cycle; Oldman/St. Mary irrigation-and-municipal system under repeated water-shortage advisories; glacier-fed late-summer flows declining.",
+    "source": "Southern Alberta drought reporting"
+  },
+  "4801": {
+    "severity": 2,
+    "region": "Medicine Hat / SE Alberta (Division No. 1)",
+    "note": "Driest corner of Alberta; recurring drought and low river flows on the South Saskatchewan system.",
+    "source": "Southern Alberta drought reporting"
+  },
+  "4706": {
+    "severity": 1,
+    "region": "Regina / southern Saskatchewan (Division No. 6)",
+    "note": "Southern Saskatchewan drought cycling; reliance on Buffalo Pound / Qu'Appelle system sensitive to prolonged dry periods.",
+    "source": "Prairie drought reporting"
+  }
+}

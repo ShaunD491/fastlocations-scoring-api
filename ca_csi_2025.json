@@ -1,0 +1,202 @@
+{
+ "1001": {
+  "csi": 79.2,
+  "rate": 6163,
+  "cma": "St. John's"
+ },
+ "1209": {
+  "csi": 68.6,
+  "rate": 6094,
+  "cma": "Halifax"
+ },
+ "1307": {
+  "csi": 105.6,
+  "rate": 7561,
+  "cma": "Moncton"
+ },
+ "1301": {
+  "csi": 70.0,
+  "rate": 4556,
+  "cma": "Saint John"
+ },
+ "1310": {
+  "csi": 80.5,
+  "rate": 5734,
+  "cma": "Fredericton"
+ },
+ "2494": {
+  "csi": 49.3,
+  "rate": 2973,
+  "cma": "Saguenay"
+ },
+ "2423": {
+  "csi": 55.0,
+  "rate": 3493,
+  "cma": "Québec"
+ },
+ "2443": {
+  "csi": 50.3,
+  "rate": 3134,
+  "cma": "Sherbrooke"
+ },
+ "2437": {
+  "csi": 56.0,
+  "rate": 3417,
+  "cma": "Trois-Rivières"
+ },
+ "2449": {
+  "csi": 72.3,
+  "rate": 4084,
+  "cma": "Drummondville"
+ },
+ "2466": {
+  "csi": 61.3,
+  "rate": 3641,
+  "cma": "Montréal"
+ },
+ "2481": {
+  "csi": 60.6,
+  "rate": 3700,
+  "cma": "Gatineau{4}"
+ },
+ "3506": {
+  "csi": 50.6,
+  "rate": 4212,
+  "cma": "Ottawa{5}"
+ },
+ "3510": {
+  "csi": 61.5,
+  "rate": 5005,
+  "cma": "Kingston"
+ },
+ "3512": {
+  "csi": 63.1,
+  "rate": 4920,
+  "cma": "Belleville–Quinte West"
+ },
+ "3515": {
+  "csi": 57.3,
+  "rate": 5385,
+  "cma": "Peterborough"
+ },
+ "3520": {
+  "csi": 55.0,
+  "rate": 3950,
+  "cma": "Toronto"
+ },
+ "3525": {
+  "csi": 54.8,
+  "rate": 4076,
+  "cma": "Hamilton"
+ },
+ "3526": {
+  "csi": 53.8,
+  "rate": 4139,
+  "cma": "St. Catharines–Niagara"
+ },
+ "3530": {
+  "csi": 66.8,
+  "rate": 5083,
+  "cma": "Kitchener–Cambridge–Waterloo"
+ },
+ "3529": {
+  "csi": 72.1,
+  "rate": 5381,
+  "cma": "Brantford"
+ },
+ "3523": {
+  "csi": 57.8,
+  "rate": 4288,
+  "cma": "Guelph"
+ },
+ "3539": {
+  "csi": 66.0,
+  "rate": 5059,
+  "cma": "London"
+ },
+ "3537": {
+  "csi": 55.4,
+  "rate": 4203,
+  "cma": "Windsor"
+ },
+ "3543": {
+  "csi": 46.9,
+  "rate": 3777,
+  "cma": "Barrie"
+ },
+ "3553": {
+  "csi": 64.9,
+  "rate": 4706,
+  "cma": "Greater Sudbury"
+ },
+ "3558": {
+  "csi": 114.1,
+  "rate": 8373,
+  "cma": "Thunder Bay"
+ },
+ "4611": {
+  "csi": 113.4,
+  "rate": 7899,
+  "cma": "Winnipeg"
+ },
+ "4706": {
+  "csi": 87.4,
+  "rate": 6543,
+  "cma": "Regina"
+ },
+ "4711": {
+  "csi": 98.9,
+  "rate": 7532,
+  "cma": "Saskatoon"
+ },
+ "4802": {
+  "csi": 107.7,
+  "rate": 8335,
+  "cma": "Lethbridge"
+ },
+ "4806": {
+  "csi": 61.7,
+  "rate": 5038,
+  "cma": "Calgary"
+ },
+ "4808": {
+  "csi": 114.4,
+  "rate": 10592,
+  "cma": "Red Deer"
+ },
+ "4811": {
+  "csi": 95.6,
+  "rate": 7463,
+  "cma": "Edmonton"
+ },
+ "5935": {
+  "csi": 103.7,
+  "rate": 8688,
+  "cma": "Kelowna"
+ },
+ "5933": {
+  "csi": 126.2,
+  "rate": 10949,
+  "cma": "Kamloops"
+ },
+ "5909": {
+  "csi": 114.9,
+  "rate": 9086,
+  "cma": "Chilliwack + Abbotsford–Mission"
+ },
+ "5915": {
+  "csi": 83.5,
+  "rate": 5672,
+  "cma": "Vancouver"
+ },
+ "5917": {
+  "csi": 74.6,
+  "rate": 5588,
+  "cma": "Victoria"
+ },
+ "5921": {
+  "csi": 106.0,
+  "rate": 9648,
+  "cma": "Nanaimo"
+ }
+}

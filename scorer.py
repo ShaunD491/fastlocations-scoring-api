@@ -95,6 +95,20 @@ try:                                               # regional layers: Safety (St
             if _r.get("livability") is not None: _v["ca_livability"]=_r["livability"]
 except FileNotFoundError:
     pass
+try:                                               # curated CA census-division water-supply stress (groundwater/capacity)
+    _WS=_load("ca_water_stress.json")              # cduid -> {severity 1-3, region, note, source}
+    for _cid,_w in _WS.items():
+        if _cid in CA_FEAT and isinstance(_w,dict) and _w.get("severity") is not None:
+            CA_FEAT[_cid]["water_stress"]=_w["severity"]
+except FileNotFoundError:
+    pass
+try:                                               # StatCan latest Crime Severity Index by CMA -> anchor CD (build_ca_crime.py)
+    _CSI25=_load("ca_csi_2025.json")               # cduid -> {csi, rate, cma}; overlays ca_regional's older CSI for metro CDs
+    for _cid,_c in _CSI25.items():
+        if _cid in CA_FEAT and isinstance(_c,dict) and _c.get("csi") is not None:
+            CA_FEAT[_cid]["ca_csi"]=_c["csi"]
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -481,13 +495,18 @@ def m_market_size(f,crit):
     return {"population_scale":pop}
 
 def m_infrastructure(f,crit):
+    ci=(crit.get("infrastructure") or {})
     if gsys(f)=="CA":                              # CMA = highest, mid everywhere else (per provided rule)
+        out={}
         p=f.get("ca_infra_pts")
-        return {"infra_grade":p} if p is not None else None
+        if p is not None: out["infra_grade"]=p
+        if ci.get("drought"):                      # opt-in water-supply security (curated CD groundwater/capacity stress; higher=safer)
+            ws=f.get("water_stress")
+            out["water_security"]=100.0 if not ws else max(0.0,100.0-ws*33.3)
+        return out or None
     # US: blend the ASCE STATE grade with LOCAL power-generation capacity (plants >=100MW within
     # ~60mi) so infrastructure is county-specific, not just a flat state value. If the project
     # flags renewable/ESG power as a priority, the local renewable share also counts.
-    ci=(crit.get("infrastructure") or {})
     g=INFRA_GRADES.get(f.get("ST_ABBREV")); pts=GRADE_PTS.get(g) if g else None
     out={}
     if pts is not None: out["infra_grade"]=pts
@@ -616,10 +635,15 @@ def run(criteria,top=10):
     rtw=(criteria.get("workforce") or {}).get("right_to_work")   # None | "preferred" | "required"
     if rtw=="required":
         cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in RTW_STATES]
-    if (criteria.get("infrastructure") or {}).get("drought")=="required":   # not in drought, not a depletion hotspot, most wells not declining
-        cands=[f for f in cands if (ALLFEAT[f].get("not_in_drought") or 0)>=50
-               and not ALLFEAT[f].get("gw_depleted")
-               and (ALLFEAT[f].get("gw_pct_declining") or 0)<=66]
+    if (criteria.get("infrastructure") or {}).get("drought")=="required":
+        def _water_ok(f):
+            d=ALLFEAT[f]
+            if gsys(d)=="CA":                       # CA: exclude severe water-supply stress (e.g. Waterloo dev freeze);
+                return (d.get("water_stress") or 0)<3   # CDs without a stress record are treated as OK (no US drought fields)
+            # US: not in drought, not a depletion hotspot, and most local wells not declining
+            return ((d.get("not_in_drought") or 0)>=50 and not d.get("gw_depleted")
+                    and (d.get("gw_pct_declining") or 0)<=66)
+        cands=[f for f in cands if _water_ok(f)]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):
