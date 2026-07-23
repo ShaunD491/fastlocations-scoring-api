@@ -109,6 +109,20 @@ try:                                               # StatCan latest Crime Severi
             CA_FEAT[_cid]["ca_csi"]=_c["csi"]
 except FileNotFoundError:
     pass
+try:                                               # StatCan recent annual population growth by CD (build_ca_popgrowth.py)
+    _PG=_load("ca_popgrowth.json")                 # cduid -> {growth_pct, from, to}; replaces stale 2016-21 census growth
+    for _cid,_g in _PG.items():
+        if _cid in CA_FEAT and isinstance(_g,dict) and _g.get("growth_pct") is not None:
+            CA_FEAT[_cid]["pop_growth"]=_g["growth_pct"]
+except FileNotFoundError:
+    pass
+try:                                               # CIMD-derived livability by CD (build_ca_livability.py); one consistent scale, fills the coverage gap
+    _LV=_load("ca_livability.json")                # cduid -> {livability (higher=less deprived), das, pop}
+    for _cid,_l in _LV.items():
+        if _cid in CA_FEAT and isinstance(_l,dict) and _l.get("livability") is not None:
+            CA_FEAT[_cid]["ca_livability"]=_l["livability"]
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -475,9 +489,9 @@ def m_incentives(f,crit):
             "priority_match":pf}
 
 def m_livability(f,crit):
-    if gsys(f)=="CA":                              # Numbeo 2026 most-livable Canadian cities (ranked CDs only)
+    if gsys(f)=="CA":                              # CIMD deprivation composite (higher = less deprived = more livable)
         lv=f.get("ca_livability")
-        return {"livability_rank":lv} if lv is not None else None
+        return {"low_deprivation":lv} if lv is not None else None
     pd=f.get("premature_death"); pf=f.get("poor_fair_health")
     pp=f.get("poor_phys_days"); pm=f.get("poor_mental_days"); le=f.get("life_expectancy")
     if all(x is None for x in (pd,pf,pp,pm,le)): return None

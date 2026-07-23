@@ -71,9 +71,11 @@ def test_coverage_bonus_present():
     assert any(r["coverage_bonus"] > 0 for r in scorer.run(US, top=10)["results"])
 
 def test_canada_null_handling():
+    # scoring must produce valid finals even where some CA sub-scores are null. Logistics is still
+    # sparse for a few remote CDs (no airport/port/grid), so it's the standing null-handling check.
     out = scorer.run(CA, top=5)
     assert out["results"] and all(r["final_score"] is not None for r in out["results"])
-    assert any(r["sub_scores"]["livability"] is None for r in scorer.run(CA, top=4000)["results"])
+    assert any(r["sub_scores"]["logistics"] is None for r in scorer.run(CA, top=4000)["results"])
 
 def test_market_proximity():
     out = scorer.run({"geography": {"countries": ["US"], "market_proximity": [{"to": "Columbus, OH", "max_miles": 60}]}}, top=20)
