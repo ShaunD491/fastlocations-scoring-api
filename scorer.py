@@ -123,6 +123,13 @@ try:                                               # CIMD-derived livability by 
             CA_FEAT[_cid]["ca_livability"]=_l["livability"]
 except FileNotFoundError:
     pass
+try:                                               # StatCan NOC broad occupation shares by CD (build_ca_occupation.py)
+    _OC=_load("ca_occupation.json")                # cduid -> {noc0..noc9 (% of employed labour force), _emp}
+    for _cid,_o in _OC.items():
+        if _cid in CA_FEAT and isinstance(_o,dict):
+            CA_FEAT[_cid]["ca_occ"]=_o
+except FileNotFoundError:
+    pass
 ALLFEAT={**FEAT,**CA_FEAT}
 
 MASTER={r["objectid"]:r for r in _load("edo_master_table_dual.json")}
@@ -404,6 +411,25 @@ def m_demographics(f,crit):
     return {"education_attainment":edu_share(f,pr),   # weighted 2x via METRIC_WEIGHTS (lifts mature, highly-educated NE/east coast)
             "pop_growth":f.get("POPGRW20CY"),
             "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
+# Skill profile -> NOC 2021 broad categories (Canada; from build_ca_occupation.py). Coarser than the
+# US S2401 groups (10 vs 16) but REAL occupational supply, replacing the degree-share proxy for CA so
+# "engineers" reads a CD's Natural-&-applied-sciences share, "skilled_trades" reads Trades, etc.
+PROFILE_NOC={
+    "engineers":["noc2"],"it_software":["noc2"],"scientists_rd":["noc2"],
+    "healthcare":["noc3"],"management":["noc0"],"finance_accounting":["noc1"],
+    "professional":["noc4"],"skilled_trades":["noc7"],"technicians":["noc7","noc2"],
+    "machine_operators":["noc9"],"assembly_production":["noc9"],
+    "general_labor":["noc9","noc8"],"logistics_warehouse":["noc7"],"customer_service":["noc6"],
+}
+def ca_occ_supply(occ,profiles):
+    """Mean NOC-broad employment share of the selected profiles (Canada). None if no occ record."""
+    if not occ or not profiles: return None
+    shares=[]
+    for p in profiles:
+        groups=PROFILE_NOC.get(p)
+        if not groups: continue
+        shares.append(sum((occ.get(g) or 0.0) for g in groups))
+    return round(sum(shares)/len(shares),3) if shares else None
 def m_workforce(f,crit):
     wfc=(crit.get("workforce") or {})
     need=(wfc.get("headcount") or {}).get("initial")
@@ -417,10 +443,15 @@ def m_workforce(f,crit):
             if lf  is not None: parts.append((lf /need)/50.0)
             if pop is not None: parts.append((pop/need)/100.0)
             if parts: staff=min(min(parts),1.0)
-        # No StatCan trades-level breakdown by CD, so skill fit is only expressible for degree-heavy
-        # profiles via bachelor_share; trades/labor profiles stay null (honest gap, not a penalty).
-        cog=skill_cognition(profiles)
-        ca_skill=f.get("bachelor_share") if (cog is not None and cog>=0.5) else None
+        # Real NOC-broad occupation supply (StatCan 98-10-0471) when available -- differentiates ALL
+        # profiles incl. trades/labor. Falls back to the bachelor_share proxy (degree-heavy only) for
+        # any CD without an occupation record.
+        occ=f.get("ca_occ")
+        if occ:
+            ca_skill=ca_occ_supply(occ,profiles)
+        else:
+            cog=skill_cognition(profiles)
+            ca_skill=f.get("bachelor_share") if (cog is not None and cog>=0.5) else None
         return {"labor_availability":(-une if une is not None else None),"staffability":staff,
                 "skill_supply":ca_skill}
     une=f.get("UNEMPRT_CY"); lf=f.get("CIVLBFR_CY"); pop=f.get("TOTPOP_CY")
