@@ -67,6 +67,13 @@ def main():
         c_resl = col("RESL_SCORE"); c_sovi = col("SOVI_SCORE")
         # per-hazard risk-index score columns are named "<HAZ>_RISKS"
         haz_cols = {c[:-6]: cols[c] for c in cols if c.endswith("_RISKS")}
+        # EXPOSURE-NORMALIZED hazard columns. The NRI composite RISK_SCORE is loss-based, so it
+        # scales with how much built value already exists -- a rural county scores "low risk" simply
+        # because there's little to lose. For SITE SELECTION we want how exposed a NEW facility would
+        # be, so we prefer the annualized loss RATIO percentile (loss per dollar exposed) and, failing
+        # that, annualized hazard frequency.
+        alr_cols = {c[:-10]: cols[c] for c in cols if c.endswith("_ALR_NPCTL")}
+        afq_cols = {c[:-6]: cols[c] for c in cols if c.endswith("_AFREQ")}
 
         out = {}
         for row in rd:
@@ -90,16 +97,42 @@ def main():
                     hz[haz] = round(v, 2)
             if hz:
                 rec["hazards"] = hz
+            # exposure-normalized hazard exposure (what a NEW facility faces), 0-100 higher = worse.
+            alr = [num(row.get(c)) for c in alr_cols.values()]
+            alr = [v for v in alr if v is not None]
+            if alr:
+                alr.sort(reverse=True)
+                top = alr[:3]                                    # worst perils drive siting decisions
+                rec["exposure"] = round((sum(top) / len(top)) * 0.7 + (sum(alr) / len(alr)) * 0.3, 2)
+                rec["exposure_src"] = "alr_npctl"
+            else:
+                afq = [num(row.get(c)) for c in afq_cols.values()]
+                afq = [v for v in afq if v is not None]
+                if afq:
+                    rec["exposure_raw_freq"] = round(sum(afq), 3)  # ranked into a percentile below
+                    rec["exposure_src"] = "afreq"
             if rec.get("risk") is not None or hz:
                 out[fips] = rec
 
+    # If no ALR percentiles existed, convert summed annualized frequency into a 0-100 percentile.
+    if out and not any("exposure" in r for r in out.values()):
+        freqs = sorted((r["exposure_raw_freq"], k) for k, r in out.items() if "exposure_raw_freq" in r)
+        n = len(freqs)
+        for i, (_, k) in enumerate(freqs):
+            out[k]["exposure"] = round(i / max(n - 1, 1) * 100, 2)
+    for r in out.values():
+        r.pop("exposure_raw_freq", None)
+
     json.dump(out, open(OUT, "w", encoding="utf-8"), separators=(",", ":"))
-    print(f"Wrote {OUT}: {len(out)} counties")
-    for fips in ("06037", "48201", "12086"):   # LA, Harris TX, Miami-Dade
+    src = next((r.get("exposure_src") for r in out.values() if r.get("exposure_src")), "none")
+    have = sum(1 for r in out.values() if r.get("exposure") is not None)
+    print(f"Wrote {OUT}: {len(out)} counties | exposure signal: {src} ({have} counties)")
+    print("  county    loss-based risk   exposure(new facility)")
+    for fips, nm in (("22091", "St. Helena LA"), ("48201", "Harris TX"), ("12086", "Miami-Dade"),
+                     ("06037", "Los Angeles"), ("39035", "Cuyahoga OH")):
         if fips in out:
             r = out[fips]
-            top = sorted((r.get("hazards") or {}).items(), key=lambda kv: kv[1], reverse=True)[:3]
-            print(f"  {fips}: risk={r.get('risk')} top hazards={top}")
+            print(f"  {fips} {nm:<16} risk={r.get('risk'):>6}   exposure={r.get('exposure')}")
 
 
 if __name__ == "__main__":

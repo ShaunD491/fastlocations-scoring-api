@@ -73,7 +73,13 @@ try:                                               # FEMA National Risk Index: c
     for _k,_v in FEAT.items():
         _n=_NRI.get(_k)
         if _n:
-            _v["nri_risk"]=_n.get("risk"); _v["nri_hazards"]=_n.get("hazards")
+            _v["nri_hazards"]=_n.get("hazards")
+            # Prefer EXPOSURE (annualized loss RATIO percentile) over the NRI composite: the composite
+            # is loss-based, so it scales with existing built value and rates rural hazard-prone areas
+            # (e.g. St. Helena Parish LA) as "low risk". Exposure answers the siting question -- how
+            # much would a NEW facility here be at risk -- independent of what's already built.
+            _v["nri_risk"]=_n.get("exposure") if _n.get("exposure") is not None else _n.get("risk")
+            _v["nri_loss_risk"]=_n.get("risk")
 except FileNotFoundError:
     pass
 try:
@@ -136,6 +142,13 @@ try:                                               # StatCan NOC broad occupatio
     for _cid,_o in _OC.items():
         if _cid in CA_FEAT and isinstance(_o,dict):
             CA_FEAT[_cid]["ca_occ"]=_o
+except FileNotFoundError:
+    pass
+try:                                               # StatCan Open Database of Infrastructure asset counts by CD (build_ca_infrastructure.py)
+    _INF=_load("ca_infrastructure.json")           # cduid -> {electric_grid, potable_water, wastewater, telecom, ...}
+    for _cid,_i in _INF.items():
+        if _cid in CA_FEAT and isinstance(_i,dict):
+            CA_FEAT[_cid]["ca_assets"]=_i
 except FileNotFoundError:
     pass
 ALLFEAT={**FEAT,**CA_FEAT}
@@ -220,7 +233,12 @@ DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_
 # to the middle. Prevents tiny / college-town counties from topping generic searches. Tunable.
 SCALE_DAMP_K=100000
 CA_MARKET_WEIGHT=0.20   # Canada weights regional market access (catchment) up; see m_market_size (CA)
-HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties with FEMA NRI composite risk >= this (top-decile hazard)
+HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties with FEMA NRI exposure >= this (top-decile hazard)
+# Natural-hazard preference must actually bite. As one metric inside infrastructure (8% weight) it
+# moved a county's score by ~0.2 pt -- invisible. When the project opts into hazard sensitivity we
+# apply a DIRECT penalty of up to this many points, scaled by the county's national hazard-exposure
+# percentile, so "prefer lower-hazard areas" visibly re-ranks (same reasoning as the property bonus).
+HAZARD_PENALTY=15.0
 # Coverage bonus: over-index jurisdictions served by a LOCAL or REGIONAL EDO customer (a specific
 # org to route the lead to) over those covered only by a broad State/Provincial agency. Added to
 # the final score from the most-specific serving EDO's category. US + Canada (CA orgs are all
@@ -550,10 +568,31 @@ def m_market_size(f,crit):
 
 def m_infrastructure(f,crit):
     ci=(crit.get("infrastructure") or {})
-    if gsys(f)=="CA":                              # CMA = highest, mid everywhere else (per provided rule)
+    if gsys(f)=="CA":
         out={}
-        p=f.get("ca_infra_pts")
+        p=f.get("ca_infra_pts")                    # legacy CMA proxy (CMA=high, else mid) -- kept as a coarse baseline
         if p is not None: out["infra_grade"]=p
+        # Real asset inventory from StatCan ODI (build_ca_infrastructure.py). Airports/ports are
+        # deliberately EXCLUDED here -- m_logistics already scores them, so counting them again
+        # would double-weight transport. Counts are log-damped: presence and depth matter, but a
+        # county with 2,000 bridges isn't 1,000x better connected than one with 2.
+        a=f.get("ca_assets")
+        if a:
+            def _lg(n): return math.log10(1.0+(n or 0))
+            grid=_lg(a.get("electric_grid"))
+            util=_lg((a.get("potable_water") or 0)+(a.get("wastewater") or 0))
+            comm=_lg(a.get("telecom"))
+            road=_lg(a.get("bridges_tunnels"))
+            energy=_lg(a.get("oil_gas"))
+            waste=_lg(a.get("solid_waste"))
+            if grid:   out["grid_assets"]=grid          # substations/transmission -- the key industrial constraint
+            if util:   out["water_infrastructure"]=util # potable water + wastewater capacity
+            if comm:   out["telecom_assets"]=comm
+            if road or energy or waste:
+                out["other_infrastructure"]=(road+energy+waste)/3.0
+        if ci.get("renewable"):                    # opt-in ESG: local low-carbon generation presence (CA analogue of US renew_share)
+            lc=(a or {}).get("low_carbon")
+            if lc is not None: out["renewable_share"]=math.log10(1.0+lc)
         if ci.get("drought"):                      # opt-in water-supply security (curated CD groundwater/capacity stress; higher=safer)
             ws=f.get("water_stress")
             out["water_security"]=100.0 if not ws else max(0.0,100.0-ws*33.3)
@@ -740,6 +779,12 @@ def run(criteria,top=10):
     trace["candidates_with_customer_edo"]=len(served)
     if not cands: return {"trace":trace,"results":[],"other_notable":[],"note":"no candidates passed filters"}
 
+    # hazard preference: national percentile of hazard EXPOSURE across the reference set, so the
+    # penalty is anchored the same way sub-scores are (a county's standing vs the country).
+    hz_pref=(criteria.get("infrastructure") or {}).get("hazard")
+    hz_pct={}
+    if hz_pref:
+        hz_pct=pct_rank({ff:ALLFEAT[ff].get("nri_risk") for ff in refset})   # 100 = most exposed
     pref=set(geo.get("preferred_regions") or [])
     if rtw=="preferred": pref|=RTW_STATES     # right-to-work states get the same +8 preference bonus
     results=[]
@@ -778,12 +823,19 @@ def run(criteria,top=10):
             # near-100 score can't clamp (which would tie the top matches at 100 and hide the real
             # ordering). At typical scores this still adds ~the same points; near the top it tapers.
             final=round(damped+(100-damped)*min((bonus+cov+prop)/40.0,1.0),2)
+        # hazard-sensitivity penalty: scaled by the county's national hazard-exposure percentile, so
+        # opting in visibly demotes exposed locations instead of nudging them a fraction of a point.
+        hz_p=hz_pct.get(f) if hz_pref else None
+        hz_pen=round(HAZARD_PENALTY*(hz_p/100.0),2) if (hz_p is not None and final is not None) else 0.0
+        if hz_pen and final is not None:
+            final=round(max(0.0,final-hz_pen),2)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),"msa":(MSA_MAP.get(f) if g=="US" else None),
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,"coverage_bonus":cov,
                         "property_bonus":prop,"has_listed_properties":bool(prop_edos),
                         "property_edos":[e["organization"] for e in prop_edos],
+                        "hazard_penalty":hz_pen,"hazard_exposure":(ALLFEAT[f].get("nri_risk") if hz_pref else None),
                         "reliability":(round(rel,3) if rel is not None else None),
                         "final_score":final,"serving_edos":edos})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)

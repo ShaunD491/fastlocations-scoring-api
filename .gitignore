@@ -29,6 +29,7 @@ FL Project Search/
 !ca_popgrowth.json
 !ca_livability.json
 !ca_occupation.json
+!ca_infrastructure.json
 !us_catchment.json
 !fips_to_msa.json
 !county_workforce.json

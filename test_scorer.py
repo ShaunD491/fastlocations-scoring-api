@@ -161,6 +161,27 @@ def test_hazard_screen():
     assert scorer.m_infrastructure(ex, {}).get("hazard_resilience") is None          # opt-in only
     assert scorer.m_infrastructure(ex, {"infrastructure": {"hazard": "preferred"}}).get("hazard_resilience") is not None
 
+def test_hazard_preference_actually_demotes():
+    # "preferred" must MEANINGFULLY re-rank, not nudge: as a metric inside infrastructure (8% weight)
+    # it moved scores ~0.2pt. A direct exposure-scaled penalty is applied instead. Also asserts a
+    # blank search is untouched, and that a more-exposed county is penalized more than a less-exposed one.
+    if not any(scorer.FEAT[f].get("nri_risk") is not None for f in scorer.FEAT):
+        return
+    US_H = {"geography": {"countries": ["US"]}, "infrastructure": {"hazard": "preferred"}}
+    base = scorer.run(US, top=4000)["results"]
+    haz = scorer.run(US_H, top=4000)["results"]
+    assert all(r["hazard_penalty"] == 0 for r in base[:20]), "no hazard preference => no penalty"
+    pens = {r["geoid"]: r["hazard_penalty"] for r in haz}
+    assert any(p > 1 for p in pens.values()), "hazard preference must apply real penalties"
+    # the most-exposed county in the top-50 baseline must lose rank once hazard is preferred
+    ranked = {r["geoid"]: i for i, r in enumerate(haz)}
+    worst = max(base[:50], key=lambda r: scorer.FEAT.get(r["geoid"], {}).get("nri_risk") or 0)
+    before = next(i for i, r in enumerate(base) if r["geoid"] == worst["geoid"])
+    assert ranked.get(worst["geoid"], 10**6) > before, "high-exposure county should fall when hazard is preferred"
+    # penalty must be monotonic in exposure
+    two = sorted((r for r in haz if r["hazard_exposure"] is not None), key=lambda r: r["hazard_exposure"])
+    assert two[0]["hazard_penalty"] <= two[-1]["hazard_penalty"]
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0
