@@ -167,6 +167,8 @@ try: PLACES=_load("us_places.json")                # "ST|normname" -> [lat,lon]
 except FileNotFoundError: PLACES={}
 try: MSA_MAP=_load("fips_to_msa.json")             # US county FIPS -> Metropolitan Statistical Area name
 except FileNotFoundError: MSA_MAP={}
+try: CMA_MAP=_load("ca_cma.json")                  # CA CDUID -> Census Metropolitan Area name (build_ca_cma.py)
+except FileNotFoundError: CMA_MAP={}
 try: CA_PLACES=_load("ca_places.json")             # CA "PROV|normname" and bare "normname" -> [lat,lon]
 except FileNotFoundError: CA_PLACES={}
 # Property orgs come LIVE from the dashboard's properties.js (single source of truth): set
@@ -831,7 +833,8 @@ def run(criteria,top=10):
             final=round(max(0.0,final-hz_pen),2)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
-                        "lat":d.get("lat"),"lon":d.get("lon"),"msa":(MSA_MAP.get(f) if g=="US" else None),
+                        "lat":d.get("lat"),"lon":d.get("lon"),
+                        "msa":(MSA_MAP.get(f) if g=="US" else CMA_MAP.get(f)),   # CA shows its CMA the same way US shows MSA
                         "sub_scores":scores,"weighted_total":total,"preferred_bonus":bonus,"coverage_bonus":cov,
                         "property_bonus":prop,"has_listed_properties":bool(prop_edos),
                         "property_edos":[e["organization"] for e in prop_edos],

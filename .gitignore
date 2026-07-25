@@ -30,6 +30,7 @@ FL Project Search/
 !ca_livability.json
 !ca_occupation.json
 !ca_infrastructure.json
+!ca_cma.json
 !us_catchment.json
 !fips_to_msa.json
 !county_workforce.json
