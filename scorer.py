@@ -572,24 +572,24 @@ def m_infrastructure(f,crit):
         out={}
         p=f.get("ca_infra_pts")                    # legacy CMA proxy (CMA=high, else mid) -- kept as a coarse baseline
         if p is not None: out["infra_grade"]=p
-        # Real asset inventory from StatCan ODI (build_ca_infrastructure.py). Airports/ports are
-        # deliberately EXCLUDED here -- m_logistics already scores them, so counting them again
-        # would double-weight transport. Counts are log-damped: presence and depth matter, but a
-        # county with 2,000 bridges isn't 1,000x better connected than one with 2.
+        # Asset inventory from StatCan ODI (build_ca_infrastructure.py). ONLY the layers that are
+        # genuine NATIONAL inventories are scored. ODI mixes federal datasets with voluntary municipal
+        # submissions, so several layers measure "who uploaded their GIS" rather than what exists:
+        #   electric_grid  -> 70.7% Alberta, 0.9% Ontario (Alberta open-data artifact)  EXCLUDED
+        #   potable_water  -> present in only 43 of 293 CDs; Calgary alone = 408k assets EXCLUDED
+        #   wastewater     -> 51% BC / 1.4% AB, municipal submission bias                EXCLUDED
+        #   oil_gas        -> Alberta Energy Regulator wells; resource extraction, not infra EXCLUDED
+        # airports/ports are excluded too -- m_logistics already scores them (no double-weighting).
+        # Counts are log-damped: presence and depth matter, but 2,000 bridges isn't 1,000x better than 2.
         a=f.get("ca_assets")
         if a:
             def _lg(n): return math.log10(1.0+(n or 0))
-            grid=_lg(a.get("electric_grid"))
-            util=_lg((a.get("potable_water") or 0)+(a.get("wastewater") or 0))
-            comm=_lg(a.get("telecom"))
-            road=_lg(a.get("bridges_tunnels"))
-            energy=_lg(a.get("oil_gas"))
-            waste=_lg(a.get("solid_waste"))
-            if grid:   out["grid_assets"]=grid          # substations/transmission -- the key industrial constraint
-            if util:   out["water_infrastructure"]=util # potable water + wastewater capacity
-            if comm:   out["telecom_assets"]=comm
-            if road or energy or waste:
-                out["other_infrastructure"]=(road+energy+waste)/3.0
+            comm=_lg(a.get("telecom"))                 # NRCan national inventory (292/293 CDs)
+            waste=_lg(a.get("solid_waste"))            # NRCan-led, provincially balanced
+            road=_lg(a.get("bridges_tunnels"))         # all 293 CDs; mildly AB-skewed but broad
+            if comm:  out["telecom_assets"]=comm
+            if waste: out["waste_infrastructure"]=waste
+            if road:  out["road_structures"]=road
         if ci.get("renewable"):                    # opt-in ESG: local low-carbon generation presence (CA analogue of US renew_share)
             lc=(a or {}).get("low_carbon")
             if lc is not None: out["renewable_share"]=math.log10(1.0+lc)
