@@ -68,6 +68,14 @@ try:                                               # USGS well trends: share of 
         if _t: _v["gw_pct_declining"]=_t.get("pct_declining")
 except FileNotFoundError:
     pass
+try:                                               # FEMA National Risk Index: composite natural-hazard risk by county (build_us_nri.py)
+    _NRI=_load("county_nri.json")                  # fips -> {risk 0-100 (higher=worse), eal_total, resilience, social_vuln, hazards{}}
+    for _k,_v in FEAT.items():
+        _n=_NRI.get(_k)
+        if _n:
+            _v["nri_risk"]=_n.get("risk"); _v["nri_hazards"]=_n.get("hazards")
+except FileNotFoundError:
+    pass
 try:
     CA_FEAT=_load("ca_features.json")              # CA, keyed by 4-digit CDUID
 except FileNotFoundError:
@@ -212,6 +220,7 @@ DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_
 # to the middle. Prevents tiny / college-town counties from topping generic searches. Tunable.
 SCALE_DAMP_K=100000
 CA_MARKET_WEIGHT=0.20   # Canada weights regional market access (catchment) up; see m_market_size (CA)
+HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties with FEMA NRI composite risk >= this (top-decile hazard)
 # Coverage bonus: over-index jurisdictions served by a LOCAL or REGIONAL EDO customer (a specific
 # org to route the lead to) over those covered only by a broad State/Provincial agency. Added to
 # the final score from the most-specific serving EDO's category. US + Canada (CA orgs are all
@@ -566,6 +575,9 @@ def m_infrastructure(f,crit):
         pd=f.get("gw_pct_declining")               # graded: fewer wells declining = healthier aquifer
         if pd is not None: out["groundwater_health"]=100.0-pd
         elif f.get("gw_depleted"): out["groundwater_health"]=0.0   # curated hotspot fallback where no wells
+    # natural-hazard resilience (FEMA NRI), opt-in via infrastructure.hazard: higher = safer (lower risk).
+    if ci.get("hazard") and f.get("nri_risk") is not None:
+        out["hazard_resilience"]=100.0-f["nri_risk"]
     return out or None
 
 def m_cost(f,crit):
@@ -689,6 +701,8 @@ def run(criteria,top=10):
             return ((d.get("not_in_drought") or 0)>=50 and not d.get("gw_depleted")
                     and (d.get("gw_pct_declining") or 0)<=66)
         cands=[f for f in cands if _water_ok(f)]
+    if (criteria.get("infrastructure") or {}).get("hazard")=="required":   # exclude high natural-hazard counties (FEMA NRI)
+        cands=[f for f in cands if (ALLFEAT[f].get("nri_risk") or 0)<HAZARD_MAX_RISK]
     # market proximity: keep counties whose centroid is within max_miles of the place
     prox=[]
     for entry in (geo.get("market_proximity") or []):

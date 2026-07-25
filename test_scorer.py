@@ -145,6 +145,22 @@ def test_property_bonus_scales_with_scope():
     assert 0 < statewide < regional < narrow <= 1.0
     assert narrow > statewide * 4, "statewide listings should be heavily discounted"
 
+def test_hazard_screen():
+    # FEMA NRI natural-hazard screen. Opt-in: 'required' excludes top-decile-risk counties; a blank
+    # search is unaffected. Skips cleanly if county_nri.json isn't in this checkout.
+    if not any(scorer.FEAT[f].get("nri_risk") is not None for f in scorer.FEAT):
+        return
+    base = scorer.run(US, top=4000)["results"]
+    hi = [r["geoid"] for r in base
+          if (scorer.FEAT.get(r["geoid"], {}).get("nri_risk") or 0) >= scorer.HAZARD_MAX_RISK]
+    assert hi, "expected some high-hazard counties in the baseline"
+    req = {r["geoid"] for r in scorer.run(
+        {"geography": {"countries": ["US"]}, "infrastructure": {"hazard": "required"}}, top=4000)["results"]}
+    assert all(g not in req for g in hi), "hazard=required must exclude high-risk counties"
+    ex = scorer.FEAT[hi[0]]
+    assert scorer.m_infrastructure(ex, {}).get("hazard_resilience") is None          # opt-in only
+    assert scorer.m_infrastructure(ex, {"infrastructure": {"hazard": "preferred"}}).get("hazard_resilience") is not None
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0

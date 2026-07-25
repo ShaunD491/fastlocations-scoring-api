@@ -152,7 +152,8 @@
         commercial_airport_max_miles: num('air_miles'),
         port_required: $('port').checked,
         renewable: str('renewable'),
-        drought: str('drought')
+        drought: str('drought'),
+        hazard: str('hazard')
       },
       demographics: {
         labor_draw_radius_miles: num('draw_radius'),
