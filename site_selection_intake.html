@@ -217,6 +217,12 @@
   .sub { font-size: 11.5px; font-weight: 600; color: #2f6bbf; background: #eef3fb; border: 1px solid #dce6f5; border-radius: 999px; padding: 3px 9px; text-transform: capitalize; }
   .sub.na { color: #9aa6b5; background: #f4f6f9; border-color: var(--line); }
   .sub .rank { color: var(--fl-blue); font-weight: 700; }
+  .breakdown { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 10px; }
+  .bdterm { font-size: 11px; color: #5a6b82; background: #f7f9fc; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+  .bdterm b { color: #3a4658; font-weight: 700; }
+  .bdterm.pos b { color: #1a7a3c; }
+  .bdterm.neg b { color: #cc2020; }
+  .bdterm.warn { background: #fff8e6; border-color: #f0dfae; color: #8a6d09; }
   .edo { font-size: 13px; color: #44546a; border-top: 1px dashed var(--line); padding-top: 8px; }
   .edo .cat { color: var(--muted-2); font-size: 12px; }
   .edoline { margin-bottom: 3px; }
@@ -462,7 +468,7 @@
       <div class="field"><label>Education priority</label>
         <select name="education">
           <option value="none">No preference</option>
-          <option value="hs">High-school+</option>
+          <option value="hs">High school / some college (non-degree)</option>
           <option value="some_college">Some college / associate</option>
           <option value="bachelors_plus">Bachelor's+</option>
         </select>

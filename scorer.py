@@ -241,6 +241,19 @@ HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties wit
 # apply a DIRECT penalty of up to this many points, scaled by the county's national hazard-exposure
 # percentile, so "prefer lower-hazard areas" visibly re-ranks (same reasoning as the property bonus).
 HAZARD_PENALTY=15.0
+WATER_PENALTY=12.0      # same reasoning for infrastructure.drought="preferred" (was a ~0.2pt nudge)
+def water_risk(d):
+    """0-100 water-supply risk (higher = worse), US and CA, for the drought preference penalty."""
+    if gsys(d)=="CA":
+        ws=d.get("water_stress")
+        return None if ws is None else min(100.0,ws*33.3)
+    parts=[]
+    nid=d.get("not_in_drought")
+    if nid is not None: parts.append(100.0-nid)          # share of county area in drought
+    pd=d.get("gw_pct_declining")
+    if pd is not None: parts.append(pd)                  # share of wells declining
+    elif d.get("gw_depleted"): parts.append(100.0)
+    return sum(parts)/len(parts) if parts else None
 # Coverage bonus: over-index jurisdictions served by a LOCAL or REGIONAL EDO customer (a specific
 # org to route the lead to) over those covered only by a broad State/Provincial agency. Added to
 # the final score from the most-specific serving EDO's category. US + Canada (CA orgs are all
@@ -344,8 +357,12 @@ def avg(xs):
     xs=[x for x in xs if x is not None]; return round(sum(xs)/len(xs),1) if xs else None
 
 # ---- raw metric extractors (higher = better) ----
+# NOTE: "hs" previously listed the SAME five bands as "none" (just reordered), so edu_share summed to
+# an identical value and the "High-school+" option was mathematically inert. It now means the
+# non-degree workforce (high school + some college) -- a real, distinct preference for operations that
+# want a trades/production labour pool rather than a degree-heavy one. UI label updated to match.
 EDU={"none":["BACHDEG_CY","GRADDEG_CY","ASSCDEG_CY","SMCOLL_CY","HSGRAD_CY"],
-     "hs":["HSGRAD_CY","SMCOLL_CY","ASSCDEG_CY","BACHDEG_CY","GRADDEG_CY"],
+     "hs":["HSGRAD_CY","SMCOLL_CY"],
      "some_college":["SMCOLL_CY","ASSCDEG_CY","BACHDEG_CY","GRADDEG_CY"],
      "bachelors_plus":["BACHDEG_CY","GRADDEG_CY"]}
 def edu_share(f,priority):
@@ -521,14 +538,19 @@ def m_logistics(f,crit):
         return {"ca_airports":(inf.get("airports") or None),
                 "ca_ports":(inf.get("ports") or None),
                 "ca_grid":(inf.get("grid_nodes") or None)}
-    inf=f.get("infra")
-    if not inf: return None
-    ap=inf["airports"]; pt=inf["port"]
+    # COVERAGE FIX: this used to `return None` whenever `infra` was absent, which dropped logistics
+    # for 82% of US counties -- even though commute time is known for 3135/3143. Because a county only
+    # HAS an `infra` record when an airport/port was actually found near it, absence is a genuine zero
+    # (no air/port access), not a data gap. Scoring it as 0 stops data-poor counties from silently
+    # skipping the single heaviest factor in a distribution search.
+    inf=f.get("infra") or {}
+    ap=inf.get("airports") or {}; pt=inf.get("port") or {}
     cm=f.get("commute_min")
-    return {"air_capacity":((ap["large"]*3+ap["medium"]*2+ap["small"]) or None),
-            "air_enplanements":(ap["enplanements"] or None),
-            "port_tonnage":(pt["max_tonnage"] or None),
-            "short_commute":(-cm if cm is not None else None)}
+    out={"air_capacity":float(ap.get("large",0)*3+ap.get("medium",0)*2+ap.get("small",0)),
+         "air_enplanements":float(ap.get("enplanements") or 0),
+         "port_tonnage":float(pt.get("max_tonnage") or 0)}
+    if cm is not None: out["short_commute"]=-cm
+    return out
 def m_incentives(f,crit):
     rec=INC.get(f.get("ST_ABBREV"))
     if not rec: return None
@@ -544,9 +566,18 @@ def m_incentives(f,crit):
     # QUALITY, not quantity: raw program count is intentionally excluded. Score reflects the value
     # tier (largest program $ advertised, weighted double), the range of incentive types offered,
     # and how well those types match the project's ranked priorities.
-    return {"incentive_value":rec.get("value_tier"),   # weighted 2x via METRIC_WEIGHTS
-            "incentive_diversity":rec.get("type_diversity"),
-            "priority_match":pf}
+    out={"incentive_value":rec.get("value_tier"),   # weighted 2x via METRIC_WEIGHTS
+         "incentive_diversity":rec.get("type_diversity"),
+         "priority_match":pf}
+    # TARGET INCENTIVE VALUE (previously ignored): score how well the largest available program covers
+    # the project's stated target, capped at 1.0 so exceeding the ask isn't rewarded without limit.
+    tv=(crit.get("incentives") or {}).get("min_value_target_usd")
+    mx=rec.get("max_value_usd")
+    try: tv=float(tv) if tv is not None else None
+    except (TypeError,ValueError): tv=None
+    if tv and tv>0 and mx is not None:
+        out["value_target_fit"]=min(float(mx)/tv,1.0)*100.0
+    return out
 
 def m_livability(f,crit):
     if gsys(f)=="CA":                              # CIMD deprivation composite (higher = less deprived = more livable)
@@ -621,17 +652,37 @@ def m_infrastructure(f,crit):
         out["hazard_resilience"]=100.0-f["nri_risk"]
     return out or None
 
+def target_wage_annual(crit):
+    """Project's target wage normalised to annual $ (form emits {amount, basis: hourly|annual})."""
+    tw=(crit.get("workforce") or {}).get("target_wage") or {}
+    if not isinstance(tw,dict): return None
+    amt=tw.get("amount") if tw.get("amount") is not None else tw.get("value")
+    try: amt=float(amt)
+    except (TypeError,ValueError): return None
+    if amt<=0: return None
+    return amt*2080.0 if str(tw.get("basis","hourly")).lower().startswith("hour") else amt
 def m_cost(f,crit):
+    tgt=target_wage_annual(crit)
     if gsys(f)=="CA":                              # StatCan: median household income as the labor-cost proxy
         inc=f.get("income")
-        return {"low_labor_cost":-inc} if inc is not None else None
+        if inc is None: return None
+        out={"low_labor_cost":-inc}
+        if tgt: out["wage_headroom"]=tgt-inc        # local pay below the budgeted wage = easier/cheaper to hire
+        return out
     inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
     bea=BEA_COST.get(f.get("fips") or "") or {}
     epw=bea.get("earn_pow_pc")                     # BEA earnings by place of work per capita = employer wage level
     if inc is None and wl is None and epw is None: return None
-    return {"low_labor_cost":(-inc if inc is not None else None),        # household income (residence)
-            "low_employer_wages":(-epw if epw is not None else None),    # BEA place-of-work earnings (~0.17 corr w/ MEDHINC)
-            "low_cost_of_living":(-wl if wl is not None else None)}
+    out={"low_labor_cost":(-inc if inc is not None else None),        # household income (residence)
+         "low_employer_wages":(-epw if epw is not None else None),    # BEA place-of-work earnings (~0.17 corr w/ MEDHINC)
+         "low_cost_of_living":(-wl if wl is not None else None)}
+    # TARGET WAGE (previously ignored): score the gap between the project's budgeted wage and the
+    # local prevailing wage. Positive headroom = the market pays less than budget, so the project can
+    # staff comfortably; negative = it is bidding under market and will struggle.
+    if tgt:
+        local=inc if inc is not None else (epw*2.0 if epw is not None else None)
+        if local is not None: out["wage_headroom"]=tgt-local
+    return out
 
 def m_safety(f,crit):
     if gsys(f)=="CA":                              # StatCan Crime Severity Index (CMA-precise, else province); lower=safer
@@ -707,10 +758,33 @@ def build_rationale(rank,r,pending):
         who=r.get("property_edos") or []
         src=who[0] if who else "its serving EDO"
         out.append(f'It also has available properties currently listed on FastLocations through {src}, indicating ready site availability, which lifts its match.')
+    # Disclose every adjustment applied AFTER the weighted factor average, so the headline number can
+    # be reconciled from what the reader is shown rather than appearing to come from the factors alone.
+    bd=r.get("score_breakdown") or {}
+    adj=[]
+    damp=bd.get("reliability_damping") or 0
+    if abs(damp)>=0.5:
+        adj.append(("pulled toward the national average" if damp<0 else "lifted toward the national average")+
+                   f' by {abs(damp):.1f} points because its labour-market reach is '+("thin" if damp<0 else "modest"))
+    b=bd.get("bonuses") or {}
+    if b.get("preferred_region"): adj.append("a preferred-region bonus")
+    if b.get("edo_coverage"): adj.append("a local-EDO coverage bonus")
+    if b.get("property_access"): adj.append("a property-availability bonus")
+    p=bd.get("penalties") or {}
+    if p.get("hazard"): adj.append(f'a natural-hazard penalty of {p["hazard"]:.1f} points')
+    if p.get("water"): adj.append(f'a water-risk penalty of {p["water"]:.1f} points')
+    if adj:
+        out.append("Beyond the factor scores, the total reflects "+", ".join(adj)+".")
     return " ".join(out)
 
 def run(criteria,top=10):
     w={**DEFAULT_WEIGHTS,**(criteria.get("weights") or {})}
+    # Guard: every slider can be dragged to 0. An all-zero vector made total weight 0, so the weighted
+    # average was None -> final_score null, "score of None out of 100" in the rationale, and results
+    # fell back to FIPS order (unranked). Fall back to the defaults instead of emitting a broken page.
+    w={k:(float(v) if isinstance(v,(int,float)) and v>0 else 0.0) for k,v in w.items()}
+    weights_fallback=sum(w.values())<=0
+    if weights_fallback: w=dict(DEFAULT_WEIGHTS)
     prop_set=get_property_orgs()   # live property-org set (dashboard properties.js), cached w/ TTL
     geo=criteria.get("geography") or {}; demo=criteria.get("demographics") or {}; infra=criteria.get("infrastructure") or {}
     countries=set(geo.get("countries") or ["US","CA"])
@@ -726,6 +800,8 @@ def run(criteria,top=10):
             ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability))}
     cands=list(refset)
     trace={"candidates_start":len(cands)}
+    if weights_fallback:
+        trace["weights_fallback"]="all supplied weights were zero; default weights used"
     if geo.get("required_regions"):
         rs=set(geo["required_regions"]); cands=[f for f in cands if ALLFEAT[f]["ST_ABBREV"] in rs]
     if geo.get("excluded_regions"):
@@ -762,12 +838,25 @@ def run(criteria,top=10):
     def has_airport(d):
         if gsys(d)=="CA": return bool((d.get("infra_ca") or {}).get("airports"))
         return bool(d.get("infra") and d["infra"]["airports"]["total"])
+    # LABOR DRAW RADIUS: previously ignored entirely -- "500k people within 10 miles" returned the same
+    # 1220 candidates as within 250 miles. The catchment aggregate is precomputed at a fixed ~65mi
+    # radius, so we can't recompute it per request; instead we interpolate between the county's OWN
+    # population (tight radius) and the full catchment (wide radius), which makes the input behave
+    # directionally correctly: a tight radius stops crediting a county for a distant metro's people.
+    draw=(demo.get("labor_draw_radius_miles") or None)
+    def _reach(d):
+        own=d.get("TOTPOP_CY"); cat=d.get("catchment_pop") or own
+        if own is None: return cat
+        if cat is None: return own
+        if not draw: return cat                    # no radius given -> unchanged behaviour
+        r=max(0.0,min(1.0,(float(draw)-15.0)/(100.0-15.0)))   # <=15mi = own county only, >=100mi = full catchment
+        return own+(cat-own)*r
     def ok(f):
         d=ALLFEAT[f]
         # filters only apply where the datum exists -> absent data never excludes (no penalty).
-        # min population / labor force are "within the labor-draw radius": tested against the regional
-        # CATCHMENT (population reachable ~65 mi), not just the county's own headcount.
-        reg_pop=d.get("catchment_pop") or d.get("TOTPOP_CY")
+        # min population / labor force are tested against the population reachable within the user's
+        # stated labor-draw radius (see _reach), not just the county's own headcount.
+        reg_pop=_reach(d)
         part=(d["CIVLBFR_CY"]/d["TOTPOP_CY"] if (d.get("CIVLBFR_CY") is not None and d.get("TOTPOP_CY")) else 0.48)
         reg_lf=(reg_pop*part if reg_pop is not None else None)
         if demo.get("min_population") and reg_pop is not None and reg_pop<demo["min_population"]: return False
@@ -787,6 +876,10 @@ def run(criteria,top=10):
     hz_pct={}
     if hz_pref:
         hz_pct=pct_rank({ff:ALLFEAT[ff].get("nri_risk") for ff in refset})   # 100 = most exposed
+    wt_pref=(criteria.get("infrastructure") or {}).get("drought")
+    wt_pct={}
+    if wt_pref:
+        wt_pct=pct_rank({ff:water_risk(ALLFEAT[ff]) for ff in refset})       # 100 = driest/most stressed
     pref=set(geo.get("preferred_regions") or [])
     if rtw=="preferred": pref|=RTW_STATES     # right-to-work states get the same +8 preference bonus
     results=[]
@@ -812,7 +905,7 @@ def run(criteria,top=10):
         prop_edos=[e for e in edos if e["objectid"] in prop_set]  # serving EDO(s) with live property listings
         # credit the most SPECIFIC property-holding EDO; statewide listings barely move the needle
         prop=round(PROPERTY_BONUS*max((property_scope_factor(e) for e in prop_edos),default=0.0),2)
-        rel=None; final=None
+        rel=None; final=None; damped=None
         if total is not None:
             # Reliability from the county's MARKET reach (regional catchment), not just its own
             # population. A small county inside a big metro (Arlington DC, Nassau NYC, a NJ suburb)
@@ -829,8 +922,10 @@ def run(criteria,top=10):
         # opting in visibly demotes exposed locations instead of nudging them a fraction of a point.
         hz_p=hz_pct.get(f) if hz_pref else None
         hz_pen=round(HAZARD_PENALTY*(hz_p/100.0),2) if (hz_p is not None and final is not None) else 0.0
-        if hz_pen and final is not None:
-            final=round(max(0.0,final-hz_pen),2)
+        wt_p=wt_pct.get(f) if wt_pref else None
+        wt_pen=round(WATER_PENALTY*(wt_p/100.0),2) if (wt_p is not None and final is not None) else 0.0
+        if (hz_pen or wt_pen) and final is not None:
+            final=round(max(0.0,final-hz_pen-wt_pen),2)
         results.append({"geoid":f,"geo_system":g,"county":d["NAME"],"state":d["ST_ABBREV"],
                         "country":("Canada" if g=="CA" else "US"),
                         "lat":d.get("lat"),"lon":d.get("lon"),
@@ -839,7 +934,18 @@ def run(criteria,top=10):
                         "property_bonus":prop,"has_listed_properties":bool(prop_edos),
                         "property_edos":[e["organization"] for e in prop_edos],
                         "hazard_penalty":hz_pen,"hazard_exposure":(ALLFEAT[f].get("nri_risk") if hz_pref else None),
+                        "water_penalty":wt_pen,
                         "reliability":(round(rel,3) if rel is not None else None),
+                        # TRANSPARENCY: the score is weighted_total -> damped toward 50 by reliability
+                        # -> headroom bonuses -> penalties. Every term is named here so the headline
+                        # number reconciles exactly from the response (no hidden adjustment).
+                        "score_breakdown":{
+                            "weighted_total":total,
+                            "reliability_damping":(round(damped-total,2) if (damped is not None and total is not None) else 0.0),
+                            "bonuses":{"preferred_region":bonus,"edo_coverage":cov,"property_access":prop},
+                            "penalties":{"hazard":hz_pen,"water":wt_pen},
+                            "factors_scored":len([1 for dim in DIMS if scores[dim] is not None]),
+                            "factors_total":len(DIMS)},
                         "final_score":final,"serving_edos":edos})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
     # PRIMARY = counties served by an EDO customer, collapsed to distinct serving EDOs (roll past

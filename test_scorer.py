@@ -182,6 +182,52 @@ def test_hazard_preference_actually_demotes():
     two = sorted((r for r in haz if r["hazard_exposure"] is not None), key=lambda r: r["hazard_exposure"])
     assert two[0]["hazard_penalty"] <= two[-1]["hazard_penalty"]
 
+def test_score_reconciles_from_breakdown():
+    """QA Test B: final_score must reconcile from terms the API actually returns, within 0.05.
+    The weighted factor average alone does NOT reconcile (mean delta ~+11) because of reliability
+    damping and the headroom bonuses -- so every term is published in `score_breakdown`."""
+    for r in scorer.run(US, top=300)["results"]:
+        bd = r["score_breakdown"]
+        t = bd["weighted_total"]
+        if t is None or r["final_score"] is None:
+            continue
+        damped = t + bd["reliability_damping"]
+        b = sum(bd["bonuses"].values())
+        recon = damped + (100 - damped) * min(b / 40.0, 1.0) - sum(bd["penalties"].values())
+        assert abs(recon - r["final_score"]) < 0.05, \
+            f'{r["county"]}: {recon:.2f} vs {r["final_score"]}'
+
+def test_no_op_sweep():
+    """QA Test A: every input the UI presents as 'SCREENS & SCORES' must change the result."""
+    import json as _json
+    base = _json.dumps(scorer.run(US, top=10)["results"], sort_keys=True, default=str)
+    cases = {
+        "labor_draw_radius": {**US, "demographics": {"min_population": 500000, "labor_draw_radius_miles": 10}},
+        "target_wage":       {**US, "workforce": {"target_wage": {"amount": 18, "basis": "hourly"}}},
+        "education_hs":      {**US, "demographics": {"education_priority": "hs"}},
+        "drought_preferred": {**US, "infrastructure": {"drought": "preferred"}},
+        "hazard_preferred":  {**US, "infrastructure": {"hazard": "preferred"}},
+        "incentive_target":  {**US, "incentives": {"min_value_target_usd": 50000000}},
+        "renewable":         {**US, "infrastructure": {"renewable": "preferred"}},
+    }
+    for name, crit in cases.items():
+        got = _json.dumps(scorer.run(crit, top=10)["results"], sort_keys=True, default=str)
+        assert got != base, f"{name} is a no-op (byte-identical to baseline)"
+
+def test_zero_weights_never_break():
+    """All ten sliders at zero must not produce a null score or an unranked/alphabetical list."""
+    out = scorer.run({**US, "weights": {d: 0 for d in scorer.DIMS}}, top=5)
+    assert out["trace"].get("weights_fallback")
+    assert out["results"] and all(r["final_score"] is not None for r in out["results"])
+    assert out["results"][0]["geoid"] != min(scorer.FEAT)     # not just FIPS order
+
+def test_logistics_coverage():
+    """Logistics used to be dropped whenever a county had no airport/port record, so 82% of counties
+    silently skipped the heaviest factor in a distribution search."""
+    R = scorer.run(US, top=4000)["results"]
+    have = sum(1 for r in R if r["sub_scores"]["logistics"] is not None)
+    assert have / len(R) > 0.90, f"logistics coverage only {have}/{len(R)}"
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0

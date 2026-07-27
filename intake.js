@@ -73,14 +73,19 @@
 
   // ---- Weights: live normalize to 100% ----
   const sliders = [...document.querySelectorAll('#weights input[type=range]')];
+  function weightSum() { return sliders.map(s => Number(s.value)).reduce((a, b) => a + b, 0); }
   function refreshWeights() {
     const raw = sliders.map(s => Number(s.value));
-    const sum = raw.reduce((a, b) => a + b, 0) || 1;
+    const total = raw.reduce((a, b) => a + b, 0);
+    const sum = total || 1;
     sliders.forEach((s, i) => {
-      const pct = Math.round((raw[i] / sum) * 100);
+      const pct = total ? Math.round((raw[i] / sum) * 100) : 0;
       s.closest('.weight-row').querySelector('.wval').textContent = pct + '%';
     });
-    document.getElementById('wtotal').textContent = '100%';
+    // Was hardcoded to '100%' -- it read "Normalized total: 100%" even with every slider at zero.
+    const el = document.getElementById('wtotal');
+    el.textContent = total ? '100%' : '0% — set at least one factor above zero';
+    el.style.color = total ? '' : '#cc2020';
   }
   sliders.forEach(s => s.addEventListener('input', refreshWeights));
   refreshWeights();
@@ -182,6 +187,7 @@
     if (!c.project.project_name) errs.push("Add a project name.");
     const conflict = c.geography.required_regions.filter(r => c.geography.excluded_regions.includes(r));
     if (conflict.length) errs.push("A region is in both Required and Excluded: " + conflict.join(", "));
+    if (weightSum() <= 0) errs.push("Set at least one factor weight above zero before generating matches.");
     return errs;
   }
 
@@ -277,9 +283,9 @@
       return;
     }
     const allDims = ['workforce','cost','real_estate','incentives','infrastructure','logistics','market_size','safety','demographics','livability'];
-    // Only show dimensions that have data for at least one result. This hides dimensions with no
-    // coverage for the selected region (e.g. infrastructure, safety, livability for Canada) instead
-    // of implying data that isn't there.
+    // Only show dimensions that have data for at least one result, so we never imply data that isn't
+    // there. (The old note here claimed infrastructure/safety/livability were missing for Canada --
+    // that is stale: Canadian results now return all ten factors.)
     const dimOrder = allDims.filter(function (d) { return data.results.some(function (r) { return r.sub_scores[d] != null; }); });
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
@@ -331,11 +337,31 @@
       } else {
         edoHtml = '<span class="cat">No EDO customer currently serves this county</span>';
       }
+      // Score transparency: the headline number is the weighted factor average PLUS damping, bonuses
+      // and penalties. Show those terms so the score reconciles from what's on screen.
+      var bd = r.score_breakdown || null;
+      var bdHtml = '';
+      if (bd) {
+        var parts = [];
+        parts.push('<span class="bdterm">Weighted factors <b>' + (bd.weighted_total != null ? bd.weighted_total.toFixed(1) : '—') + '</b></span>');
+        if (Math.abs(bd.reliability_damping || 0) >= 0.05)
+          parts.push('<span class="bdterm" title="Small, isolated labour markets are pulled toward the national average">Market-depth adj. <b>' + (bd.reliability_damping > 0 ? '+' : '') + bd.reliability_damping.toFixed(1) + '</b></span>');
+        var bo = bd.bonuses || {};
+        if (bo.preferred_region) parts.push('<span class="bdterm pos">Preferred region <b>+' + bo.preferred_region + '</b></span>');
+        if (bo.edo_coverage) parts.push('<span class="bdterm pos">Local EDO coverage <b>+' + bo.edo_coverage + '</b></span>');
+        if (bo.property_access) parts.push('<span class="bdterm pos">Property availability <b>+' + bo.property_access + '</b></span>');
+        var pe = bd.penalties || {};
+        if (pe.hazard) parts.push('<span class="bdterm neg">Hazard exposure <b>&minus;' + pe.hazard.toFixed(1) + '</b></span>');
+        if (pe.water) parts.push('<span class="bdterm neg">Water risk <b>&minus;' + pe.water.toFixed(1) + '</b></span>');
+        if (bd.factors_scored < bd.factors_total)
+          parts.push('<span class="bdterm warn" title="Factors with no data for this location are omitted rather than penalised">Scored on ' + bd.factors_scored + ' of ' + bd.factors_total + ' factors</span>');
+        bdHtml = '<div class="breakdown">' + parts.join('') + '</div>';
+      }
       html += '<div class="result">' +
         '<div class="rhead"><span class="rank">' + (i + 1) + '</span>' +
         '<span class="place">' + r.county + ', ' + r.state + (r.msa ? ' <span class="msa">(' + r.msa + (r.country === 'Canada' ? ' CMA' : ' MSA') + ')</span>' : '') + '</span>' +
         '<span class="score"><span class="flscore-cap">FastLocations Score</span><span class="flscore-val">' + r.final_score + '</span></span></div>' +
-        '<div class="subs">' + chips + '</div>' +
+        '<div class="subs">' + chips + '</div>' + bdHtml +
         (r.rationale ? '<p class="rationale">' + r.rationale + '</p>' : '') +
         '<div class="edo">' + edoHtml + '</div></div>';
     });
