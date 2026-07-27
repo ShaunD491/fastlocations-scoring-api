@@ -97,16 +97,29 @@ def submit():
 
 @app.get("/places")
 def places():
+    """Autocomplete for market-proximity. Covers BOTH countries: this used to iterate only the US
+    table, so a Canada-mode search for 'Toronto, ON' was offered 'Toronto, OH'. Canadian labels come
+    from scorer.CA_DISPLAY (ca_places.json stores coordinates only)."""
     q=(request.args.get("q") or "").strip()
     nq=scorer._norm(q.split(",")[0]) if q else ""
     if len(nq)<2: return jsonify([])
+    # optional 2-letter region hint after the comma, e.g. "london, ON" -> prefer Ontario
+    parts=[p.strip() for p in q.split(",")]
+    want=parts[-1].upper() if len(parts)>=2 and len(parts[-1].strip())==2 else None
     hits=set()
     for k,v in scorer.PLACES.items():
         st,nm=k.split("|",1)
         if nm.startswith(nq) and len(v)>=3:
             hits.add(v[2]+", "+st)
-    out=sorted(hits, key=lambda x:(len(x), x))[:10]
-    return jsonify(out)
+    for k in scorer.CA_PLACES:
+        if "|" not in k: continue                       # bare-name duplicates
+        st,nm=k.split("|",1)
+        if nm.startswith(nq):
+            hits.add((scorer.CA_DISPLAY.get(nm) or nm.title())+", "+st)
+    def rank(x):
+        st=x.rsplit(", ",1)[-1]
+        return (0 if (want and st==want) else 1, len(x), x)
+    return jsonify(sorted(hits, key=rank)[:10])
 
 @app.route("/match", methods=["POST","OPTIONS"])
 def match():

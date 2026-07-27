@@ -222,6 +222,22 @@ _STATE2AB={"alabama":"AL","alaska":"AK","arizona":"AZ","arkansas":"AR","californ
 "oregon":"OR","pennsylvania":"PA","rhodeisland":"RI","southcarolina":"SC","southdakota":"SD","tennessee":"TN",
 "texas":"TX","utah":"UT","vermont":"VT","virginia":"VA","washington":"WA","westvirginia":"WV","wisconsin":"WI","wyoming":"WY"}
 _CA_PROV={"ON","QC","BC","AB","MB","SK","NS","NB","NL","PE","NT","YT","NU"}
+# Display names for Canadian places. ca_places.json stores only [lat,lon] (no label), so the /places
+# autocomplete had nothing to show and Canada was missing from it entirely -- "Toronto, ON" suggested
+# Toronto, OH. Labels are recovered from the census-division names already loaded, plus the major
+# cities whose accents/punctuation can't be reconstructed from a normalised key.
+CA_DISPLAY={}
+for _cid,_v in CA_FEAT.items():
+    _nm=_v.get("NAME")
+    if _nm: CA_DISPLAY.setdefault(_norm(_nm),_nm)
+for _nm in ("Toronto","Montréal","Vancouver","Calgary","Edmonton","Ottawa","Winnipeg","Québec",
+            "Hamilton","Kitchener","Waterloo","Cambridge","London","Victoria","Halifax","Saskatoon",
+            "Regina","St. John's","Moncton","Fredericton","Saint John","Windsor","Oshawa","Barrie",
+            "Guelph","Kingston","Sudbury","Thunder Bay","Kelowna","Abbotsford","Burnaby","Richmond",
+            "Surrey","Laval","Longueuil","Gatineau","Sherbrooke","Trois-Rivières","Red Deer",
+            "Lethbridge","Kamloops","Nanaimo","Brampton","Mississauga","Markham","Vaughan","Burlington",
+            "Milton","Ajax","Whitby","Niagara Falls","St. Catharines","Cornwall","Belleville","Peterborough"):
+    CA_DISPLAY[_norm(_nm)]=_nm
 # Right-to-work states (26, current 2025 -- Michigan repealed its law Feb 2024 and is NOT included).
 RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV","NC","ND",
             "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
@@ -242,6 +258,7 @@ HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties wit
 # percentile, so "prefer lower-hazard areas" visibly re-ranks (same reasoning as the property bonus).
 HAZARD_PENALTY=15.0
 WATER_PENALTY=12.0      # same reasoning for infrastructure.drought="preferred" (was a ~0.2pt nudge)
+PRIORITY_DECAY=0.6      # incentive priority ranking: weight of each pick = 0.6^position (1, .6, .36, .22)
 def water_risk(d):
     """0-100 water-supply risk (higher = worse), US and CA, for the drought preference penalty."""
     if gsys(d)=="CA":
@@ -558,11 +575,14 @@ def m_incentives(f,crit):
     prio=(crit.get("incentives") or {}).get("priorities") or []
     pf=None
     if prio:
-        # depth-weighted: each ranked priority scores by HOW MANY programs of that type exist
-        # (saturating at 3), weighted by the user's ranking order -- not just present/absent.
-        n=len(prio); tot=n*(n+1)/2.0
-        got=sum((n-i)*min(tc.get(t,0),3)/3.0 for i,t in enumerate(prio))
-        pf=got/tot*100
+        # Depth-weighted by the user's RANKING. The old linear (n-i) weights made the top pick only
+        # 3x the last on a 3-item list, and with priority_match at 1/4 of the dimension the ordering
+        # was effectively cosmetic (reversing a list moved the total ~0.03). Geometric decay makes the
+        # first pick decisively dominant; see METRIC_WEIGHTS for the matching weight increase.
+        wts=[PRIORITY_DECAY**i for i in range(len(prio))]
+        tot=sum(wts)
+        got=sum(wts[i]*min(tc.get(t,0),3)/3.0 for i,t in enumerate(prio))
+        pf=got/tot*100 if tot else None
     # QUALITY, not quantity: raw program count is intentionally excluded. Score reflects the value
     # tier (largest program $ advertised, weighted double), the range of incentive types offered,
     # and how well those types match the project's ranked priorities.
@@ -702,7 +722,10 @@ def m_real_estate(f,crit):
 
 # Per-metric weights WITHIN a dimension (default 1). Lets a metric count for more without the old
 # duplicate-key hack: education dominates demographics; critical thinking and value tier count 2x.
-METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,"skill_supply":1.5}
+# priority_match is the ONLY incentives metric that responds to what the user actually asked for, so
+# it carries more weight than the generic value tier -- otherwise the ranked-priority UI is cosmetic.
+METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,
+                "skill_supply":1.5,"priority_match":3.0}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
@@ -821,10 +844,15 @@ def run(criteria,top=10):
     if (criteria.get("infrastructure") or {}).get("hazard")=="required":   # exclude high natural-hazard counties (FEMA NRI)
         cands=[f for f in cands if (ALLFEAT[f].get("nri_risk") or 0)<HAZARD_MAX_RISK]
     # market proximity: keep counties whose centroid is within max_miles of the place
-    prox=[]
+    prox=[]; prox_unresolved=[]
     for entry in (geo.get("market_proximity") or []):
-        pt=geocode_place(entry.get("to")); mx=entry.get("max_miles")
-        if pt and mx: prox.append((pt[0],pt[1],float(mx),entry.get("to")))
+        nm=entry.get("to"); pt=geocode_place(nm); mx=entry.get("max_miles")
+        if pt and mx: prox.append((pt[0],pt[1],float(mx),nm))
+        elif nm:
+            # A place we can't geocode used to be dropped silently -- the user got the FULL unfiltered
+            # result set believing a proximity constraint had been applied. Report it instead.
+            prox_unresolved.append(nm)
+    if prox_unresolved: trace["market_proximity_unresolved"]=prox_unresolved
     if prox:
         def near(f):
             d=ALLFEAT[f]; lat=d.get("lat"); lon=d.get("lon")

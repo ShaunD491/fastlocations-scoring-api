@@ -98,12 +98,16 @@ def test_skill_profile_affects_ranking():
     eng = scorer.run({**base, "workforce": {"skill_profile": ["engineers"]}}, top=8)["results"]
     lab = scorer.run({**base, "workforce": {"skill_profile": ["general_labor"]}}, top=8)["results"]
     assert [r["geoid"] for r in eng] != [r["geoid"] for r in lab], "skill profile did not affect ranking"
-    # and the workforce sub-score itself differs for the same county under the two profiles
+    # ...and the workforce sub-score itself differs. Compare over ALL overlapping counties: picking one
+    # arbitrarily via next(iter(set)) was flaky, because set order shifts with Python's hash seed and a
+    # few counties legitimately score the same under both profiles.
     both = {r["geoid"] for r in eng} & {r["geoid"] for r in lab}
     assert both, "expected some overlap to compare"
-    gid = next(iter(both))
-    we = next(r for r in eng if r["geoid"] == gid)["sub_scores"]["workforce"]
-    wl = next(r for r in lab if r["geoid"] == gid)["sub_scores"]["workforce"]
+    e_by = {r["geoid"]: r["sub_scores"]["workforce"] for r in eng}
+    l_by = {r["geoid"]: r["sub_scores"]["workforce"] for r in lab}
+    assert any(e_by[g] != l_by[g] for g in both), "workforce sub-score identical across profiles"
+    gid = next(g for g in sorted(both) if e_by[g] != l_by[g])
+    we, wl = e_by[gid], l_by[gid]
     assert we != wl, "workforce sub-score identical across profiles"
 
 def test_skill_profile_absent_is_neutral():
@@ -227,6 +231,29 @@ def test_logistics_coverage():
     R = scorer.run(US, top=4000)["results"]
     have = sum(1 for r in R if r["sub_scores"]["logistics"] is not None)
     assert have / len(R) > 0.90, f"logistics coverage only {have}/{len(R)}"
+
+def test_incentive_priority_order_matters():
+    """QA #4: the UI says 'your first pick is weighted highest'. Reversing a 3-item list must move the
+    incentives sub-score materially (>2 pts) on affected counties, not by 0.03."""
+    A = ["property_tax_abatement", "job_training_grant", "cash_grant"]
+    fwd = {r["geoid"]: r for r in scorer.run({**US, "incentives": {"priorities": A}}, top=200)["results"]}
+    rev = {r["geoid"]: r for r in scorer.run({**US, "incentives": {"priorities": list(reversed(A))}}, top=200)["results"]}
+    d = [abs(fwd[g]["sub_scores"]["incentives"] - rev[g]["sub_scores"]["incentives"])
+         for g in fwd if g in rev and fwd[g]["sub_scores"]["incentives"] is not None]
+    assert d and max(d) > 2.0, f"priority order still cosmetic (max delta {max(d) if d else 0:.2f})"
+
+def test_canadian_proximity_and_unresolved_places():
+    """QA #6: Canadian places must geocode, and an unresolvable place must be REPORTED rather than
+    silently dropped (which returned a full unfiltered set the user thought was filtered)."""
+    for city in ("Toronto, ON", "Calgary, AB", "Winnipeg, MB", "Vancouver, BC", "Montreal, QC"):
+        assert scorer.geocode_place(city), f"{city} did not geocode"
+    bogus = scorer.run({"geography": {"countries": ["US"],
+                                      "market_proximity": [{"to": "Nowheresville, ZZ", "max_miles": 50}]}}, top=3)
+    assert bogus["trace"].get("market_proximity_unresolved") == ["Nowheresville, ZZ"]
+    ok = scorer.run({"geography": {"countries": ["CA"],
+                                   "market_proximity": [{"to": "Toronto, ON", "max_miles": 100}]}}, top=5)
+    assert ok["trace"].get("market_proximity_unresolved") is None
+    assert 0 < ok["trace"]["candidates_after_filters"] < 100, "Toronto radius should bind"
 
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

@@ -276,6 +276,10 @@
     });
   }
 
+  function escHtml(v) {
+    return (v == null ? '' : String(v)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   function renderResults(data) {
     const wrap = document.getElementById('results');
     if (!data || !data.results || !data.results.length) {
@@ -290,6 +294,13 @@
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
       ' candidates passed the filters. Scored on the factors with data for the selected region.</p>' +
+      // Warn when a proximity place couldn't be geocoded -- otherwise the user sees an unfiltered
+      // result set and believes the distance constraint was applied.
+      ((data.trace.market_proximity_unresolved || []).length
+        ? '<div class="warnbox">&#9888; ' +
+          data.trace.market_proximity_unresolved.map(function (n) { return '"' + escHtml(n) + '"'; }).join(', ') +
+          ' could not be located, so the proximity limit was <b>not applied</b>. Try "City, ST" (e.g. Columbus, OH) or "City, PROV" (e.g. Toronto, ON).</div>'
+        : '') +
       '<div class="recalibrate">Not seeing the right fit? Change any input above - your factor weightings, filters, or priorities - then choose <b>Generate matches</b> again to refine these results.</div>' +
       '<div id="flMap" class="flmap"></div>';
     data.results.forEach((r, i) => {
