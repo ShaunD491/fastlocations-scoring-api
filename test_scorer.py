@@ -255,6 +255,30 @@ def test_canadian_proximity_and_unresolved_places():
     assert ok["trace"].get("market_proximity_unresolved") is None
     assert 0 < ok["trace"]["candidates_after_filters"] < 100, "Toronto radius should bind"
 
+def test_cross_country_scores_are_comparable():
+    """US and Canadian sources are NOT on one scale: US unemployment is a current-year estimate (~4%)
+    vs Canada's 2021 Census (~9.6%), and income is USD vs CAD. Ranking them together buried Canada
+    (workforce 8.9 vs 51.7). Percentiles are now computed within each country."""
+    import statistics
+    R = scorer.run({"geography": {"countries": ["US", "CA"]}}, top=4000)["results"]
+    us = [r["final_score"] for r in R if r["country"] != "Canada"]
+    ca = [r["final_score"] for r in R if r["country"] == "Canada"]
+    assert us and ca
+    assert abs(statistics.mean(us) - statistics.mean(ca)) < 6, "one country is systematically depressed"
+    for dim in ("workforce", "cost"):
+        u = [r["sub_scores"][dim] for r in R if r["country"] != "Canada" and r["sub_scores"][dim] is not None]
+        c = [r["sub_scores"][dim] for r in R if r["country"] == "Canada" and r["sub_scores"][dim] is not None]
+        assert abs(statistics.mean(u) - statistics.mean(c)) < 12, f"{dim} not comparable across countries"
+
+def test_region_diversity_cap():
+    """County granularity varies ~5x by state (GA 159, IN 92, all of BC 29), so without a cap the
+    finely-subdivided states crowd out everywhere else."""
+    import collections
+    R = scorer.run({"geography": {"countries": ["US", "CA"]}}, top=20)["results"]
+    worst = collections.Counter(r["state"] for r in R).most_common(1)[0][1]
+    assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
+    assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0

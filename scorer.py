@@ -22,7 +22,7 @@ Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
 (served by a customer EDO, distinct orgs) and OTHER NOTABLE (top non-customer counties).
 Small-county reliability damping + local/regional coverage bonus applied to the final.
 """
-import json,os,sys,math,urllib.request,urllib.parse
+import json,os,sys,math,collections,urllib.request,urllib.parse
 O=os.environ.get("FL_DATA_DIR") or os.path.dirname(os.path.abspath(__file__))
 def _load(fn): return json.load(open(os.path.join(O,fn)))
 
@@ -243,8 +243,13 @@ RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV
             "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
 
 DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
-DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.08,"incentives":0.10,"real_estate":0.15,
-                 "demographics":0.05,"logistics":0.08,"cost":0.20,"safety":0.05,"market_size":0.06,"livability":0.05}
+# Rebalanced (was cost .20 / real_estate .15 / market_size .06 / logistics .08 / infrastructure .08).
+# The old default put 35% on cheapness and only 14% on market access, so an unweighted search ranked
+# largely by low incomes -- 8,000-person rural counties beat every real market, and expensive but
+# strong regions (US west coast, Vancouver) were buried. Cheapness is now 27% and market access 20%.
+# Use-type presets in intake.js still override these per project type.
+DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.10,"incentives":0.10,"real_estate":0.12,
+                 "demographics":0.05,"logistics":0.10,"cost":0.15,"safety":0.05,"market_size":0.10,"livability":0.05}
 # Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
 # by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
@@ -259,6 +264,8 @@ HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties wit
 HAZARD_PENALTY=15.0
 WATER_PENALTY=12.0      # same reasoning for infrastructure.drought="preferred" (was a ~0.2pt nudge)
 PRIORITY_DECAY=0.6      # incentive priority ranking: weight of each pick = 0.6^position (1, .6, .36, .22)
+MAX_PER_REGION=2        # max results one state/province may take in the Top-N (0 = uncapped). Counters
+                        # the fact that county granularity varies ~5x by state; see run().
 def water_risk(d):
     """0-100 water-supply risk (higher = worse), US and CA, for the drought preference penalty."""
     if gsys(d)=="CA":
@@ -737,8 +744,21 @@ def score_dimension(cands,extract,crit):
     for r in raws.values():
         if r: keys|=set(r.keys())
     if not keys: return {ff:None for ff in cands}
-    pcts={k:pct_rank({ff:(raws[ff].get(k) if raws[ff] else None) for ff in cands}) for k in keys}
-    return {ff:_wavg([(pcts[k][ff],METRIC_WEIGHTS.get(k,1.0)) for k in keys]) for ff in cands}
+    # Percentile-rank WITHIN EACH COUNTRY, never across both. Several metric keys are shared by the US
+    # and Canadian extractors but come from sources that are not comparable on one scale:
+    #   labor_availability -> US unemployment is a current-year estimate (~4.0%), Canada's is the 2021
+    #                         Census (~9.6%, COVID-era). Ranked together, every CD looked jobless.
+    #   low_labor_cost     -> US median household income is USD, Canada's is CAD (76,958 vs 60,420),
+    #                         so Canadian markets read as systematically expensive.
+    # Ranking each country against its own distribution makes a score mean "this place's standing in
+    # its own country", which is comparable across the border; raw units no longer have to be.
+    groups={}
+    for ff in cands: groups.setdefault(gsys(ALLFEAT[ff]),[]).append(ff)
+    pcts={k:{} for k in keys}
+    for members in groups.values():
+        for k in keys:
+            pcts[k].update(pct_rank({ff:(raws[ff].get(k) if raws[ff] else None) for ff in members}))
+    return {ff:_wavg([(pcts[k].get(ff),METRIC_WEIGHTS.get(k,1.0)) for k in keys]) for ff in cands}
 
 def serving_edos(geoid,g):
     rows=[MASTER[i] for i in index_for(g).get(geoid,[]) if i in MASTER]
@@ -986,7 +1006,21 @@ def run(criteria,top=10):
         e=r["serving_edos"][0] if r["serving_edos"] else None
         key=e["objectid"] if e else ("_noedo_"+str(r["geoid"]))
         (extra if key in seen else primary).append(r); seen.add(key)
-    top_results=(primary+extra)[:top]
+    # GEOGRAPHIC SPREAD: states differ enormously in how finely they're subdivided -- Georgia has 159
+    # counties and Indiana 92, while all of British Columbia is 29 census divisions -- so granular
+    # states get several times the chances of appearing. Cap how many slots one state/province can
+    # take (same idea as the distinct-serving-EDO rule above). Scores are untouched; this only decides
+    # which of the already-ranked results surface. Overflow is kept and used as backfill if the cap
+    # would otherwise leave the list short.
+    ordered=primary+extra
+    if MAX_PER_REGION and len(ordered)>top:
+        per=collections.Counter(); capped=[]; overflow=[]
+        for r in ordered:
+            st=r["state"]
+            if per[st]<MAX_PER_REGION: capped.append(r); per[st]+=1
+            else: overflow.append(r)
+        ordered=capped+overflow
+    top_results=ordered[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
                     "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
