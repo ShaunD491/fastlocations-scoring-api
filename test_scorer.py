@@ -40,6 +40,51 @@ def test_national_anchor():
     a = _find(nat, "Cook", "IL"); b = _find(il, "Cook", "IL")
     assert a and b and a["sub_scores"] == b["sub_scores"], "not national-anchored"
 
+def test_innovation_index_bea_counties_are_expanded():
+    # The StatsAmerica file uses "BEA counties", which merge 24 Virginia counties with their
+    # independent cities plus Alaska/Hawaii areas. Codes like 51919 and 51942 are not Census FIPS and
+    # a naive join drops them silently. Every key must be a real county the engine knows about.
+    if not scorer.IIX:
+        return
+    assert "_meta" not in scorer.IIX, "provenance leaked into the county records"
+    unknown = [f for f in scorer.IIX if f not in scorer.FEAT]
+    assert not unknown, f"innovation index has FIPS the engine cannot place: {unknown[:8]}"
+    for merged in ("51919", "51942", "51901"):
+        assert merged not in scorer.IIX, f"unexpanded BEA county {merged}"
+    # Fairfax County and Fairfax City both sit inside BEA 51919 and must both carry its value
+    a, b = scorer.IIX.get("51059"), scorer.IIX.get("51600")
+    assert a and b and a["bea_county"] == b["bea_county"] == "51919"
+    assert a["innovation_output"] == b["innovation_output"]
+
+def test_broadband_direction_is_not_inverted():
+    # Both source measures count population LACKING broadband despite their names, so the sign has to
+    # be flipped on ingest. If that inversion is ever lost, dense metros would rank as broadband
+    # deserts. Guard with counties whose relative standing is not in doubt.
+    if not scorer.IIX:
+        return
+    urban = scorer.IIX.get("13135", {}).get("broadband")      # Gwinnett GA
+    rural = scorer.IIX.get("46121", {}).get("broadband")      # Todd County SD
+    if urban is None or rural is None:
+        return
+    assert urban > rural, f"broadband sign inverted: Gwinnett {urban} vs Todd {rural}"
+
+def test_innovation_index_excludes_double_counted_measures():
+    # Education, unemployment and STEM occupation shares are sourced directly elsewhere in the model.
+    # Ingesting StatsAmerica's versions too would weight the same facts twice.
+    if not scorer.IIX:
+        return
+    rec = next(iter(scorer.IIX.values()))
+    for banned in ("headline", "education", "unemployment", "stem", "high_tech"):
+        assert not any(banned in k.lower() for k in rec), f"double-counted measure ingested: {banned}"
+
+def test_innovation_index_absent_for_canada_without_penalty():
+    # Canadian CDs have no coverage in this US-only source. They must simply lack the metric rather
+    # than score zero on it.
+    ca = next(iter(scorer.CA_FEAT.values()))
+    dem = scorer.m_demographics(ca, {})
+    assert "innovation_output" not in dem and "business_dynamism" not in dem
+    assert scorer.innovation_output(ca) is None
+
 def test_rd_intensity_distinguishes_true_zero_from_missing():
     # A county with CBP coverage but no R&D establishments is a real measurement of zero and must
     # score, not be treated as a coverage gap. A county with no CBP data at all must return None so

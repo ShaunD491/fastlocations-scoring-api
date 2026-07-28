@@ -232,6 +232,11 @@ try: OCC=_load("county_occupation.json")           # fips -> occupation-group em
 except FileNotFoundError: OCC={}
 try: INNOV=_load("county_innovation.json")         # fips -> R&D industry presence (CBP NAICS 5417) via build_us_innovation.py
 except FileNotFoundError: INNOV={}
+try:                                               # fips -> StatsAmerica Innovation Intelligence subset via build_innovation_index.py
+    IIX=_load("county_innovation_index.json")
+    IIX_META=IIX.pop("_meta",{})                   # provenance, not a county record
+except FileNotFoundError:
+    IIX,IIX_META={},{}
 import re as _re, unicodedata as _ud
 def _norm(x):
     x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
@@ -524,6 +529,32 @@ def rd_intensity(f):
     Counties with no CBP data at all are absent from the file and return None."""
     r=INNOV.get(f.get("fips") or "")
     return r.get("rd_estab_share") if r else None
+def _iix(f,key):
+    """Read a pre-composed StatsAmerica theme. build_innovation_index.py percentile-ranks each raw
+    measure and averages within theme, because the source measures are in incompatible units
+    (percentages, ratios, dollars scaled by GDP) and cannot be averaged directly."""
+    r=IIX.get(f.get("fips") or "")
+    v=r.get(key) if r else None
+    return v if isinstance(v,(int,float)) else None
+def innovation_output(f):
+    """Knowledge CREATION: patent technology diffusion, patenting rate change, patent diversity,
+    university knowledge spillovers.
+
+    Distinct from both knowledge_economy (technical workers resident) and rd_intensity (R&D firms
+    present) -- this is measured output and institutional spillover, not headcount or firm counts.
+    Sourced from StatsAmerica because there is no longer a reachable county-level patent feed:
+    USPTO's own county tables stop at CY2015 and PatentsView's bulk files are now key-gated."""
+    return _iix(f,"innovation_output")
+def business_dynamism(f):
+    """Entrepreneurial and capital conditions: establishment births, deaths, expansions and
+    contractions; venture capital dollars and deal counts; IPOs; foreign and domestic direct
+    investment; latent innovation, industry diversity and cluster performance."""
+    return _iix(f,"business_dynamism")
+def broadband(f):
+    """Broadband infrastructure and adoption, net of adoption barriers. The engine had NO broadband
+    signal before this -- it is a genuine gap being filled, not a refinement of something existing,
+    which is why it sits in infrastructure rather than alongside the innovation composites."""
+    return _iix(f,"broadband")
 def m_demographics(f,crit):
     # Composition / quality only. Raw population scale is carried by market_size, and absolute
     # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
@@ -545,6 +576,10 @@ def m_demographics(f,crit):
     if ke is not None: out["knowledge_economy"]=ke
     rd=rd_intensity(f)
     if rd is not None: out["rd_intensity"]=rd
+    io_=innovation_output(f)
+    if io_ is not None: out["innovation_output"]=io_
+    bd=business_dynamism(f)
+    if bd is not None: out["business_dynamism"]=bd
     return out
 # Skill profile -> NOC 2021 broad categories (Canada; from build_ca_occupation.py). Coarser than the
 # US S2401 groups (10 vs 16) but REAL occupational supply, replacing the degree-share proxy for CA so
@@ -748,6 +783,8 @@ def m_infrastructure(f,crit):
     # natural-hazard resilience (FEMA NRI), opt-in via infrastructure.hazard: higher = safer (lower risk).
     if ci.get("hazard") and f.get("nri_risk") is not None:
         out["hazard_resilience"]=100.0-f["nri_risk"]
+    bb=broadband(f)                                # US only; Canadian CDs simply omit the key
+    if bb is not None: out["broadband"]=bb
     return out or None
 
 def target_wage_annual(crit):
@@ -807,7 +844,11 @@ METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_va
                 # Held below 1.0 deliberately: ~81% of US counties tie at zero R&D establishments, so
                 # this metric behaves more like a presence flag than a gradient, and R&D presence is
                 # heavily metropolitan. At full weight it would quietly undo the geographic rebalancing.
-                "rd_intensity":0.75}
+                "rd_intensity":0.75,
+                # Third-party composites. Kept below the native signals on purpose: they are someone
+                # else's aggregation choices, 61 counties share a value across a merged BEA area, and
+                # they carry no coverage for Canada -- so they inform the ranking without steering it.
+                "innovation_output":0.75,"business_dynamism":0.75}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
