@@ -79,11 +79,52 @@ def test_innovation_index_excludes_double_counted_measures():
 
 def test_innovation_index_absent_for_canada_without_penalty():
     # Canadian CDs have no coverage in this US-only source. They must simply lack the metric rather
-    # than score zero on it.
+    # than score zero on it, and must still receive an innovation sub-score from knowledge_economy.
     ca = next(iter(scorer.CA_FEAT.values()))
-    dem = scorer.m_demographics(ca, {})
-    assert "innovation_output" not in dem and "business_dynamism" not in dem
+    inn = scorer.m_innovation(ca, {})
+    assert "innovation_output" not in inn and "business_dynamism" not in inn
     assert scorer.innovation_output(ca) is None
+    assert "knowledge_economy" in inn, "Canada left with no innovation signal at all"
+
+def test_real_estate_uses_land_price_weighted_over_tax():
+    # Real estate was property tax alone, which penalised high-tax/cheap-land regions and flattered
+    # Prop 13 California. Land price must be present and must outweigh the tax rate.
+    if not scorer.LANDC:
+        return
+    re_ = scorer.m_real_estate(scorer.FEAT["36055"], {})      # Monroe County NY
+    assert "low_land_cost" in re_ and "low_property_tax" in re_
+    assert scorer.METRIC_WEIGHTS["low_land_cost"] > scorer.METRIC_WEIGHTS.get("low_property_tax", 1.0)
+    # cheaper land must produce a less negative (higher) raw value than dear land
+    cheap = scorer.m_real_estate(scorer.FEAT["36067"], {})["low_land_cost"]   # Onondaga ~$3.5k
+    dear = scorer.m_real_estate(scorer.FEAT["13121"], {})["low_land_cost"]    # Fulton GA ~$25k
+    assert cheap > dear
+    # a county with no farm acreage must still score on tax alone rather than vanishing
+    nofarm = next((f for f in scorer.FEAT if f not in scorer.LANDC
+                   and scorer.FEAT[f].get("property_tax_rate") is not None), None)
+    if nofarm:
+        assert scorer.m_real_estate(scorer.FEAT[nofarm], {}) is not None
+
+def test_innovation_is_its_own_dimension():
+    # Promoted out of demographics. It must be weighted, scored, and must not be double-counted by
+    # still appearing in demographics.
+    assert "innovation" in scorer.DIMS
+    assert scorer.DEFAULT_WEIGHTS.get("innovation", 0) > 0
+    assert abs(sum(scorer.DEFAULT_WEIGHTS.values()) - 1.0) < 1e-9, "default weights must sum to 1"
+    dem = scorer.m_demographics(scorer.FEAT["06085"], {})
+    for k in ("knowledge_economy", "rd_intensity", "innovation_output", "business_dynamism"):
+        assert k not in dem, f"{k} still double-counted inside demographics"
+    out = scorer.run({"geography": {"countries": ["US"]}}, top=3)
+    assert "innovation" in out["dimensions_live"]
+    assert out["results"][0]["sub_scores"].get("innovation") is not None
+
+def test_innovation_weight_actually_moves_ranking():
+    # A dimension with a slider that changes nothing is worse than no slider at all.
+    base = {w: 0.1 for w in scorer.DEFAULT_WEIGHTS}
+    heavy = dict(base, innovation=0.9)
+    geo = {"geography": {"countries": ["US"]}}
+    a = [r["county"] for r in scorer.run(dict(geo, weights=base), top=25)["results"]]
+    b = [r["county"] for r in scorer.run(dict(geo, weights=heavy), top=25)["results"]]
+    assert a != b, "innovation weight has no effect on the ranking"
 
 def test_rd_intensity_distinguishes_true_zero_from_missing():
     # A county with CBP coverage but no R&D establishments is a real measurement of zero and must
@@ -109,8 +150,8 @@ def test_rd_intensity_is_live_and_ordered():
     if not mid or not non:
         return
     assert scorer.rd_intensity(mid) > scorer.rd_intensity(non)
-    dem = scorer.m_demographics(mid, {})
-    assert "rd_intensity" in dem, "rd_intensity never reaches the demographics dimension"
+    inn = scorer.m_innovation(mid, {})
+    assert "rd_intensity" in inn, "rd_intensity never reaches the innovation dimension"
 
 def test_ca_labour_is_current_and_retains_cd_variation():
     # The Canadian labour inputs are rebased to the current Labour Force Survey but must keep the

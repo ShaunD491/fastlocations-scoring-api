@@ -232,6 +232,8 @@ try: OCC=_load("county_occupation.json")           # fips -> occupation-group em
 except FileNotFoundError: OCC={}
 try: INNOV=_load("county_innovation.json")         # fips -> R&D industry presence (CBP NAICS 5417) via build_us_innovation.py
 except FileNotFoundError: INNOV={}
+try: LANDC=_load("county_land_cost.json")          # fips -> land $/acre (USDA NASS 2022) via build_land_cost.py
+except FileNotFoundError: LANDC={}
 try:                                               # fips -> StatsAmerica Innovation Intelligence subset via build_innovation_index.py
     IIX=_load("county_innovation_index.json")
     IIX_META=IIX.pop("_meta",{})                   # provenance, not a county record
@@ -270,14 +272,20 @@ for _nm in ("Toronto","Montréal","Vancouver","Calgary","Edmonton","Ottawa","Win
 RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV","NC","ND",
             "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
 
-DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability"]
+DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability","innovation"]
 # Rebalanced (was cost .20 / real_estate .15 / market_size .06 / logistics .08 / infrastructure .08).
 # The old default put 35% on cheapness and only 14% on market access, so an unweighted search ranked
 # largely by low incomes -- 8,000-person rural counties beat every real market, and expensive but
 # strong regions (US west coast, Vancouver) were buried. Cheapness is now 27% and market access 20%.
 # Use-type presets in intake.js still override these per project type.
-DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.10,"incentives":0.10,"real_estate":0.12,
-                 "demographics":0.05,"logistics":0.10,"cost":0.15,"safety":0.05,"market_size":0.10,"livability":0.05}
+# innovation promoted to a dimension of its own (was four metrics buried inside demographics, where
+# the arithmetic capped its influence near 1.5% of the final score even on an R&D search). demographics
+# drops to .04 because it gave up knowledge_economy and rd_intensity; the remaining .04 comes off
+# real_estate, logistics, cost and market_size. Default is a deliberately modest .05 -- most projects
+# are not R&D, and the r_and_d use-type preset in intake.js raises it where it matters.
+DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.10,"incentives":0.10,"real_estate":0.11,
+                 "demographics":0.04,"logistics":0.09,"cost":0.14,"safety":0.05,"market_size":0.09,
+                 "livability":0.05,"innovation":0.05}
 # Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
 # by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
@@ -561,17 +569,33 @@ def m_demographics(f,crit):
     # educational attainment, population growth, and labor-force participation.
     if gsys(f)=="CA":                              # StatCan: bachelor's share, recent growth, participation rate
         if f.get("bachelor_share") is None and f.get("pop_growth") is None: return None
-        out={"education_attainment":f.get("bachelor_share"),
-             "pop_growth":f.get("pop_growth"),
-             "labor_force_participation":f.get("participation")}
-        ke=knowledge_economy(f)
-        if ke is not None: out["knowledge_economy"]=ke
-        return out
+        return {"education_attainment":f.get("bachelor_share"),
+                "pop_growth":f.get("pop_growth"),
+                "labor_force_participation":f.get("participation")}
     pr=(crit.get("demographics") or {}).get("education_priority","none")
     pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
     out={"education_attainment":edu_share(f,pr),   # weighted 2x via METRIC_WEIGHTS (lifts mature, highly-educated NE/east coast)
          "pop_growth":f.get("POPGRW20CY"),
          "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
+    return out
+
+def m_innovation(f,crit):
+    """Innovation capacity, as its own dimension rather than a corner of demographics.
+
+    Four complementary views, each answering a different question, so a place that merely looks
+    innovative on one cannot carry the dimension:
+      knowledge_economy  - do technical people WORK here (occupation shares; both countries)
+      rd_intensity       - are R&D firms PRESENT here (CBP NAICS 5417 establishment share; US)
+      innovation_output  - is knowledge being CREATED here (patents, university spillovers; US)
+      business_dynamism  - can a venture START and FUND itself here (establishment churn, VC, FDI; US)
+
+    Canada currently has only the first of these: StatsAmerica and County Business Patterns are both
+    US-only. Because every dimension is percentile-ranked within its own country, Canadian CDs are
+    ranked against each other on the signal that does exist rather than being penalised for the three
+    that do not -- but the Canadian innovation sub-score rests on one metric and should be read as the
+    coarser number it is. A Canadian equivalent (StatCan business dynamics / CIPO patents by CD) is the
+    obvious next build."""
+    out={}
     ke=knowledge_economy(f)
     if ke is not None: out["knowledge_economy"]=ke
     rd=rd_intensity(f)
@@ -580,7 +604,7 @@ def m_demographics(f,crit):
     if io_ is not None: out["innovation_output"]=io_
     bd=business_dynamism(f)
     if bd is not None: out["business_dynamism"]=bd
-    return out
+    return out or None
 # Skill profile -> NOC 2021 broad categories (Canada; from build_ca_occupation.py). Coarser than the
 # US S2401 groups (10 vs 16) but REAL occupational supply, replacing the degree-share proxy for CA so
 # "engineers" reads a CD's Natural-&-applied-sciences share, "skilled_trades" reads Trades, etc.
@@ -831,9 +855,16 @@ def m_real_estate(f,crit):
     if gsys(f)=="CA":                              # StatCan: median dwelling value as the real-estate-cost proxy
         dv=f.get("dwelling_value")
         return {"low_dwelling_cost":-dv} if dv is not None else None
+    # Land purchase price carries 2x property tax via METRIC_WEIGHTS: the acquisition cost is a larger
+    # real number for most projects than the annual rate, and scoring tax alone had been penalising
+    # high-tax/cheap-land regions (Upstate NY) while flattering low-tax/dear-land ones (Prop 13
+    # California). Either metric alone still scores if the other is missing.
+    out={}
+    lc=LANDC.get(f.get("fips") or "")
+    if lc and lc.get("land_per_acre"): out["low_land_cost"]=-lc["land_per_acre"]
     pt=f.get("property_tax_rate")
-    if pt is None: return None
-    return {"low_property_tax":-pt}
+    if pt is not None: out["low_property_tax"]=-pt
+    return out or None
 
 # Per-metric weights WITHIN a dimension (default 1). Lets a metric count for more without the old
 # duplicate-key hack: education dominates demographics; critical thinking and value tier count 2x.
@@ -841,14 +872,12 @@ def m_real_estate(f,crit):
 # it carries more weight than the generic value tier -- otherwise the ranked-priority UI is cosmetic.
 METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,
                 "skill_supply":1.5,"priority_match":3.0,
-                # Held below 1.0 deliberately: ~81% of US counties tie at zero R&D establishments, so
-                # this metric behaves more like a presence flag than a gradient, and R&D presence is
-                # heavily metropolitan. At full weight it would quietly undo the geographic rebalancing.
-                "rd_intensity":0.75,
-                # Third-party composites. Kept below the native signals on purpose: they are someone
-                # else's aggregation choices, 61 counties share a value across a merged BEA area, and
-                # they carry no coverage for Canada -- so they inform the ranking without steering it.
-                "innovation_output":0.75,"business_dynamism":0.75}
+                # Within the innovation dimension. rd_intensity stays below its peers because roughly
+                # 81% of US counties tie at zero R&D establishments, making it closer to a presence
+                # flag than a gradient; the other three are continuous and carry equal weight.
+                "rd_intensity":0.75,"innovation_output":1.0,"business_dynamism":1.0,
+                # Acquisition cost outweighs the annual tax rate in the real-estate dimension.
+                "low_land_cost":2.0}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
@@ -889,10 +918,11 @@ def serving_edos(geoid,g):
 
 DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount, and workforce skills",
             "demographics":"educational attainment, growth, and labor-force participation",
+            "innovation":"technical employment, R&D presence, patenting and knowledge spillovers, and business dynamism",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality",
-            "real_estate":"real-estate cost",
+            "real_estate":"land purchase price and property-tax burden",
             "cost":"labor and operating cost",
             "safety":"public safety (low crime)",
             "market_size":"market size (regional catchment)",
@@ -958,7 +988,8 @@ def run(criteria,top=10):
     sub={dim:score_dimension(refset,ex,criteria) for dim,ex in (
             ("workforce",m_workforce),("demographics",m_demographics),("logistics",m_logistics),
             ("incentives",m_incentives),("infrastructure",m_infrastructure),("real_estate",m_real_estate),
-            ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability))}
+            ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability),
+            ("innovation",m_innovation))}
     cands=list(refset)
     trace={"candidates_start":len(cands)}
     if weights_fallback:
@@ -1143,7 +1174,7 @@ def run(criteria,top=10):
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
                     "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation"],
             "dimensions_pending_data":[],
             "results":top_results,"other_notable":other_notable}
 

@@ -92,13 +92,18 @@
 
   // ---- Use-type presets: picking a use type re-sets the weight sliders to a sensible default ----
   const USE_PRESETS = {
-    manufacturing:          { workforce:22, cost:20, real_estate:12, incentives:12, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:5 },
-    warehouse_distribution: { workforce:14, cost:16, real_estate:14, incentives:8,  infrastructure:6,  logistics:24, market_size:8,  livability:3, safety:4, demographics:3 },
-    data_center:            { workforce:8,  cost:16, real_estate:10, incentives:12, infrastructure:26, logistics:6,  market_size:8,  livability:3, safety:4, demographics:7 },
-    office:                 { workforce:20, cost:14, real_estate:12, incentives:6,  infrastructure:6,  logistics:6,  market_size:12, livability:9, safety:7, demographics:8 },
-    r_and_d:                { workforce:24, cost:12, real_estate:10, incentives:10, infrastructure:8,  logistics:5,  market_size:8,  livability:8, safety:5, demographics:10 },
-    flex:                   { workforce:18, cost:18, real_estate:15, incentives:10, infrastructure:8,  logistics:10, market_size:6,  livability:5, safety:5, demographics:5 },
-    mixed:                  { workforce:18, cost:20, real_estate:15, incentives:10, infrastructure:8,  logistics:8,  market_size:6,  livability:5, safety:5, demographics:5 }
+    // Innovation is its own dimension as of this version. Warehouse and flex barely move on it;
+    // R&D leans on it hardest, second only to workforce -- an R&D site still has to be staffable.
+    manufacturing:          { workforce:22, cost:19, real_estate:11, incentives:12, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:4,  innovation:3 },
+    warehouse_distribution: { workforce:14, cost:16, real_estate:14, incentives:8,  infrastructure:6,  logistics:24, market_size:8,  livability:3, safety:4, demographics:2,  innovation:1 },
+    data_center:            { workforce:8,  cost:16, real_estate:10, incentives:12, infrastructure:26, logistics:6,  market_size:8,  livability:3, safety:4, demographics:3,  innovation:4 },
+    office:                 { workforce:20, cost:14, real_estate:12, incentives:6,  infrastructure:6,  logistics:6,  market_size:12, livability:9, safety:7, demographics:4,  innovation:4 },
+    // R&D runs the lowest cost weight of any use type: these projects compete for scarce talent and
+    // proximity to research, and rarely site on operating cost. What they do care about is land to
+    // build a campus on, so the points come off cost and go to innovation and real estate.
+    r_and_d:                { workforce:20, cost:5,  real_estate:10, incentives:9,  infrastructure:7,  logistics:3,  market_size:6,  livability:7, safety:4, demographics:5,  innovation:24 },
+    flex:                   { workforce:18, cost:18, real_estate:15, incentives:10, infrastructure:8,  logistics:10, market_size:6,  livability:5, safety:5, demographics:3,  innovation:2 },
+    mixed:                  { workforce:18, cost:19, real_estate:15, incentives:10, infrastructure:8,  logistics:8,  market_size:6,  livability:5, safety:5, demographics:3,  innovation:3 }
   };
   const useSel = $('use_primary');
   if (useSel) useSel.addEventListener('change', function () {
