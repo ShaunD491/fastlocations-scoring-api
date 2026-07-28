@@ -40,6 +40,33 @@ def test_national_anchor():
     a = _find(nat, "Cook", "IL"); b = _find(il, "Cook", "IL")
     assert a and b and a["sub_scores"] == b["sub_scores"], "not national-anchored"
 
+def test_rd_intensity_distinguishes_true_zero_from_missing():
+    # A county with CBP coverage but no R&D establishments is a real measurement of zero and must
+    # score, not be treated as a coverage gap. A county with no CBP data at all must return None so
+    # the scorer damps it instead of penalizing it.
+    if not scorer.INNOV:
+        return
+    zeros = [f for f, v in scorer.INNOV.items() if v.get("rd_estab_share") == 0]
+    assert len(zeros) > 1000, "expected most counties to record a genuine zero"
+    z = scorer.FEAT.get(zeros[0])
+    assert z is None or scorer.rd_intensity(z) == 0.0, "true zero must not become None"
+    fake = {"fips": "99999"}
+    assert scorer.rd_intensity(fake) is None, "county absent from CBP must be None, not 0"
+
+def test_rd_intensity_is_live_and_ordered():
+    # The metric must reach the demographics dimension, and denser R&D counties must not rank below
+    # counties with no R&D presence on it.
+    if not scorer.INNOV:
+        return
+    mid = scorer.FEAT.get("25017")            # Middlesex MA - densest R&D cluster in the country
+    non = next((scorer.FEAT[f] for f, v in scorer.INNOV.items()
+                if v.get("rd_estab_share") == 0 and f in scorer.FEAT), None)
+    if not mid or not non:
+        return
+    assert scorer.rd_intensity(mid) > scorer.rd_intensity(non)
+    dem = scorer.m_demographics(mid, {})
+    assert "rd_intensity" in dem, "rd_intensity never reaches the demographics dimension"
+
 def test_ca_labour_is_current_and_retains_cd_variation():
     # The Canadian labour inputs are rebased to the current Labour Force Survey but must keep the
     # CD-level dispersion that only the Census publishes. A wholesale LFS substitution would collapse

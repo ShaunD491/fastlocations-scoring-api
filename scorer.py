@@ -230,6 +230,8 @@ try: BEA_COST=_load("county_bea.json")             # fips -> {earn_pow_pc, pcpi,
 except FileNotFoundError: BEA_COST={}
 try: OCC=_load("county_occupation.json")           # fips -> occupation-group employment shares (%); Census ACS S2401 via build_occupation.py
 except FileNotFoundError: OCC={}
+try: INNOV=_load("county_innovation.json")         # fips -> R&D industry presence (CBP NAICS 5417) via build_us_innovation.py
+except FileNotFoundError: INNOV={}
 import re as _re, unicodedata as _ud
 def _norm(x):
     x=_ud.normalize("NFKD",str(x)).encode("ascii","ignore").decode().lower()
@@ -507,6 +509,21 @@ def knowledge_economy(f):
     if not o: return None
     parts=[o.get(k) for k in ("comp","eng","sci") if o.get(k) is not None]
     return round(sum(parts),3) if parts else None
+def rd_intensity(f):
+    """Share of the county's establishments that are Scientific R&D Services (CBP NAICS 5417).
+
+    Deliberately separate from knowledge_economy(): that one counts technical WORKERS who live in a
+    county, this one counts whether R&D is performed there as a line of business. A commuter suburb
+    of engineers and a county hosting a research campus diverge sharply on this. Kept as its own
+    metric key rather than folded into knowledge_economy so each is percentile-ranked on its own
+    distribution -- the two are on different scales and a weighted sum of the raw values would let
+    occupation shares swamp this entirely.
+
+    Roughly 2,600 of 3,246 counties record a genuine zero here, so the bottom of the distribution is
+    one large tie block; that is a real finding about where US R&D is performed, not a coverage hole.
+    Counties with no CBP data at all are absent from the file and return None."""
+    r=INNOV.get(f.get("fips") or "")
+    return r.get("rd_estab_share") if r else None
 def m_demographics(f,crit):
     # Composition / quality only. Raw population scale is carried by market_size, and absolute
     # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
@@ -526,6 +543,8 @@ def m_demographics(f,crit):
          "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
     ke=knowledge_economy(f)
     if ke is not None: out["knowledge_economy"]=ke
+    rd=rd_intensity(f)
+    if rd is not None: out["rd_intensity"]=rd
     return out
 # Skill profile -> NOC 2021 broad categories (Canada; from build_ca_occupation.py). Coarser than the
 # US S2401 groups (10 vs 16) but REAL occupational supply, replacing the degree-share proxy for CA so
@@ -784,7 +803,11 @@ def m_real_estate(f,crit):
 # priority_match is the ONLY incentives metric that responds to what the user actually asked for, so
 # it carries more weight than the generic value tier -- otherwise the ranked-priority UI is cosmetic.
 METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,
-                "skill_supply":1.5,"priority_match":3.0}
+                "skill_supply":1.5,"priority_match":3.0,
+                # Held below 1.0 deliberately: ~81% of US counties tie at zero R&D establishments, so
+                # this metric behaves more like a presence flag than a gradient, and R&D presence is
+                # heavily metropolitan. At full weight it would quietly undo the geographic rebalancing.
+                "rd_intensity":0.75}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
