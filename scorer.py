@@ -144,6 +144,27 @@ try:                                               # StatCan NOC broad occupatio
             CA_FEAT[_cid]["ca_occ"]=_o
 except FileNotFoundError:
     pass
+try:                                               # CURRENT Labour Force Survey rates by CD (build_ca_labour.py)
+    _LAB=_load("ca_labour.json")                   # cduid -> {unemployment, participation, employment_rate, ref, basis}
+    for _cid,_l in _LAB.items():
+        _v=CA_FEAT.get(_cid)
+        if _v and isinstance(_l,dict):
+            # Replaces the 2021 Census figures, which were collected under COVID restrictions and put
+            # Canadian unemployment near 9.6% against a US current-year estimate of ~4.0%.
+            if _l.get("unemployment") is not None: _v["unemployment"]=_l["unemployment"]
+            if _l.get("participation") is not None: _v["participation"]=_l["participation"]
+            _v["labour_ref"]=_l.get("ref")
+except FileNotFoundError:
+    pass
+try:                                               # CA province-level innovation inputs (ISED SME survey + provincial R&D credit rates)
+    _CI=(_load("ca_innovation.json") or {}).get("provinces") or {}
+    for _cid,_v in CA_FEAT.items():
+        _r=_CI.get(_v.get("ST_ABBREV"))
+        if _r:
+            _v["sme_innovation_rate"]=_r.get("sme_innovation_rate")
+            _v["sred_rate_pct"]=_r.get("sred_rate_pct")
+except FileNotFoundError:
+    pass
 try:                                               # StatCan Open Database of Infrastructure asset counts by CD (build_ca_infrastructure.py)
     _INF=_load("ca_infrastructure.json")           # cduid -> {electric_grid, potable_water, wastewater, telecom, ...}
     for _cid,_i in _INF.items():
@@ -467,20 +488,45 @@ def skill_cognition(profiles):
     """Mean cognition weight of the selected profiles (0..1); drives the coarse Canadian signal."""
     cs=[SKILL_BANDS[p][1] for p in (profiles or []) if p in SKILL_BANDS]
     return sum(cs)/len(cs) if cs else None
+def knowledge_economy(f):
+    """Innovation capacity of the local workforce, measured where the work actually happens.
+
+    Built from the county/census-division OCCUPATION data already loaded, so it is fine-grained on
+    both sides of the border (3,222 US counties; 293 Canadian CDs) rather than the state- or
+    region-level innovation composites that are usually published. US: computer/mathematical,
+    architecture/engineering and life/physical/social science employment shares. Canada: the natural
+    and applied sciences NOC group, nudged by the province's SME innovation rate (ISED, region-level,
+    so it is deliberately a minor term -- it cannot differentiate CDs within a province)."""
+    if gsys(f)=="CA":
+        occ=f.get("ca_occ") or {}
+        stem=occ.get("noc2")
+        if stem is None: return None
+        rate=f.get("sme_innovation_rate")
+        return stem if rate is None else stem*0.8+(rate/10.0)*0.2
+    o=OCC.get(f.get("fips") or "")
+    if not o: return None
+    parts=[o.get(k) for k in ("comp","eng","sci") if o.get(k) is not None]
+    return round(sum(parts),3) if parts else None
 def m_demographics(f,crit):
     # Composition / quality only. Raw population scale is carried by market_size, and absolute
     # labor force mirrors it (r~0.89), so demographics uses RATES/quality to de-correlate:
     # educational attainment, population growth, and labor-force participation.
-    if gsys(f)=="CA":                              # StatCan: bachelor's share, 2016-21 growth, participation rate
+    if gsys(f)=="CA":                              # StatCan: bachelor's share, recent growth, participation rate
         if f.get("bachelor_share") is None and f.get("pop_growth") is None: return None
-        return {"education_attainment":f.get("bachelor_share"),
-                "pop_growth":f.get("pop_growth"),
-                "labor_force_participation":f.get("participation")}
+        out={"education_attainment":f.get("bachelor_share"),
+             "pop_growth":f.get("pop_growth"),
+             "labor_force_participation":f.get("participation")}
+        ke=knowledge_economy(f)
+        if ke is not None: out["knowledge_economy"]=ke
+        return out
     pr=(crit.get("demographics") or {}).get("education_priority","none")
     pop=f.get("TOTPOP_CY"); lf=f.get("CIVLBFR_CY")
-    return {"education_attainment":edu_share(f,pr),   # weighted 2x via METRIC_WEIGHTS (lifts mature, highly-educated NE/east coast)
-            "pop_growth":f.get("POPGRW20CY"),
-            "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
+    out={"education_attainment":edu_share(f,pr),   # weighted 2x via METRIC_WEIGHTS (lifts mature, highly-educated NE/east coast)
+         "pop_growth":f.get("POPGRW20CY"),
+         "labor_force_participation":(lf/pop if (lf is not None and pop) else None)}
+    ke=knowledge_economy(f)
+    if ke is not None: out["knowledge_economy"]=ke
+    return out
 # Skill profile -> NOC 2021 broad categories (Canada; from build_ca_occupation.py). Coarser than the
 # US S2401 groups (10 vs 16) but REAL occupational supply, replacing the degree-share proxy for CA so
 # "engineers" reads a CD's Natural-&-applied-sciences share, "skilled_trades" reads Trades, etc.
@@ -604,6 +650,12 @@ def m_incentives(f,crit):
     except (TypeError,ValueError): tv=None
     if tv and tv>0 and mx is not None:
         out["value_target_fit"]=min(float(mx)/tv,1.0)*100.0
+    # Canadian provincial R&D (SR&ED) credit rate -- only counts when the project actually ranks R&D
+    # credits as a priority, since it is irrelevant to a project that isn't doing R&D. The 35% federal
+    # credit applies nationwide and so cannot differentiate provinces; only the provincial top-up does.
+    if "rd_credit" in prio:
+        sr=f.get("sred_rate_pct")
+        if sr is not None: out["rd_credit_rate"]=float(sr)
     return out
 
 def m_livability(f,crit):
@@ -746,8 +798,10 @@ def score_dimension(cands,extract,crit):
     if not keys: return {ff:None for ff in cands}
     # Percentile-rank WITHIN EACH COUNTRY, never across both. Several metric keys are shared by the US
     # and Canadian extractors but come from sources that are not comparable on one scale:
-    #   labor_availability -> US unemployment is a current-year estimate (~4.0%), Canada's is the 2021
-    #                         Census (~9.6%, COVID-era). Ranked together, every CD looked jobless.
+    #   labor_availability -> US unemployment comes from the ACS/current-year model, Canada's from the
+    #                         Labour Force Survey (3-month moving average, seasonally adjusted). Two
+    #                         different instruments with different reference weeks and definitions of
+    #                         "actively seeking"; their raw rates are not one comparable scale.
     #   low_labor_cost     -> US median household income is USD, Canada's is CAD (76,958 vs 60,420),
     #                         so Canadian markets read as systematically expensive.
     # Ranking each country against its own distribution makes a score mean "this place's standing in

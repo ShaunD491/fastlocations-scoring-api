@@ -1,0 +1,23 @@
+{
+  "_comment": "Canadian province/territory innovation inputs. TWO separate signals: (1) sme_innovation_rate - share of SMEs reporting at least one form of innovation, from ISED/StatCan Survey on Financing and Growth of SMEs 2023, published at REGION level only (7 regions), so every census division in a province inherits its regional value - it is therefore used as a coarse secondary signal, never as the primary innovation measure; (2) sred_rate_pct - maximum provincial SR&ED / R&D tax credit rate, used by the incentives dimension when a project ranks R&D credits as a priority.",
+  "_sources": {
+    "sme_innovation_rate": "Innovation, Science and Economic Development Canada, 'SME Profile: Innovation in Canada' (2025), Table 2 - Survey on Financing and Growth of Small and Medium Enterprises, 2023. NOTE: the report's narrative text quotes 31.8/29.5/27.9 for BC/QC/ON while Table 2 gives 31.2/28.5/26.9; the table values are used.",
+    "sred_rate_pct": "Grant Thornton, 'Canada's innovation landscape: Powerhouse provinces for R&D' (map of maximum provincial SR&ED/R&D credits). CORRECTION APPLIED: that document is ~2020 vintage and states Alberta offers no provincial credit. Alberta introduced the Innovation Employment Grant in 2021 (8% base, up to 20% enhanced) and made it permanent in Budget 2025, so AB is recorded at its 8% base rate. Federal SR&ED credit is 35% and applies nationally, so it does not differentiate between provinces and is not scored."
+  },
+  "_verify_before_relying": "Provincial R&D credit rates change with budgets. Re-confirm against each province's finance ministry and the CRA before treating these as current.",
+  "provinces": {
+    "BC": { "sme_innovation_rate": 31.2, "sred_rate_pct": 10 },
+    "QC": { "sme_innovation_rate": 28.5, "sred_rate_pct": 30 },
+    "ON": { "sme_innovation_rate": 26.9, "sred_rate_pct": 8 },
+    "AB": { "sme_innovation_rate": 24.7, "sred_rate_pct": 8 },
+    "MB": { "sme_innovation_rate": 24.0, "sred_rate_pct": 15 },
+    "SK": { "sme_innovation_rate": 20.8, "sred_rate_pct": 10 },
+    "NS": { "sme_innovation_rate": 21.4, "sred_rate_pct": 15 },
+    "NB": { "sme_innovation_rate": 21.4, "sred_rate_pct": 15 },
+    "NL": { "sme_innovation_rate": 21.4, "sred_rate_pct": 15 },
+    "PE": { "sme_innovation_rate": 21.4, "sred_rate_pct": 0 },
+    "YT": { "sme_innovation_rate": 31.2, "sred_rate_pct": 15 },
+    "NT": { "sme_innovation_rate": 31.2, "sred_rate_pct": 0 },
+    "NU": { "sme_innovation_rate": 31.2, "sred_rate_pct": 0 }
+  }
+}

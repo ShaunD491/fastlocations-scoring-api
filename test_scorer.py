@@ -40,6 +40,22 @@ def test_national_anchor():
     a = _find(nat, "Cook", "IL"); b = _find(il, "Cook", "IL")
     assert a and b and a["sub_scores"] == b["sub_scores"], "not national-anchored"
 
+def test_ca_labour_is_current_and_retains_cd_variation():
+    # The Canadian labour inputs are rebased to the current Labour Force Survey but must keep the
+    # CD-level dispersion that only the Census publishes. A wholesale LFS substitution would collapse
+    # every non-metro CD in a province onto one identical rate, which is what this guards against.
+    import collections
+    rates = [v.get("unemployment") for v in scorer.CA_FEAT.values() if v.get("unemployment") is not None]
+    assert len(rates) > 250, "Canadian unemployment coverage regressed"
+    # no single value may dominate: provincial fallback covers 229 CDs, so a straight copy would put
+    # well over half the country on ~10 distinct numbers
+    common = collections.Counter(rates).most_common(1)[0][1]
+    assert common < len(rates) * 0.25, f"CD variation collapsed: {common}/{len(rates)} share one rate"
+    assert len(set(rates)) > 50, "too few distinct unemployment rates"
+    # and the COVID-era level must be gone
+    mid = sorted(rates)[len(rates) // 2]
+    assert 3.0 < mid < 8.0, f"median Canadian unemployment {mid} looks like census-era data"
+
 def test_distinct_serving_edos():
     ids = [r["serving_edos"][0]["objectid"] for r in scorer.run(US, top=5)["results"] if r["serving_edos"]]
     assert len(ids) == len(set(ids))
