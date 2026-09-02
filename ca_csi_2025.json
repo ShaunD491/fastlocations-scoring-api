@@ -1,202 +1,1724 @@
 {
  "1001": {
   "csi": 79.2,
-  "rate": 6163,
+  "rate": null,
   "cma": "St. John's"
  },
  "1209": {
   "csi": 68.6,
-  "rate": 6094,
+  "rate": null,
   "cma": "Halifax"
  },
  "1307": {
   "csi": 105.6,
-  "rate": 7561,
+  "rate": null,
   "cma": "Moncton"
  },
  "1301": {
   "csi": 70.0,
-  "rate": 4556,
+  "rate": null,
   "cma": "Saint John"
  },
  "1310": {
   "csi": 80.5,
-  "rate": 5734,
+  "rate": null,
   "cma": "Fredericton"
  },
  "2494": {
   "csi": 49.3,
-  "rate": 2973,
+  "rate": null,
   "cma": "Saguenay"
  },
  "2423": {
   "csi": 55.0,
-  "rate": 3493,
+  "rate": null,
   "cma": "Québec"
  },
  "2443": {
-  "csi": 50.3,
-  "rate": 3134,
+  "csi": 50.2,
+  "rate": null,
   "cma": "Sherbrooke"
  },
  "2437": {
   "csi": 56.0,
-  "rate": 3417,
+  "rate": null,
   "cma": "Trois-Rivières"
  },
  "2449": {
   "csi": 72.3,
-  "rate": 4084,
+  "rate": null,
   "cma": "Drummondville"
  },
  "2466": {
   "csi": 61.3,
-  "rate": 3641,
+  "rate": null,
   "cma": "Montréal"
  },
  "2481": {
-  "csi": 60.6,
-  "rate": 3700,
-  "cma": "Gatineau{4}"
+  "csi": 60.5,
+  "rate": null,
+  "cma": "Gatineau"
  },
  "3506": {
   "csi": 50.6,
-  "rate": 4212,
-  "cma": "Ottawa{5}"
+  "rate": null,
+  "cma": "Ottawa"
  },
  "3510": {
   "csi": 61.5,
-  "rate": 5005,
+  "rate": null,
   "cma": "Kingston"
  },
  "3512": {
   "csi": 63.1,
-  "rate": 4920,
-  "cma": "Belleville–Quinte West"
+  "rate": null,
+  "cma": "Belleville-Quinte West"
  },
  "3515": {
   "csi": 57.3,
-  "rate": 5385,
+  "rate": null,
   "cma": "Peterborough"
  },
  "3520": {
   "csi": 55.0,
-  "rate": 3950,
+  "rate": null,
   "cma": "Toronto"
  },
  "3525": {
   "csi": 54.8,
-  "rate": 4076,
+  "rate": null,
   "cma": "Hamilton"
  },
  "3526": {
   "csi": 53.8,
-  "rate": 4139,
-  "cma": "St. Catharines–Niagara"
+  "rate": null,
+  "cma": "St.Catharines-Niagara"
  },
  "3530": {
   "csi": 66.8,
-  "rate": 5083,
-  "cma": "Kitchener–Cambridge–Waterloo"
+  "rate": null,
+  "cma": "Kitchener-Cambridge-Waterloo"
  },
  "3529": {
   "csi": 72.1,
-  "rate": 5381,
+  "rate": null,
   "cma": "Brantford"
  },
  "3523": {
   "csi": 57.8,
-  "rate": 4288,
+  "rate": null,
   "cma": "Guelph"
  },
  "3539": {
   "csi": 66.0,
-  "rate": 5059,
+  "rate": null,
   "cma": "London"
  },
  "3537": {
   "csi": 55.4,
-  "rate": 4203,
+  "rate": null,
   "cma": "Windsor"
  },
  "3543": {
   "csi": 46.9,
-  "rate": 3777,
+  "rate": null,
   "cma": "Barrie"
  },
  "3553": {
   "csi": 64.9,
-  "rate": 4706,
+  "rate": null,
   "cma": "Greater Sudbury"
  },
  "3558": {
   "csi": 114.1,
-  "rate": 8373,
+  "rate": null,
   "cma": "Thunder Bay"
  },
  "4611": {
   "csi": 113.4,
-  "rate": 7899,
+  "rate": null,
   "cma": "Winnipeg"
  },
  "4706": {
   "csi": 87.4,
-  "rate": 6543,
+  "rate": null,
   "cma": "Regina"
  },
  "4711": {
   "csi": 98.9,
-  "rate": 7532,
+  "rate": null,
   "cma": "Saskatoon"
  },
  "4802": {
   "csi": 107.7,
-  "rate": 8335,
+  "rate": null,
   "cma": "Lethbridge"
  },
  "4806": {
   "csi": 61.7,
-  "rate": 5038,
+  "rate": null,
   "cma": "Calgary"
  },
  "4808": {
   "csi": 114.4,
-  "rate": 10592,
+  "rate": null,
   "cma": "Red Deer"
  },
  "4811": {
-  "csi": 95.6,
-  "rate": 7463,
+  "csi": 95.5,
+  "rate": null,
   "cma": "Edmonton"
  },
  "5935": {
   "csi": 103.7,
-  "rate": 8688,
+  "rate": null,
   "cma": "Kelowna"
  },
  "5933": {
   "csi": 126.2,
-  "rate": 10949,
+  "rate": null,
   "cma": "Kamloops"
  },
  "5909": {
   "csi": 114.9,
-  "rate": 9086,
-  "cma": "Chilliwack + Abbotsford–Mission"
+  "rate": null,
+  "cma": "Chilliwack + Abbotsford-Mission"
  },
  "5915": {
   "csi": 83.5,
-  "rate": 5672,
+  "rate": null,
   "cma": "Vancouver"
  },
  "5917": {
   "csi": 74.6,
-  "rate": 5588,
+  "rate": null,
   "cma": "Victoria"
  },
  "5921": {
   "csi": 106.0,
-  "rate": 9648,
+  "rate": null,
   "cma": "Nanaimo"
+ },
+ "1002": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1003": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1004": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1005": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1006": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1007": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1008": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1009": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1010": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1011": {
+  "csi": 88.7,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1101": {
+  "csi": 68.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1102": {
+  "csi": 68.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1103": {
+  "csi": 68.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1201": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1202": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1203": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1204": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1205": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1206": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1207": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1208": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1210": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1211": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1212": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1213": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1214": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1215": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1216": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1217": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1218": {
+  "csi": 73.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1302": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1303": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1304": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1305": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1306": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1308": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1309": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1311": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1312": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1313": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1314": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "1315": {
+  "csi": 90.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2401": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2402": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2403": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2404": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2405": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2406": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2407": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2408": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2409": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2410": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2411": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2412": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2413": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2414": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2415": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2416": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2417": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2418": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2419": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2420": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2421": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2422": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2425": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2426": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2427": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2428": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2429": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2430": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2431": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2432": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2433": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2434": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2435": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2436": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2438": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2439": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2440": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2441": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2442": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2444": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2445": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2446": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2447": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2448": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2450": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2451": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2452": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2453": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2454": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2455": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2456": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2457": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2458": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2459": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2460": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2461": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2462": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2463": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2464": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2465": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2467": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2468": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2469": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2470": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2471": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2472": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2473": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2474": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2475": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2476": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2477": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2478": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2479": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2480": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2482": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2483": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2484": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2485": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2486": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2487": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2488": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2489": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2490": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2491": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2492": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2493": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2495": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2496": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2497": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2498": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "2499": {
+  "csi": 61.5,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3501": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3502": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3507": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3509": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3511": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3513": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3514": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3516": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3518": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3519": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3521": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3522": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3524": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3528": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3531": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3532": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3534": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3536": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3538": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3540": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3541": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3542": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3544": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3546": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3547": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3548": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3549": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3551": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3552": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3554": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3556": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3557": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3559": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "3560": {
+  "csi": 57.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4601": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4602": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4603": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4604": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4605": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4606": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4607": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4608": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4609": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4610": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4612": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4613": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4614": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4615": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4616": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4617": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4618": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4619": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4620": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4621": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4622": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4623": {
+  "csi": 130.0,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4701": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4702": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4703": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4704": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4705": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4707": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4708": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4709": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4710": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4712": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4713": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4714": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4715": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4716": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4717": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4718": {
+  "csi": 146.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4801": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4803": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4804": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4805": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4807": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4809": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4810": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4812": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4813": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4814": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4815": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4816": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4817": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4818": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "4819": {
+  "csi": 90.6,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5901": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5903": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5905": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5907": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5919": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5923": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5924": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5926": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5927": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5929": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5931": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5937": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5939": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5941": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5943": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5945": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5947": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5949": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5951": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5953": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5955": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5957": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "5959": {
+  "csi": 92.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6001": {
+  "csi": 195.4,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6101": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6102": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6103": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6104": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6105": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6106": {
+  "csi": 485.9,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6204": {
+  "csi": 461.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6205": {
+  "csi": 461.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "6208": {
+  "csi": 461.2,
+  "rate": null,
+  "cma": null,
+  "basis": "provincial"
+ },
+ "_meta": {
+  "source": "StatCan table 35-10-0026, reference year 2025",
+  "provincial_fill": 253
  }
 }

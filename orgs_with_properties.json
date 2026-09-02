@@ -1,6 +1,6 @@
 {
   "_comment": "EDO objectids whose territory currently has properties listed on the FastLocations dashboard. Regenerated from properties.js by build_property_orgs.py. The scorer gives counties served by one of these EDOs a moderate property-access bonus.",
-  "generated": "2026-07-22T14:57:41",
+  "generated": "2026-09-01T20:32:36",
   "source": "properties.js",
   "objectids": [
     "5",

@@ -38,13 +38,44 @@ CODES = {
 TOTAL = "001"
 
 
+def latest_acs_year(key, newest=None):
+    """Newest published ACS 5-year vintage, probed downward. Pinning a year
+    means a refresh can never resolve a staleness flag - it re-fetches the same
+    year forever."""
+    import datetime, urllib.request, ssl, os
+    ctx = ssl.create_default_context()
+    for k in ("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE"):
+        pth = os.environ.get(k)
+        if pth and os.path.exists(pth):
+            try:
+                ctx = ssl.create_default_context(cafile=pth)
+            except Exception:
+                pass
+            break
+    top = newest or datetime.date.today().year
+    for y in range(top, top - 5, -1):
+        try:
+            u = ("https://api.census.gov/data/%d/acs/acs5?get=NAME&for=state:01&key=%s"
+                 % (y, key))
+            r = urllib.request.urlopen(
+                urllib.request.Request(u, headers={"User-Agent": "FastLocations/1.0"}),
+                timeout=60, context=ctx).read().decode("utf-8")
+            if r.lstrip().startswith("["):
+                return y
+        except Exception:
+            continue
+    return None
+
+
 def main():
     if len(sys.argv) < 2:
         sys.exit("usage: python build_occupation.py YOUR_CENSUS_API_KEY")
     key = sys.argv[1].strip()
     codes = [TOTAL] + list(CODES)
     getvars = ",".join(f"S2401_C01_{c}E" for c in codes)
-    url = ("https://api.census.gov/data/2023/acs/acs5/subject"
+    year = latest_acs_year(key) or 2023
+    print(f"Using ACS {year} 5-year (newest published)")
+    url = (f"https://api.census.gov/data/{year}/acs/acs5/subject"
            f"?get={getvars}&for=county:*&key={key}")
     print(f"Fetching S2401 occupation data for all counties ...")
     with urllib.request.urlopen(url, timeout=120) as r:
@@ -79,6 +110,8 @@ def main():
             rec["_emp"] = tot
             out[fips] = rec
 
+    # vintage marker so the refresh tool reports the DATA's age, not the file's
+    out["_meta"] = {"source": f"Census ACS {year} 5-year, table S2401"}
     json.dump(out, open(OUT, "w", encoding="utf-8"), separators=(",", ":"))
     print(f"Wrote {OUT}: {len(out)} counties")
     a = out.get("06085", {})   # Santa Clara (tech) sanity check

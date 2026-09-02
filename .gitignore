@@ -50,3 +50,16 @@ FL Project Search/
 # curated territory source data (build-time, not loaded at runtime, but must be version-controlled)
 !regional_edo_members.json
 !regional_edo_members_TODO.json
+
+# --- Data Refresh Tool (tool/) ---------------------------------------------
+# refresh_config.json holds the Brave and Census API keys and is already covered
+# by the *.json rule above; these are the rest of the tool's working state.
+tool/staging/
+tool/state/
+tool/__pycache__/
+_data_backups/
+
+# Provenance sidecars written by the builders: small, and they are how the
+# refresh tool knows the age of the DATA rather than the age of the file.
+!*_meta.json
+!ct_migration_meta.json

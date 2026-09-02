@@ -24,7 +24,15 @@ Small-county reliability damping + local/regional coverage bonus applied to the 
 """
 import json,os,sys,math,collections,urllib.request,urllib.parse
 O=os.environ.get("FL_DATA_DIR") or os.path.dirname(os.path.abspath(__file__))
-def _load(fn): return json.load(open(os.path.join(O,fn)))
+# encoding="utf-8" is not optional. open() defaults to the platform encoding,
+# which on Windows is cp1252, so every accented name in the data - Montreal,
+# Memphremagog, La Canada Flintridge - was decoding to mojibake, and a byte
+# cp1252 has no mapping for (0x8d) raised outright. That silent corruption is
+# the likely origin of keys like "CA|lacaaadaflintridge" in the gazetteer this
+# replaces: a name normalised AFTER being mis-decoded. Every file here is
+# written as UTF-8, so it must be read as UTF-8.
+def _load(fn):
+    return json.load(open(os.path.join(O,fn), encoding="utf-8"))
 
 FEAT=_load("county_features.json")                 # US, keyed by 5-digit FIPS
 for v in FEAT.values(): v["geo_system"]="US"
@@ -300,6 +308,22 @@ HAZARD_MAX_RISK=90.0    # infrastructure.hazard="required" excludes counties wit
 HAZARD_PENALTY=15.0
 WATER_PENALTY=12.0      # same reasoning for infrastructure.drought="preferred" (was a ~0.2pt nudge)
 PRIORITY_DECAY=0.6      # incentive priority ranking: weight of each pick = 0.6^position (1, .6, .36, .22)
+# Depth at which a jurisdiction counts as fully serving one incentive type. Was 3,
+# calibrated when incentives_index.json held 1,557 programs and the median
+# jurisdiction had 26. The index now carries the Incentives Search Tool's full
+# master -- 6,930 programs, median 120 per jurisdiction -- and at 3 the common
+# types saturated: cash_grant, tax_credit, job_training_grant and
+# low_interest_loan all hit the cap in 65 of 65 jurisdictions, so picking any of
+# them scored 100 everywhere and priority_match stopped discriminating. At 10 the
+# median falls to 92.7 with a 35-point spread. Raise this if the index grows again.
+# Caveat worth knowing: 60 of 65 jurisdictions sit exactly at the Incentives
+# Search Tool's collection ceiling (120 programs, or 90 for the jurisdictions it
+# treats as small, which includes most Canadian provinces), so type depth is a
+# sample rather than a census. Checked rather than assumed: normalising the
+# counts to a common basis closes only 1.4 points of the 11.3-point US/Canada
+# gap, so the ceiling is a minor artefact and the rest is a real difference in
+# programme mix. If that ceiling ever moves a lot, re-check this constant.
+PRIORITY_DEPTH=10
 MAX_PER_REGION=2        # max results one state/province may take in the Top-N (0 = uncapped). Counters
                         # the fact that county granularity varies ~5x by state; see run().
 def water_risk(d):
@@ -712,7 +736,8 @@ def m_incentives(f,crit):
         # first pick decisively dominant; see METRIC_WEIGHTS for the matching weight increase.
         wts=[PRIORITY_DECAY**i for i in range(len(prio))]
         tot=sum(wts)
-        got=sum(wts[i]*min(tc.get(t,0),3)/3.0 for i,t in enumerate(prio))
+        got=sum(wts[i]*min(tc.get(t,0),PRIORITY_DEPTH)/float(PRIORITY_DEPTH)
+                for i,t in enumerate(prio))
         pf=got/tot*100 if tot else None
     # QUALITY, not quantity: raw program count is intentionally excluded. Score reflects the value
     # tier (largest program $ advertised, weighted double), the range of incentive types offered,

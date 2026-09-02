@@ -1,0 +1,20 @@
+{
+ "built": "2026-09-01",
+ "source": "StatCan population estimates by census division, reference year 2025 (via ca_popgrowth.json)",
+ "refreshed": [
+  "TOTPOP_CY",
+  "POPDENS_CY",
+  "labour_force"
+ ],
+ "derived": {
+  "POPDENS_CY": "scaled by the population ratio; land area constant",
+  "labour_force": "2021 Census count scaled by the population ratio - an estimate, kept consistent with the Labour Force Survey rates overlaid by build_ca_labour.py"
+ },
+ "carried": [
+  "income",
+  "dwelling_value",
+  "bachelor_share"
+ ],
+ "carried_note": "no StatCan series publishes these below the province or CMA; they are Census products and cannot move until the 2026 Census releases",
+ "census_divisions": 293
+}

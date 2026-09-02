@@ -1,0 +1,36 @@
+{
+ "migrated": "2026-09-01",
+ "from": [
+  "09001",
+  "09003",
+  "09005",
+  "09007",
+  "09009",
+  "09011",
+  "09013",
+  "09015"
+ ],
+ "to": [
+  "09110",
+  "09120",
+  "09130",
+  "09140",
+  "09150",
+  "09160",
+  "09170",
+  "09180",
+  "09190"
+ ],
+ "crosswalk": "ACS 2021 + 2023 county subdivisions joined on COUSUB",
+ "files": [
+  "county_features.json",
+  "county_groundwater_trend.json",
+  "county_innovation_index.json",
+  "county_land_cost.json",
+  "fips_to_msa.json",
+  "metrics_extra.json",
+  "us_catchment.json",
+  "edo_master_table_dual.json"
+ ],
+ "approximation": "lat/lon are population-weighted means of the contributing county centroids; infra and MSA labels are taken from the dominant contributing county"
+}
