@@ -427,6 +427,8 @@
       <h2>The short version</h2>
       <p class="sec-note">If you read nothing else.</p>
 
+      <p>Double-click <code>Start_Data_Refresh.bat</code> at the FastLocations root. It starts the tool and opens your browser to it. Or, from a terminal:</p>
+
       <pre><code>cd Projects\tool
 python refresh_web.py          →  http://localhost:5003</code></pre>
 
@@ -474,7 +476,9 @@ python refresh_web.py          →  http://localhost:5003</code></pre>
       <ol class="steps">
         <li>
           <h4>Start the tool</h4>
-          <p><code>python refresh_web.py</code> in <code>Projects\tool</code>, then open <a href="http://localhost:5003">localhost:5003</a>. It runs on your machine only. Port 5003 sits alongside the Incentives tool on 5001 and the Organizations editor on 5002, so all three can run at once.</p>
+          <p><code>Start_Data_Refresh.bat</code> sits at the FastLocations root beside <code>Start_Incentives.bat</code> and <code>Start_Organizations.bat</code>, and follows the same pattern &mdash; including the self-relaunch trick that waits for Flask to bind before opening the browser, so you do not land on a connection error.</p>
+          <p>It also checks for <code>flask</code> and <code>requests</code> before launching. Without that, a missing package produces a Python traceback in a window that closes too fast to read; instead you get the <code>pip install</code> line to run.</p>
+          <p>By hand it is <code>python refresh_web.py</code> in <code>Projects\tool</code>, then <a href="http://localhost:5003">localhost:5003</a>. It runs on your machine only. Port 5003 sits alongside the Incentives tool on 5001 and the Organizations editor on 5002, so all three can run at once.</p>
         </li>
         <li>
           <h4>Check the sources first, if you like</h4>
@@ -687,6 +691,7 @@ python refresh_engine.py refresh county_bea --force</code></pre>
         <li><strong>Some fields cannot move until 2027&ndash;28.</strong> Canadian income, dwelling value and educational attainment are Census products with no annual series below the province &mdash; the 2026 Census releases them.</li>
         <li><strong>It does not deploy.</strong> It refreshes the files locally; getting them live is <a href="#live">section 5</a>.</li>
         <li><strong>It does not run on a schedule</strong> and holds no credentials beyond the local config, which is git-ignored.</li>
+        <li><strong>The launcher is not in the repository.</strong> <code>Start_Data_Refresh.bat</code> lives one level above it at the FastLocations root, with the other two launchers, so it does not travel with a clone. Copy it across, or start the tool by hand.</li>
       </ul>
     </section>
 
