@@ -1,0 +1,433 @@
+<title>Data Refresh Runbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --ground:#f5f7fa;
+    --panel:#ffffff;
+    --panel-2:#eef2f7;
+    --ink:#16202e;
+    --ink-2:#33445a;
+    --muted:#5f6d7e;
+    --rule:#dfe6ee;
+    --rule-2:#c8d3e0;
+    --accent:#0b5fa5;
+    --accent-soft:#e6eff8;
+    --go:#1b7a4d;
+    --go-soft:#e2f2ea;
+    --warn:#a2600b;
+    --warn-soft:#fbeedb;
+    --stop:#b0382b;
+    --stop-soft:#fbe6e3;
+    --shadow:0 1px 2px rgba(18,32,52,.06),0 4px 14px rgba(18,32,52,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#10161e; --panel:#18202a; --panel-2:#1f2935;
+      --ink:#e6ecf4; --ink-2:#c2cedd; --muted:#93a2b5;
+      --rule:#27313e; --rule-2:#354252;
+      --accent:#74b6f2; --accent-soft:#15263a;
+      --go:#5cc38c; --go-soft:#142a20;
+      --warn:#dfa552; --warn-soft:#2c2314;
+      --stop:#ef8579; --stop-soft:#2f1a18;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10161e; --panel:#18202a; --panel-2:#1f2935;
+    --ink:#e6ecf4; --ink-2:#c2cedd; --muted:#93a2b5;
+    --rule:#27313e; --rule-2:#354252;
+    --accent:#74b6f2; --accent-soft:#15263a;
+    --go:#5cc38c; --go-soft:#142a20;
+    --warn:#dfa552; --warn-soft:#2c2314;
+    --stop:#ef8579; --stop-soft:#2f1a18;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font:16px/1.62 "IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{
+    max-width:1180px; margin:0 auto; padding:0 28px 96px;
+    display:grid; grid-template-columns:212px minmax(0,1fr);
+    gap:0 56px; align-items:start;
+  }
+
+  .mast{grid-column:1/-1;padding:52px 0 30px;border-bottom:2px solid var(--ink)}
+  .eyebrow{
+    font:500 12px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 16px;
+  }
+  h1{
+    font:700 clamp(34px,5.2vw,52px)/1.06 "Zilla Slab",Georgia,serif;
+    margin:0 0 14px;letter-spacing:-.015em;text-wrap:balance;
+  }
+  .standfirst{font-size:18px;color:var(--muted);max-width:60ch;margin:0}
+  .facts{
+    display:flex;flex-wrap:wrap;gap:0 34px;margin-top:28px;
+    padding-top:20px;border-top:1px solid var(--rule);
+  }
+  .fact{display:flex;flex-direction:column;gap:3px}
+  .fact b{
+    font:600 21px/1 "IBM Plex Mono",ui-monospace,monospace;
+    font-variant-numeric:tabular-nums;color:var(--ink);
+  }
+  .fact span{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+  nav.rail{position:sticky;top:24px;padding-top:44px;font-size:13.5px}
+  nav.rail p{
+    font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;
+  }
+  nav.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  nav.rail a{
+    display:flex;gap:9px;padding:5px 8px;margin-left:-8px;border-radius:5px;
+    color:var(--muted);text-decoration:none;line-height:1.35;
+  }
+  nav.rail a:hover{background:var(--panel-2);color:var(--ink)}
+  nav.rail a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  nav.rail em{
+    font:500 11.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;
+    font-style:normal;color:var(--rule-2);
+  }
+
+  main{padding-top:44px;min-width:0;max-width:70ch}
+  section{margin-bottom:52px;scroll-margin-top:24px}
+  h2{font:600 27px/1.2 "Zilla Slab",Georgia,serif;margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+  .sec-note{color:var(--muted);font-size:15px;margin:0 0 22px}
+  h3{font:600 17px/1.35 "IBM Plex Sans",sans-serif;margin:30px 0 8px}
+  p{margin:0 0 15px}
+  strong{font-weight:600}
+  a{color:var(--accent)}
+
+  code{
+    font:500 13.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;
+    background:var(--panel-2);border:1px solid var(--rule);border-radius:4px;
+    padding:1px 5px;word-break:break-word;
+  }
+  pre{
+    background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--accent);
+    border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 16px;box-shadow:var(--shadow);
+  }
+  pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.65}
+
+  ul{margin:0 0 15px;padding-left:20px}
+  ul li{margin-bottom:7px}
+  ul li::marker{color:var(--rule-2)}
+
+  ol.steps{list-style:none;counter-reset:step;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:0}
+  ol.steps > li{counter-increment:step;position:relative;padding:0 0 22px 46px;border-left:1px solid var(--rule);margin-left:13px}
+  ol.steps > li:last-child{border-left-color:transparent;padding-bottom:0}
+  ol.steps > li::before{
+    content:counter(step);position:absolute;left:-13px;top:-2px;width:26px;height:26px;
+    border-radius:50%;background:var(--accent);color:#fff;
+    font:600 13px/26px "IBM Plex Mono",ui-monospace,monospace;text-align:center;
+  }
+  ol.steps h4{font:600 16px/1.4 "IBM Plex Sans",sans-serif;margin:1px 0 6px}
+  ol.steps p{margin-bottom:9px}
+  ol.steps p:last-child{margin-bottom:0}
+
+  .tw{overflow-x:auto;margin:0 0 18px;border:1px solid var(--rule);border-radius:7px;background:var(--panel);box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--rule);vertical-align:top}
+  thead th{
+    font:500 11px/1.3 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    background:var(--panel-2);white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.mono,th.mono{font:400 13px/1.5 "IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .note{
+    border:1px solid var(--rule);border-left:3px solid var(--accent);background:var(--panel);
+    border-radius:6px;padding:15px 17px;margin:0 0 18px;font-size:15px;box-shadow:var(--shadow);
+  }
+  .note.warn{border-left-color:var(--warn)}
+  .note.stop{border-left-color:var(--stop)}
+  .note .lbl{
+    display:block;font:600 11px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;
+  }
+  .note.warn .lbl{color:var(--warn)}
+  .note.stop .lbl{color:var(--stop)}
+  .note p:last-child{margin-bottom:0}
+
+  .chip{display:inline-block;padding:2px 9px;border-radius:99px;font:600 11.5px/1.7 "IBM Plex Sans",sans-serif;white-space:nowrap}
+  .chip.go{background:var(--go-soft);color:var(--go)}
+  .chip.warn{background:var(--warn-soft);color:var(--warn)}
+  .chip.stop{background:var(--stop-soft);color:var(--stop)}
+  .chip.acc{background:var(--accent-soft);color:var(--accent)}
+
+  .btn{
+    display:inline-block;padding:1px 9px;border-radius:5px;background:var(--accent-soft);
+    color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    font:600 13.5px/1.6 "IBM Plex Sans",sans-serif;white-space:nowrap;
+  }
+  .kicker{
+    font:500 11.5px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 9px;
+  }
+  hr.div{border:0;border-top:1px solid var(--rule);margin:0 0 30px}
+
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;gap:0;padding:0 20px 72px}
+    nav.rail{display:none}
+    main{padding-top:34px;max-width:none}
+    .facts{gap:0 24px}
+  }
+</style>
+
+<div class="shell">
+
+  <header class="mast">
+    <p class="eyebrow">FastLocations &middot; Operations</p>
+    <h1>Data Refresh Runbook</h1>
+    <p class="standfirst">How to keep the data behind <em>Where to Expand: My Project</em> current &mdash; what to run, how to tell it worked, and what to do when it did not.</p>
+    <div class="facts">
+      <div class="fact"><b>37</b><span>Datasets tracked</span></div>
+      <div class="fact"><b>22</b><span>Refresh unattended</span></div>
+      <div class="fact"><b>5</b><span>Need a manual file</span></div>
+      <div class="fact"><b>5003</b><span>Local port</span></div>
+    </div>
+  </header>
+
+  <nav class="rail">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#short"><em>1</em> The short version</a></li>
+      <li><a href="#cadence"><em>2</em> When to run it</a></li>
+      <li><a href="#running"><em>3</em> Running a refresh</a></li>
+      <li><a href="#reading"><em>4</em> Reading the table</a></li>
+      <li><a href="#manual"><em>5</em> The five manual ones</a></li>
+      <li><a href="#moved"><em>6</em> When a source moves</a></li>
+      <li><a href="#wrong"><em>7</em> When it goes wrong</a></li>
+      <li><a href="#adding"><em>8</em> Adding a dataset</a></li>
+      <li><a href="#never"><em>9</em> What it will not do</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="short">
+      <h2>The short version</h2>
+      <p class="sec-note">If you read nothing else.</p>
+
+      <pre><code>cd Projects\tool
+python refresh_web.py          →  http://localhost:5003</code></pre>
+
+      <p>Click <span class="btn">Refresh everything automatable</span> and leave it. It takes a few minutes, downloads only what has actually changed, and cannot damage anything: every file is backed up before it is rebuilt and restored automatically if the rebuild looks wrong.</p>
+
+      <p>When it finishes, the status column should read <span class="chip go">ok</span> or <span class="chip acc">newest</span> for everything. Those two both mean &ldquo;nothing to do&rdquo;. Anything <span class="chip warn">stale</span> is genuinely behind and worth a look.</p>
+
+      <div class="note">
+        <span class="lbl">Nothing is automatic</span>
+        <p>The tool never runs on a schedule and never refreshes anything you did not ask it to. It is a button, not a cron job.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="cadence">
+      <h2>When to run it</h2>
+      <p class="sec-note">Most of this data changes annually. Running it more often than the sources publish achieves nothing.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>When</th><th>Do this</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Monthly</strong></td><td>Refresh everything automatable</td><td>Cheap. Skips anything unchanged, so most months it downloads nothing.</td></tr>
+            <tr><td><strong>After an incentives run</strong></td><td>Refresh <code>incentives_index</code></td><td>The scorer reads its own summary of the incentives, not the master. Without this the two drift.</td></tr>
+            <tr><td><strong>After editing an EDO</strong></td><td>Refresh <code>edo_indexes</code></td><td>Lead routing is a derived index. Change a territory without rebuilding and leads route to the wrong EDO, or to nobody.</td></tr>
+            <tr><td><strong>Adding a property dataset</strong></td><td>Refresh <code>orgs_with_properties</code></td><td>Parses the dashboard's <code>properties.js</code> for the property-access bonus.</td></tr>
+            <tr><td><strong>Once a year</strong></td><td>Check the five manual sources</td><td>See <a href="#manual">section 5</a>. Nothing prompts you.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="lbl">Leave &ldquo;Only update newer files&rdquo; ticked</span>
+        <p>With it on, a refresh asks each source whether anything has actually been published since the file was last built, and skips it if not. A full sweep with nothing new downloads zero bytes and takes seconds. Untick it only when you want to force a rebuild.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="running">
+      <h2>Running a refresh</h2>
+      <p class="sec-note">What each button does.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Start the tool</h4>
+          <p><code>python refresh_web.py</code> in <code>Projects\tool</code>, then open <a href="http://localhost:5003">localhost:5003</a>. It runs on your machine only. Port 5003 sits alongside the Incentives tool on 5001 and the Organizations editor on 5002, so all three can run at once.</p>
+        </li>
+        <li>
+          <h4>Check the sources first, if you like</h4>
+          <p><span class="btn">Check sources only</span> touches every source and reports whether it answers, without downloading or rebuilding anything. Useful after a long gap, and the fastest way to find a source that has moved.</p>
+        </li>
+        <li>
+          <h4>Refresh</h4>
+          <p><span class="btn">Refresh everything automatable</span> is the normal action. <span class="btn">Refresh what is stale</span> narrows it to datasets actually behind. Ticking rows and using <span class="btn">Refresh selected</span> does one or a few.</p>
+        </li>
+        <li>
+          <h4>Watch the log</h4>
+          <p>Each dataset prints what it decided and why &mdash; <code>[skip] up to date</code>, <code>[newer] source published&hellip;</code>, <code>[ok]</code> with record counts, or <code>[!] REJECTED</code> followed by a rollback. Cancel stops cleanly after the current step.</p>
+        </li>
+      </ol>
+
+      <p>Everything also works from the command line, which is what to use if you want it in a script:</p>
+      <pre><code>python refresh_engine.py list
+python refresh_engine.py check all
+python refresh_engine.py refresh auto
+python refresh_engine.py refresh ca_labour county_bea
+python refresh_engine.py refresh county_bea --force</code></pre>
+    </section>
+
+    <hr class="div">
+
+    <section id="reading">
+      <h2>Reading the table</h2>
+      <p class="sec-note">Two columns are easy to misread, and both matter.</p>
+
+      <h3>Data vintage is not the file date</h3>
+      <p>The table shows both. <strong>Data vintage</strong> is how old the data actually is, read from the file's own provenance &mdash; hover it to see where that came from. <strong>File written</strong> is only when the file was last touched.</p>
+      <p>They come apart constantly. Rewriting a file does not make its contents newer, and a file rewritten this morning can hold data from 2017. Judge staleness on the vintage; ignore the file date unless you are debugging.</p>
+
+      <h3>&ldquo;stale&rdquo; and &ldquo;newest&rdquo; are different claims</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Status</th><th>Means</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip go">ok</span></td><td>Current</td><td>None</td></tr>
+            <tr><td><span class="chip acc">newest</span></td><td>Past its publication cycle, but this is the newest vintage the source has</td><td>None. Refreshing cannot improve it.</td></tr>
+            <tr><td><span class="chip warn">stale</span></td><td>Genuinely behind something newer that exists</td><td>Refresh it</td></tr>
+            <tr><td><span class="chip stop">thin</span> / <span class="chip stop">broken</span></td><td>Below its record floor, or unreadable</td><td>Refresh; if it persists, see <a href="#wrong">section 7</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A dataset showing <span class="chip acc">newest</span> for a year is normal. ACS 5-year data describes a period ending well over a year ago and is still the latest anyone publishes.</p>
+    </section>
+
+    <hr class="div">
+
+    <section id="manual">
+      <h2>The five manual ones</h2>
+      <p class="sec-note">These sources sit behind bot protection or a download form, so the tool cannot fetch them. Everything after the download is automatic.</p>
+
+      <p>Download the file, drop it in <code>tool\staging\&lt;dataset&gt;\</code>, then refresh that dataset. The tool finds it, unzips it if needed, and builds. It never deletes anything you put there.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Dataset</th><th>Get it from</th><th>Cycle</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">county_nri</td><td>hazards.fema.gov/nri &rarr; Data Resources &rarr; county table</td><td>Annual</td></tr>
+            <tr><td class="mono">county_innovation_index</td><td>statsamerica.org/innovation &mdash; the <strong>Measures</strong> export</td><td>Annual</td></tr>
+            <tr><td class="mono">county_land_cost</td><td>USDA NASS Census of Agriculture</td><td>5-yearly</td></tr>
+            <tr><td class="mono">ca_livability</td><td>StatCan CIMD catalogue page</td><td>5-yearly</td></tr>
+            <tr><td class="mono">ca_infrastructure</td><td>StatCan ODI &mdash; all ten GeoPackages into one folder</td><td>~2-yearly</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <span class="lbl">StatsAmerica: take the Measures file</span>
+        <p>Not the Index Values export. That one silently omits 51 Virginia county-equivalents, Fairfax among them.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="moved">
+      <h2>When a source moves</h2>
+      <p class="sec-note">Government download URLs move. The tool helps you find the new one; it never changes anything by itself.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Confirm it is actually broken</h4>
+          <p><span class="btn">Check sources only</span>. A source that has moved reports an HTTP error or a page that is not the file.</p>
+        </li>
+        <li>
+          <h4>Ask it to look</h4>
+          <p><span class="btn">Research sources</span> searches with Brave, hands the results to Claude, and asks which is the real download. It answers with a URL, a confidence and one sentence of reasoning, then fetches the first kilobyte to check the URL actually serves bytes.</p>
+        </li>
+        <li>
+          <h4>Approve, then verify</h4>
+          <p>Nothing is saved until you click <span class="btn">Use this URL</span>. Then force a refresh of that one dataset and read the <code>keys usable</code> figure in the log.</p>
+        </li>
+      </ol>
+
+      <div class="note stop">
+        <span class="lbl">An approved URL is a claim, not a fact</span>
+        <p>Claude picks the most plausible link in the search results. It cannot tell a 2021 dataset from the 2016 edition of the same series sitting at a near-identical URL &mdash; which has happened, and produced a file with <em>more</em> records and 87% less usable coverage. The safety checks caught it. Check the numbers anyway.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="wrong">
+      <h2>When it goes wrong</h2>
+      <p class="sec-note">Most failures are one of these five.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Log says</th><th>Meaning</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">REJECTED &hellip; below the floor</td><td>The rebuild produced too few records. The source probably changed shape.</td><td>Already rolled back. Open the source and see what changed.</td></tr>
+            <tr><td class="mono">REJECTED &hellip; matches only N keys</td><td>The data is real but on the wrong geography vintage.</td><td>Already rolled back. Wrong file &mdash; check the URL.</td></tr>
+            <tr><td class="mono">Census rejected the key</td><td>Missing, or signed up but never activated.</td><td>Click the activation link in the confirmation email.</td></tr>
+            <tr><td class="mono">nothing matching &hellip; in staging</td><td>A manual dataset with no file staged.</td><td><a href="#manual">Section 5</a>.</td></tr>
+            <tr><td class="mono">could not read source headers</td><td>Source unreachable.</td><td>Retry; if it persists, <a href="#moved">section 6</a>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Every refresh copies the current file into <code>Projects\_data_backups\&lt;dataset&gt;\</code> before touching it, five deep. A rejected rebuild restores automatically, so you rarely need these &mdash; but if you want an older version back, copy it into <code>Projects\</code>.</p>
+
+      <div class="note">
+        <span class="lbl">A rejection is the tool working</span>
+        <p>It means a bad rebuild was caught before it reached the scorer. The alternative is a model that quietly stops screening on something.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="adding">
+      <h2>Adding a dataset</h2>
+      <p class="sec-note">If the scorer starts reading a new file, it must be registered or the tool will not know it exists.</p>
+
+      <p>Add an entry to <code>refresh_registry.py</code>. The fields are documented at the top of that file; the ones that matter most are <code>min_records</code> (the floor a rebuild must clear), <code>key_space</code> (the file whose keys the scorer looks this data up by &mdash; this is what catches a wrong-geography rebuild), <code>cadence_days</code>, and <code>then</code> for anything that must be rebuilt afterwards.</p>
+
+      <p>Two things a new builder should do:</p>
+      <ul>
+        <li>Write a vintage marker &mdash; a <code>_meta</code> block with the source and its reference year &mdash; so staleness is judged on the data rather than the file date.</li>
+        <li>Probe for the newest available vintage rather than pinning a year. A pinned year means a staleness flag can never be resolved: the builder re-fetches the same old data forever.</li>
+      </ul>
+
+      <div class="note warn">
+        <span class="lbl">Two files cannot hold a _meta key</span>
+        <p><code>county_features.json</code> and <code>ca_features.json</code> <em>are</em> the scorer's feature tables and are iterated directly, so a <code>_meta</code> key inside becomes a phantom county. Those two write provenance to a sidecar instead.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="never">
+      <h2>What it will not do</h2>
+      <p class="sec-note">Worth knowing so you do not wait for it.</p>
+
+      <ul>
+        <li><strong>Nine files have no builder</strong>, and that is deliberate rather than unfinished. Three are hand-curated, one is fully superseded, one is not read by the scorer at all, one belongs to the Organizations editor, one is static geometry, and one was investigated and judged not worth building. <code>tool/README.md</code> says which and why for each.</li>
+        <li><strong>Some fields cannot move until 2027&ndash;28.</strong> Canadian income, dwelling value and educational attainment are Census products with no annual series below the province &mdash; the 2026 Census releases them.</li>
+        <li><strong>It does not deploy.</strong> It refreshes the files the scoring API reads locally. Publishing to the site is a separate step.</li>
+        <li><strong>It does not run on a schedule</strong> and holds no credentials beyond the local config, which is git-ignored.</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
