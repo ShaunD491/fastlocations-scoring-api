@@ -377,7 +377,7 @@
     hr.div{margin-bottom:16pt}
 
     /* a new page for each major part keeps the runbook navigable on paper */
-    #cadence,#running,#reading,#manual,#moved,#wrong,#adding,#never{
+    #cadence,#running,#reading,#live,#manual,#moved,#wrong,#adding,#never{
       break-before:page;
     }
     #cadence{break-before:auto}
@@ -401,6 +401,7 @@
       <div class="fact"><b>22</b><span>Refresh unattended</span></div>
       <div class="fact"><b>5</b><span>Need a manual file</span></div>
       <div class="fact"><b>5003</b><span>Local port</span></div>
+      <div class="fact"><b>Railway</b><span>Where it deploys</span></div>
     </div>
   </header>
 
@@ -411,11 +412,12 @@
       <li><a href="#cadence"><em>2</em> When to run it</a></li>
       <li><a href="#running"><em>3</em> Running a refresh</a></li>
       <li><a href="#reading"><em>4</em> Reading the table</a></li>
-      <li><a href="#manual"><em>5</em> The five manual ones</a></li>
-      <li><a href="#moved"><em>6</em> When a source moves</a></li>
-      <li><a href="#wrong"><em>7</em> When it goes wrong</a></li>
-      <li><a href="#adding"><em>8</em> Adding a dataset</a></li>
-      <li><a href="#never"><em>9</em> What it will not do</a></li>
+      <li><a href="#live"><em>5</em> Getting it live</a></li>
+      <li><a href="#manual"><em>6</em> The five manual ones</a></li>
+      <li><a href="#moved"><em>7</em> When a source moves</a></li>
+      <li><a href="#wrong"><em>8</em> When it goes wrong</a></li>
+      <li><a href="#adding"><em>9</em> Adding a dataset</a></li>
+      <li><a href="#never"><em>10</em> What it will not do</a></li>
     </ol>
   </nav>
 
@@ -519,6 +521,58 @@ python refresh_engine.py refresh county_bea --force</code></pre>
         </table>
       </div>
       <p>A dataset showing <span class="chip acc">newest</span> for a year is normal. ACS 5-year data describes a period ending well over a year ago and is still the latest anyone publishes.</p>
+    </section>
+
+    <hr class="div">
+
+    <section id="live">
+      <h2>Getting it live</h2>
+      <p class="sec-note">Refreshing the data locally does not change the website. This is the part that does.</p>
+
+      <h3>Nothing goes to GoDaddy</h3>
+      <p>Worth being clear about, because it is the natural assumption. The site is on GoDaddy, but the <em>scoring</em> is not:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Piece</th><th>Lives on</th><th>Touched by a refresh?</th></tr></thead>
+          <tbody>
+            <tr><td>The intake form &mdash; <code>site_selection_intake.html</code>, <code>intake.js</code></td><td><strong>GoDaddy</strong>, fastlocations.ai</td><td>No</td></tr>
+            <tr><td>The scoring API and every data file it reads</td><td><strong>Railway</strong></td><td><strong>Yes</strong> &mdash; all of it</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The form on GoDaddy is a form. It posts to the API at <code>fastlocations-scoring-api-production.up.railway.app</code> (set in <code>intake.js</code>) and renders what comes back. The data lives inside the API deployment, so it ships by deploying the repository &mdash; there is no file to upload to the host.</p>
+
+      <h3>Shipping a refresh</h3>
+      <ol class="steps">
+        <li>
+          <h4>Commit and push the refreshed files</h4>
+          <p>The runtime JSON is version-controlled, so a refresh shows up as a normal diff. Review it &mdash; a refresh that changes a screen input deserves a look before it ships.</p>
+        </li>
+        <li>
+          <h4>Merge to <code>main</code></h4>
+          <p>Railway redeploys from <code>main</code>. The build installs <code>requirements.txt</code> and starts <code>app:app</code> under gunicorn.</p>
+        </li>
+        <li>
+          <h4>Confirm it took</h4>
+          <p>Open the API's health endpoint. It reports what the deployed scorer actually loaded, which is the only proof that matters:</p>
+          <pre><code>https://fastlocations-scoring-api-production.up.railway.app/health
+
+{"counties":3144,"edos":390,"states_with_incentives":65,"status":"ok"}</code></pre>
+          <p>If those numbers match what <code>refresh_engine.py list</code> shows locally, the deploy carried the data. If they match the <em>old</em> values, it did not &mdash; the deploy has not run, or it ran from the wrong branch.</p>
+        </li>
+      </ol>
+
+      <div class="note warn">
+        <span class="lbl">Check the Railway settings once</span>
+        <p>There is no <code>railway.json</code> in the repository, so the deploy configuration lives only in the Railway dashboard. Confirm which branch it watches and whether auto-deploy is on &mdash; otherwise a merge changes nothing and the health check will tell you so.</p>
+      </div>
+
+      <div class="note">
+        <span class="lbl">Two stale files</span>
+        <p><code>render.yaml</code> and <code>Procfile</code> in <code>Projects/</code> describe a Render deployment, while <code>intake.js</code> points at Railway. If Render is retired, those files are misleading rather than harmful &mdash; but do not follow them.</p>
+      </div>
     </section>
 
     <hr class="div">
@@ -631,7 +685,7 @@ python refresh_engine.py refresh county_bea --force</code></pre>
       <ul>
         <li><strong>Nine files have no builder</strong>, and that is deliberate rather than unfinished. Three are hand-curated, one is fully superseded, one is not read by the scorer at all, one belongs to the Organizations editor, one is static geometry, and one was investigated and judged not worth building. <code>tool/README.md</code> says which and why for each.</li>
         <li><strong>Some fields cannot move until 2027&ndash;28.</strong> Canadian income, dwelling value and educational attainment are Census products with no annual series below the province &mdash; the 2026 Census releases them.</li>
-        <li><strong>It does not deploy.</strong> It refreshes the files the scoring API reads locally. Publishing to the site is a separate step.</li>
+        <li><strong>It does not deploy.</strong> It refreshes the files locally; getting them live is <a href="#live">section 5</a>.</li>
         <li><strong>It does not run on a schedule</strong> and holds no credentials beyond the local config, which is git-ignored.</li>
       </ul>
     </section>

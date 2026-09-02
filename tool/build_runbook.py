@@ -82,7 +82,7 @@ PRINT_CSS = """
     hr.div{margin-bottom:16pt}
 
     /* a new page for each major part keeps the runbook navigable on paper */
-    #cadence,#running,#reading,#manual,#moved,#wrong,#adding,#never{
+    #cadence,#running,#reading,#live,#manual,#moved,#wrong,#adding,#never{
       break-before:page;
     }
     #cadence{break-before:auto}
