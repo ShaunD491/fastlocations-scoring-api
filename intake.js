@@ -94,16 +94,20 @@
   const USE_PRESETS = {
     // Innovation is its own dimension as of this version. Warehouse and flex barely move on it;
     // R&D leans on it hardest, second only to workforce -- an R&D site still has to be staffable.
-    manufacturing:          { workforce:22, cost:19, real_estate:11, incentives:12, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:4,  innovation:3 },
-    warehouse_distribution: { workforce:14, cost:16, real_estate:14, incentives:8,  infrastructure:6,  logistics:24, market_size:8,  livability:3, safety:4, demographics:2,  innovation:1 },
-    data_center:            { workforce:8,  cost:16, real_estate:10, incentives:12, infrastructure:26, logistics:6,  market_size:8,  livability:3, safety:4, demographics:3,  innovation:4 },
-    office:                 { workforce:20, cost:14, real_estate:12, incentives:6,  infrastructure:6,  logistics:6,  market_size:12, livability:9, safety:7, demographics:4,  innovation:4 },
+    // DAI (the county DAI score) is a FIXED 7 in every preset by design: it is meant to carry ~7% of
+    // the final score under all scenarios, so it does not flex with use type. Each preset still sums
+    // to 100; the 7 points came off workforce (where the score used to live as a hidden metric) and
+    // the preset's other large factors. test_scorer.py checks both invariants.
+    manufacturing:          { workforce:19, cost:17, real_estate:10, incentives:11, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:4,  innovation:3,  dai:7 },
+    warehouse_distribution: { workforce:12, cost:14, real_estate:12, incentives:8,  infrastructure:6,  logistics:23, market_size:8,  livability:3, safety:4, demographics:2,  innovation:1,  dai:7 },
+    data_center:            { workforce:7,  cost:14, real_estate:10, incentives:11, infrastructure:23, logistics:6,  market_size:8,  livability:3, safety:4, demographics:3,  innovation:4,  dai:7 },
+    office:                 { workforce:17, cost:12, real_estate:11, incentives:6,  infrastructure:6,  logistics:6,  market_size:11, livability:9, safety:7, demographics:4,  innovation:4,  dai:7 },
     // R&D runs the lowest cost weight of any use type: these projects compete for scarce talent and
     // proximity to research, and rarely site on operating cost. What they do care about is land to
     // build a campus on, so the points come off cost and go to innovation and real estate.
-    r_and_d:                { workforce:20, cost:5,  real_estate:10, incentives:9,  infrastructure:7,  logistics:3,  market_size:6,  livability:7, safety:4, demographics:5,  innovation:24 },
-    flex:                   { workforce:18, cost:18, real_estate:15, incentives:10, infrastructure:8,  logistics:10, market_size:6,  livability:5, safety:5, demographics:3,  innovation:2 },
-    mixed:                  { workforce:18, cost:19, real_estate:15, incentives:10, infrastructure:8,  logistics:8,  market_size:6,  livability:5, safety:5, demographics:3,  innovation:3 }
+    r_and_d:                { workforce:17, cost:5,  real_estate:9,  incentives:8,  infrastructure:7,  logistics:3,  market_size:6,  livability:7, safety:4, demographics:5,  innovation:22, dai:7 },
+    flex:                   { workforce:16, cost:16, real_estate:13, incentives:10, infrastructure:8,  logistics:9,  market_size:6,  livability:5, safety:5, demographics:3,  innovation:2,  dai:7 },
+    mixed:                  { workforce:16, cost:17, real_estate:13, incentives:9,  infrastructure:8,  logistics:8,  market_size:6,  livability:5, safety:5, demographics:3,  innovation:3,  dai:7 }
   };
   const useSel = $('use_primary');
   if (useSel) useSel.addEventListener('change', function () {
@@ -291,10 +295,14 @@
       wrap.innerHTML = '<h3>No matches</h3><p class="cap">No counties passed the filters. Loosen the required regions or lower the population / labor-force thresholds.</p>';
       return;
     }
-    const allDims = ['workforce','cost','real_estate','incentives','infrastructure','logistics','market_size','safety','demographics','livability'];
+    // Every dimension the scorer returns in sub_scores (scorer.DIMS). innovation was missing from this
+    // list, so its chip never rendered even though it was scored; dai is the county DAI score.
+    const allDims = ['workforce','cost','real_estate','incentives','infrastructure','logistics','market_size','safety','demographics','livability','innovation','dai'];
+    // Chip label: the dimension key with underscores as spaces, except the acronym.
+    const dimLabel = function (d) { return d === 'dai' ? 'DAI' : d.replace(/_/g, ' '); };
     // Only show dimensions that have data for at least one result, so we never imply data that isn't
     // there. (The old note here claimed infrastructure/safety/livability were missing for Canada --
-    // that is stale: Canadian results now return all ten factors.)
+    // that is stale: Canadian results return every factor except dai, which is US-only.)
     const dimOrder = allDims.filter(function (d) { return data.results.some(function (r) { return r.sub_scores[d] != null; }); });
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
@@ -317,9 +325,9 @@
       const unscored = dimOrder.filter(function (d) { return r.sub_scores[d] == null; });
       const chips = scored.map(function (d, k) {
         return '<span class="sub" title="Relative strength on this location (1 = strongest factor)">' +
-               d.replace(/_/g, ' ') + ' <b class="rank">#' + (k + 1) + '</b></span>';
+               dimLabel(d) + ' <b class="rank">#' + (k + 1) + '</b></span>';
       }).concat(unscored.map(function (d) {
-        return '<span class="sub na">' + d.replace(/_/g, ' ') + ' –</span>';
+        return '<span class="sub na">' + dimLabel(d) + ' –</span>';
       })).join('');
       // Best serving EDO per tier (list is pre-sorted smallest-territory first, so the first match
       // in each tier is the most specific / best for that tier).

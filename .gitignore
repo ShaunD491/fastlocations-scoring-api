@@ -36,6 +36,7 @@ FL Project Search/
 !county_innovation.json
 !county_innovation_index.json
 !county_land_cost.json
+!county_dai.json
 !us_catchment.json
 !fips_to_msa.json
 !county_workforce.json
@@ -50,6 +51,8 @@ FL Project Search/
 # curated territory source data (build-time, not loaded at runtime, but must be version-controlled)
 !regional_edo_members.json
 !regional_edo_members_TODO.json
+# hand-maintained DAI county table: the only source for county_dai.json, nowhere to re-download it from
+!DAI.csv
 
 # --- Data Refresh Tool (tool/) ---------------------------------------------
 # refresh_config.json holds the Brave and Census API keys and is already covered

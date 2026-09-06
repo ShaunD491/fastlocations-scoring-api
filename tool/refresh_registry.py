@@ -96,6 +96,32 @@ DATASETS = [
                  "by hand into staging/ and refresh; the builder unzips it itself.",
     },
     {
+        "id": "county_dai",
+        "title": "County DAI score",
+        "output": "county_dai.json",
+        "feeds": "dai",
+        "country": "US",
+        "acquire": "assisted",
+        "builder": "build_county_dai.py",
+        "args": ["{src}"],
+        "url": None,
+        "member": "*.csv",
+        "source_page": "",
+        "search_hint": "",
+        "cadence_days": 365,
+        "min_records": 3000,
+        "key_space": "county_features.json",
+        "then": [],
+        "notes": "Hand-maintained table (NAME, STATE, FIPS, DAI Score), not a public download: "
+                 "drop the new DAI.csv into staging/county_dai/ and refresh. The builder "
+                 "zero-pads FIPS, skips the #DIV/0! rows for Puerto Rico and the USVI, and "
+                 "carries the nine Connecticut planning regions forward from "
+                 "county_features.json because the source is still keyed by the eight "
+                 "pre-2022 counties. Alaska is absent from the source and stays null. "
+                 "Scored as its own dimension at a fixed ~7% (scorer.DEFAULT_WEIGHTS['dai']); "
+                 "before that it was the critical_thinking metric inside workforce.",
+    },
+    {
         "id": "county_bea",
         "title": "BEA earnings by place of work (cost)",
         "output": "county_bea.json",

@@ -408,6 +408,59 @@ def test_region_diversity_cap():
     assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
     assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
 
+def test_dai_is_its_own_dimension():
+    # The county DAI score was the `critical_thinking` metric inside workforce (2x). It is now a
+    # dimension of its own at ~7%, and must not still be counted inside workforce.
+    assert "dai" in scorer.DIMS
+    assert abs(scorer.DEFAULT_WEIGHTS.get("dai", 0) - 0.07) < 1e-9, "dai default weight must be 7%"
+    assert abs(sum(scorer.DEFAULT_WEIGHTS.values()) - 1.0) < 1e-9, "default weights must sum to 1"
+    wf = scorer.m_workforce(scorer.FEAT["11001"], {})
+    assert "critical_thinking" not in wf, "critical_thinking still double-counted inside workforce"
+    assert "critical_thinking" not in scorer.METRIC_WEIGHTS
+    # direction: DC (90.3) must out-rank Clay County KY (9.2) on the raw metric
+    hi = scorer.m_dai(scorer.FEAT["11001"], {})["dai_score"]
+    lo = scorer.m_dai(scorer.FEAT["21051"], {})["dai_score"]
+    assert hi > lo
+    # coverage: essentially every US county except Alaska carries a value
+    have = sum(1 for f in scorer.FEAT.values() if scorer.m_dai(f, {}) is not None)
+    assert have >= 3100, f"only {have} US counties carry a DAI score"
+    out = scorer.run(US, top=3)
+    assert "dai" in out["dimensions_live"]
+    assert out["results"][0]["sub_scores"].get("dai") is not None
+    # Canada has no DAI: null sub-score, never a penalty (the other weights renormalise)
+    ca = scorer.run(CA, top=3)["results"]
+    assert all(r["sub_scores"].get("dai") is None for r in ca)
+    assert all(r["final_score"] is not None for r in ca)
+
+def test_dai_weight_actually_moves_ranking():
+    base = {w: 0.1 for w in scorer.DEFAULT_WEIGHTS}
+    heavy = dict(base, dai=0.9)
+    a = [r["county"] for r in scorer.run(dict(US, weights=base), top=25)["results"]]
+    b = [r["county"] for r in scorer.run(dict(US, weights=heavy), top=25)["results"]]
+    assert a != b, "dai weight has no effect on the ranking"
+
+def test_dai_is_seven_percent_under_every_scenario():
+    # "Approx 7% under all scenarios": every use-type preset in intake.js and the form's default
+    # sliders must carry dai at 7 out of 100. Parsed from the JS/HTML so the UI cannot drift silently.
+    import os, re
+    here = os.path.dirname(os.path.abspath(__file__))
+    js = open(os.path.join(here, "intake.js"), encoding="utf-8").read()
+    block = js[js.index("const USE_PRESETS"):js.index("};", js.index("const USE_PRESETS"))]
+    presets = re.findall(r"^\s*(\w+):\s*\{([^}]*)\}", block, re.M)
+    assert len(presets) >= 7, "use-type presets not found in intake.js"
+    for name, body in presets:
+        w = {k: int(v) for k, v in re.findall(r"(\w+):\s*(\d+)", body)}
+        assert w.get("dai") == 7, f"preset {name} has dai={w.get('dai')}, expected 7"
+        assert sum(w.values()) == 100, f"preset {name} sums to {sum(w.values())}, expected 100"
+        assert set(w) == set(scorer.DIMS), f"preset {name} keys differ from scorer.DIMS: {set(w) ^ set(scorer.DIMS)}"
+    html = open(os.path.join(here, "site_selection_intake.html"), encoding="utf-8").read()
+    sliders = dict(re.findall(r'data-w="(\w+)"[^>]*value="(\d+)"', html))
+    assert sliders.get("dai") == "7", f"form default for dai is {sliders.get('dai')}, expected 7"
+    assert set(sliders) == set(scorer.DIMS), f"form sliders differ from scorer.DIMS: {set(sliders) ^ set(scorer.DIMS)}"
+    assert sum(int(v) for v in sliders.values()) == 100, "form default sliders must sum to 100"
+    for d, v in sliders.items():
+        assert int(v) == round(scorer.DEFAULT_WEIGHTS[d] * 100), f"form default for {d} ({v}) != scorer default"
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0

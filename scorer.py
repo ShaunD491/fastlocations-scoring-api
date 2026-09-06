@@ -5,8 +5,8 @@ scorer.py — FastLocations deterministic site-matching scorer  (ProjectCriteria
 Dual-spine: ranks US counties (FIPS) and Canadian Census Divisions (CDUID), then
 rolls each up to the serving EDO customer from organizations.json.
 
-Ten weighted dimensions (percentile-ranked within the candidate set, then weighted):
-  workforce      US: unemployment, staffability, prime-age share, critical thinking ; CA: unemployment + staffability
+Twelve weighted dimensions (percentile-ranked within the candidate set, then weighted):
+  workforce      US: unemployment, staffability, prime-age share, skill supply ; CA: unemployment + staffability
   demographics   US: education (2x), growth, participation ; CA: bachelor share, growth, participation
   infrastructure US: ASCE state grade ; CA: CMA = high, mid elsewhere
   logistics      US: airports + ports + commute ; CA: airport/port/grid counts
@@ -16,6 +16,8 @@ Ten weighted dimensions (percentile-ranked within the candidate set, then weight
   safety         US: crime rate ; CA: StatCan Crime Severity Index
   market_size    regional catchment population (US and CA)
   livability     US: County Health Rankings outcomes ; CA: Numbeo most-livable cities (ranked CDs only)
+  innovation     US: technical employment, R&D presence, patenting, business dynamism ; CA: provincial index
+  dai            US only: county DAI score (county_dai.json, built from DAI.csv); CA has no equivalent -> null
 
 Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
 (weights renormalise over non-null dims, never penalise). Results split into PRIMARY
@@ -242,6 +244,16 @@ try: INNOV=_load("county_innovation.json")         # fips -> R&D industry presen
 except FileNotFoundError: INNOV={}
 try: LANDC=_load("county_land_cost.json")          # fips -> land $/acre (USDA NASS 2022) via build_land_cost.py
 except FileNotFoundError: LANDC={}
+try:                                               # DAI score (0-100, higher = better) via build_county_dai.py from DAI.csv
+    _DAI=_load("county_dai.json")                  # fips -> {dai, ref}; feeds the `dai` dimension
+    for _k,_v in FEAT.items():
+        _d=_DAI.get(_k)
+        if _d and _d.get("dai") is not None: _v["dai"]=_d["dai"]
+except FileNotFoundError:
+    # The same numbers were shipped inside county_features.json as `critical_thinking` before the
+    # DAI dimension existed. Fall back to them so a deploy without county_dai.json still scores DAI.
+    for _v in FEAT.values():
+        if _v.get("critical_thinking") is not None: _v["dai"]=_v["critical_thinking"]
 try:                                               # fips -> StatsAmerica Innovation Intelligence subset via build_innovation_index.py
     IIX=_load("county_innovation_index.json")
     IIX_META=IIX.pop("_meta",{})                   # provenance, not a county record
@@ -280,7 +292,7 @@ for _nm in ("Toronto","Montréal","Vancouver","Calgary","Edmonton","Ottawa","Win
 RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV","NC","ND",
             "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
 
-DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability","innovation"]
+DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability","innovation","dai"]
 # Rebalanced (was cost .20 / real_estate .15 / market_size .06 / logistics .08 / infrastructure .08).
 # The old default put 35% on cheapness and only 14% on market access, so an unweighted search ranked
 # largely by low incomes -- 8,000-person rural counties beat every real market, and expensive but
@@ -291,9 +303,15 @@ DIMS=["workforce","demographics","infrastructure","logistics","incentives","real
 # drops to .04 because it gave up knowledge_economy and rd_intensity; the remaining .04 comes off
 # real_estate, logistics, cost and market_size. Default is a deliberately modest .05 -- most projects
 # are not R&D, and the r_and_d use-type preset in intake.js raises it where it matters.
-DEFAULT_WEIGHTS={"workforce":0.18,"infrastructure":0.10,"incentives":0.10,"real_estate":0.11,
-                 "demographics":0.04,"logistics":0.09,"cost":0.14,"safety":0.05,"market_size":0.09,
-                 "livability":0.05,"innovation":0.05}
+# dai is the county DAI score promoted to a dimension of its own at a FIXED ~7% under every scenario
+# (the use-type presets in intake.js all carry dai:7 too). It used to be the `critical_thinking`
+# metric inside workforce at 2x, where its effective share of the final score drifted with the
+# workforce slider and the number of workforce metrics the query happened to populate (roughly 4-6%)
+# and was invisible to the user. The 7 points came off workforce (-2, which is where the metric
+# left), cost, real_estate, infrastructure, incentives and logistics (-1 each).
+DEFAULT_WEIGHTS={"workforce":0.16,"infrastructure":0.09,"incentives":0.09,"real_estate":0.10,
+                 "demographics":0.04,"logistics":0.08,"cost":0.13,"safety":0.05,"market_size":0.09,
+                 "livability":0.05,"innovation":0.05,"dai":0.07}
 # Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
 # by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
@@ -699,7 +717,8 @@ def m_workforce(f,crit):
             "employee_availability":avail,
             "shift_fit":shift_fit,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            "critical_thinking":f.get("critical_thinking"),   # weighted 2x via METRIC_WEIGHTS
+            # critical_thinking (the DAI score) left this dimension: it is scored on its own as `dai`
+            # (m_dai) so it cannot be double-counted here.
             # supply of the SELECTED skill profiles (attainment-band share). Null unless the intake
             # picks at least one profile, so blank searches score exactly as before.
             "skill_supply":skill_supply(f,profiles)}
@@ -773,6 +792,14 @@ def m_livability(f,crit):
             "few_phys_unhealthy_days":(-pp if pp is not None else None),
             "few_mental_unhealthy_days":(-pm if pm is not None else None),
             "life_expectancy":le}
+
+def m_dai(f,crit):
+    """County DAI score (0-100, higher = better), US only. Single-metric dimension so its share of the
+    final score is exactly its weight. Canada has no DAI, so it returns None there and the other
+    weights renormalise over the dimensions that do have data (a gap, never a penalty)."""
+    if gsys(f)=="CA": return None
+    v=f.get("dai")
+    return {"dai_score":v} if v is not None else None
 
 def m_market_size(f,crit):
     cp=f.get("catchment_pop")                       # regional catchment (metro access) for US and CA
@@ -892,10 +919,10 @@ def m_real_estate(f,crit):
     return out or None
 
 # Per-metric weights WITHIN a dimension (default 1). Lets a metric count for more without the old
-# duplicate-key hack: education dominates demographics; critical thinking and value tier count 2x.
+# duplicate-key hack: education dominates demographics; value tier counts 2x.
 # priority_match is the ONLY incentives metric that responds to what the user actually asked for, so
 # it carries more weight than the generic value tier -- otherwise the ranked-priority UI is cosmetic.
-METRIC_WEIGHTS={"education_attainment":2.0,"critical_thinking":2.0,"incentive_value":2.0,
+METRIC_WEIGHTS={"education_attainment":2.0,"incentive_value":2.0,
                 "skill_supply":1.5,"priority_match":3.0,
                 # Within the innovation dimension. rd_intensity stays below its peers because roughly
                 # 81% of US counties tie at zero R&D establishments, making it closer to a presence
@@ -944,6 +971,7 @@ def serving_edos(geoid,g):
 DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount, and workforce skills",
             "demographics":"educational attainment, growth, and labor-force participation",
             "innovation":"technical employment, R&D presence, patenting and knowledge spillovers, and business dynamism",
+            "dai":"its DAI score",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality",
@@ -1014,7 +1042,7 @@ def run(criteria,top=10):
             ("workforce",m_workforce),("demographics",m_demographics),("logistics",m_logistics),
             ("incentives",m_incentives),("infrastructure",m_infrastructure),("real_estate",m_real_estate),
             ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability),
-            ("innovation",m_innovation))}
+            ("innovation",m_innovation),("dai",m_dai))}
     cands=list(refset)
     trace={"candidates_start":len(cands)}
     if weights_fallback:
@@ -1199,7 +1227,7 @@ def run(criteria,top=10):
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
                     "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation","dai"],
             "dimensions_pending_data":[],
             "results":top_results,"other_notable":other_notable}
 
