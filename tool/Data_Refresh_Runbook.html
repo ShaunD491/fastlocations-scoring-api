@@ -413,7 +413,7 @@
       <li><a href="#running"><em>3</em> Running a refresh</a></li>
       <li><a href="#reading"><em>4</em> Reading the table</a></li>
       <li><a href="#live"><em>5</em> Getting it live</a></li>
-      <li><a href="#manual"><em>6</em> The five manual ones</a></li>
+      <li><a href="#manual"><em>6</em> The six manual ones</a></li>
       <li><a href="#moved"><em>7</em> When a source moves</a></li>
       <li><a href="#wrong"><em>8</em> When it goes wrong</a></li>
       <li><a href="#adding"><em>9</em> Adding a dataset</a></li>
@@ -456,7 +456,7 @@ python refresh_web.py          →  http://localhost:5003</code></pre>
             <tr><td><strong>After an incentives run</strong></td><td>Refresh <code>incentives_index</code></td><td>The scorer reads its own summary of the incentives, not the master. Without this the two drift.</td></tr>
             <tr><td><strong>After editing an EDO</strong></td><td>Refresh <code>edo_indexes</code></td><td>Lead routing is a derived index. Change a territory without rebuilding and leads route to the wrong EDO, or to nobody.</td></tr>
             <tr><td><strong>Adding a property dataset</strong></td><td>Refresh <code>orgs_with_properties</code></td><td>Parses the dashboard's <code>properties.js</code> for the property-access bonus.</td></tr>
-            <tr><td><strong>Once a year</strong></td><td>Check the five manual sources</td><td>See <a href="#manual">section 5</a>. Nothing prompts you.</td></tr>
+            <tr><td><strong>Once a year</strong></td><td>Check the six manual sources</td><td>See <a href="#manual">section 5</a>. Nothing prompts you.</td></tr>
           </tbody>
         </table>
       </div>
@@ -582,8 +582,8 @@ python refresh_engine.py refresh county_bea --force</code></pre>
     <hr class="div">
 
     <section id="manual">
-      <h2>The five manual ones</h2>
-      <p class="sec-note">These sources sit behind bot protection or a download form, so the tool cannot fetch them. Everything after the download is automatic.</p>
+      <h2>The six manual ones</h2>
+      <p class="sec-note">These sources sit behind bot protection or a download form, or are maintained by hand, so the tool cannot fetch them. Everything after the download is automatic.</p>
 
       <p>Download the file, drop it in <code>tool\staging\&lt;dataset&gt;\</code>, then refresh that dataset. The tool finds it, unzips it if needed, and builds. It never deletes anything you put there.</p>
 
@@ -594,6 +594,7 @@ python refresh_engine.py refresh county_bea --force</code></pre>
             <tr><td class="mono">county_nri</td><td>hazards.fema.gov/nri &rarr; Data Resources &rarr; county table</td><td>Annual</td></tr>
             <tr><td class="mono">county_innovation_index</td><td>statsamerica.org/innovation &mdash; the <strong>Measures</strong> export</td><td>Annual</td></tr>
             <tr><td class="mono">county_land_cost</td><td>USDA NASS Census of Agriculture</td><td>5-yearly</td></tr>
+            <tr><td class="mono">county_dai</td><td>DAI.csv &mdash; the hand-maintained county table (NAME, STATE, FIPS, DAI Score). No public source: keep the master copy; the repository holds the last one loaded</td><td>As supplied</td></tr>
             <tr><td class="mono">ca_livability</td><td>StatCan CIMD catalogue page</td><td>5-yearly</td></tr>
             <tr><td class="mono">ca_infrastructure</td><td>StatCan ODI &mdash; all ten GeoPackages into one folder</td><td>~2-yearly</td></tr>
           </tbody>
