@@ -20,7 +20,9 @@ Twelve weighted dimensions (percentile-ranked within the candidate set, then wei
   dai            US only: county DAI score (county_dai.json, built from DAI.csv); CA has no equivalent -> null
 
 Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
-(weights renormalise over non-null dims, never penalise). Results split into PRIMARY
+(weights renormalise over non-null dims, never penalise). Every metric is percentile-ranked
+within its country; the cost dimension is additionally ranked within market-size tiers
+(TIERED_DIMS / COST_TIERS) so a metro's wages are compared with other metros. Results split into PRIMARY
 (served by a customer EDO, distinct orgs) and OTHER NOTABLE (top non-customer counties).
 Small-county reliability damping + local/regional coverage bonus applied to the final.
 """
@@ -344,6 +346,29 @@ PRIORITY_DECAY=0.6      # incentive priority ranking: weight of each pick = 0.6^
 PRIORITY_DEPTH=10
 MAX_PER_REGION=2        # max results one state/province may take in the Top-N (0 = uncapped). Counters
                         # the fact that county granularity varies ~5x by state; see run().
+# COST is percentile-ranked within MARKET-SIZE TIERS (US only), not against all 3,144 counties.
+# Ranked nationally, every large metro sat in the bottom decile on cost simply because wages rise
+# with market size: Seattle 1, Santa Clara 0, Phoenix 10, San Diego 5, Las Vegas 25. Cost plus real
+# estate plus safety carry 28% of the default weight, and that stack cost the big western markets
+# 7-11 points of weighted total -- the gap between rank 200 and the top 10. Ranking cost within
+# tiers of regional catchment (the same reach measure the reliability damping uses) makes the
+# sub-score mean "how expensive is this market for one of its size": each tier averages ~50, so
+# no size class is systematically cheap or dear. Measured before adopting: Phoenix 10 -> 49,
+# Las Vegas 25 -> 72, Riverside 22 -> 63, San Diego 5 -> 31; the losers are small Midwest counties
+# that had been credited for cheapness against the whole country. It does NOT rescue the most
+# expensive coastal metros (Seattle 1 -> 12, Santa Clara 0 -> 3): they are the dearest markets even
+# among big ones, and that is a weighting question (the R&D preset runs cost at 5), not a ranking
+# one. Canada is a single group -- its catchments are an order of magnitude smaller and the tiers
+# would leave two or three CDs ranking against each other. Only cost is tiered; real estate was
+# measured too and moved the same counties further for no extra fairness, so it stays national.
+COST_TIERS=((0,100_000,"rural"),(100_000,500_000,"small"),(500_000,2_000_000,"mid"),(2_000_000,float("inf"),"metro"))
+TIERED_DIMS={"cost"}    # dimensions whose metrics are percentile-ranked within market_tier() (US only)
+def market_tier(f):
+    """Market-size tier of a US county by regional catchment (own population if no catchment).
+    Canadian CDs all return one tier, so tiering is a no-op there."""
+    if gsys(f)=="CA": return "CA"
+    v=f.get("catchment_pop") or f.get("TOTPOP_CY") or 0
+    return next(name for lo,hi,name in COST_TIERS if lo<=v<hi)
 def water_risk(d):
     """0-100 water-supply risk (higher = worse), US and CA, for the drought preference penalty."""
     if gsys(d)=="CA":
@@ -935,7 +960,7 @@ def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     for v,wt in pairs:
         if v is not None: num+=v*wt; den+=wt
     return round(num/den,1) if den else None
-def score_dimension(cands,extract,crit):
+def score_dimension(cands,extract,crit,tiered=False):
     raws={ff:extract(ALLFEAT[ff],crit) for ff in cands}
     keys=set()
     for r in raws.values():
@@ -951,8 +976,11 @@ def score_dimension(cands,extract,crit):
     #                         so Canadian markets read as systematically expensive.
     # Ranking each country against its own distribution makes a score mean "this place's standing in
     # its own country", which is comparable across the border; raw units no longer have to be.
+    # tiered=True (the cost dimension, see COST_TIERS) further splits each country by market-size
+    # tier, so the percentile means "standing among markets of this size".
     groups={}
-    for ff in cands: groups.setdefault(gsys(ALLFEAT[ff]),[]).append(ff)
+    for ff in cands:
+        d=ALLFEAT[ff]; groups.setdefault((gsys(d),market_tier(d) if tiered else None),[]).append(ff)
     pcts={k:{} for k in keys}
     for members in groups.values():
         for k in keys:
@@ -1038,7 +1066,7 @@ def run(criteria,top=10):
     # the query's region / proximity / threshold filters. So a county's sub-scores and FastLocations
     # Score mean the same thing in a nationwide search and in a "Texas only" search -- the number is
     # its standing against the country, not just against the other counties that passed the filter.
-    sub={dim:score_dimension(refset,ex,criteria) for dim,ex in (
+    sub={dim:score_dimension(refset,ex,criteria,tiered=(dim in TIERED_DIMS)) for dim,ex in (
             ("workforce",m_workforce),("demographics",m_demographics),("logistics",m_logistics),
             ("incentives",m_incentives),("infrastructure",m_infrastructure),("real_estate",m_real_estate),
             ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability),

@@ -33,6 +33,10 @@ Twelve, all live: workforce, demographics, infrastructure, logistics, incentives
 safety, market_size, livability, innovation, dai. Defaults are `scorer.DEFAULT_WEIGHTS`; the use-type
 presets in `intake.js` override them per project type.
 
+`cost` is percentile-ranked within market-size tiers (regional catchment under 100k, to 500k, to 2M, and
+over 2M; see `COST_TIERS` in `scorer.py`), so a metro's wages are compared with other metros rather than
+with rural counties. Every other dimension ranks nationally. Canada is a single tier.
+
 `dai` is the county DAI score (0-100, higher is better; US counties only). It is held at about 7% of
 the final score under every scenario: the default weights and every use-type preset carry it at 7, and
 `test_scorer.py` enforces that. Canada has no DAI, so Canadian results are scored on the other eleven

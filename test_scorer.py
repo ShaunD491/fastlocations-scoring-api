@@ -461,6 +461,41 @@ def test_dai_is_seven_percent_under_every_scenario():
     for d, v in sliders.items():
         assert int(v) == round(scorer.DEFAULT_WEIGHTS[d] * 100), f"form default for {d} ({v}) != scorer default"
 
+def test_cost_is_ranked_within_market_tiers():
+    # Ranked nationally, every big metro sat in the bottom decile on cost because wages rise with market
+    # size. Within tiers each size class must average ~50, and a mid-priced metro must no longer read as
+    # one of the dearest places in the country.
+    import statistics, collections
+    assert "cost" in scorer.TIERED_DIMS
+    R = scorer.run(US, top=5000)["results"]
+    by = collections.defaultdict(list)
+    for r in R:
+        if r["sub_scores"]["cost"] is not None: by[scorer.market_tier(scorer.FEAT[r["geoid"]])].append(r["sub_scores"]["cost"])
+    assert set(by) == {"rural", "small", "mid", "metro"}, set(by)
+    for t, v in by.items():
+        assert abs(statistics.mean(v) - 50) < 8, f"tier {t} averages {statistics.mean(v):.1f} on cost"
+    maricopa = next(r for r in R if r["geoid"] == "04013")
+    assert maricopa["sub_scores"]["cost"] > 35, "Phoenix still scored as if compared with rural counties"
+    # tiering only touches cost: workforce stays a single national ranking
+    saved = set(scorer.TIERED_DIMS); scorer.TIERED_DIMS.clear()
+    try:
+        flat = scorer.run(US, top=5000)["results"]
+    finally:
+        scorer.TIERED_DIMS.update(saved)
+    f = {r["geoid"]: r for r in flat}
+    assert all(f[r["geoid"]]["sub_scores"]["workforce"] == r["sub_scores"]["workforce"] for r in R)
+    metro_flat = statistics.mean(f[r["geoid"]]["sub_scores"]["cost"] for r in R
+                                 if scorer.market_tier(scorer.FEAT[r["geoid"]]) == "metro" and f[r["geoid"]]["sub_scores"]["cost"] is not None)
+    assert metro_flat < 35, "without tiering metros should read as expensive; the test premise is off"
+    # Canada is one tier, so its cost scores are unchanged by tiering
+    ca = scorer.run(CA, top=5000)["results"]
+    scorer.TIERED_DIMS.clear()
+    try:
+        ca_flat = {r["geoid"]: r["sub_scores"]["cost"] for r in scorer.run(CA, top=5000)["results"]}
+    finally:
+        scorer.TIERED_DIMS.update(saved)
+    assert all(ca_flat[r["geoid"]] == r["sub_scores"]["cost"] for r in ca)
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     passed = failed = 0
