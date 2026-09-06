@@ -10,6 +10,7 @@
   const API_BASE = 'https://fastlocations-scoring-api-production.up.railway.app';
 
   const form = document.getElementById('intakeForm');
+  let lastResults = null;   // the most recent /match response, for the plan and for saved scenarios
   const $ = (n) => form.querySelector('[name="' + n + '"]');
   const num = (n) => { const v = $(n).value.trim(); return v === '' ? null : Number(v); };
   const str = (n) => { const v = $(n).value.trim(); return v === '' ? null : v; };
@@ -85,7 +86,7 @@
     // Was hardcoded to '100%' -- it read "Normalized total: 100%" even with every slider at zero.
     const el = document.getElementById('wtotal');
     el.textContent = total ? '100%' : '0% — set at least one factor above zero';
-    el.style.color = total ? '' : '#cc2020';
+    el.style.color = total ? '' : 'var(--fl-red)';
   }
   sliders.forEach(s => s.addEventListener('input', refreshWeights));
   refreshWeights();
@@ -234,6 +235,7 @@
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
     try {
       const data = await submitToBackend(c);
+      lastResults = data;
       renderResults(data);
       const panel = document.getElementById('flSubmitPanel');
       if (panel) {
@@ -435,7 +437,7 @@
         ? 'https://www.fastlocations.ai/dash/dashboard.html?id=' + encodeURIComponent(edo.objectid) : null;
       let pop = '<div style="font-size:13px;line-height:1.5">' +
         '<b>' + (i + 1) + '. ' + r.county + ', ' + r.state + '</b><br>' +
-        'FastLocations Score: <b style="color:#cc2020">' + r.final_score + '</b>';
+        'FastLocations Score: <b style="color:#d32323">' + r.final_score + '</b>';
       if (edo) pop += '<br>' + edo.organization;
       if (dash) pop += '<br><a href="' + dash + '" target="_blank" rel="noopener">AI+Plus Dashboard &#8599;</a>';
       pop += '</div>';
@@ -455,30 +457,353 @@
   // ---- Print / Save as PDF ----
   document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
 
-  // ---- Export the completed form (+ matches) to Word ----
-  document.getElementById('wordBtn').addEventListener('click', function () {
-    const c = buildCriteria();
-    const esc = function (v) { return (v == null ? '' : String(v)).replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
-    const row = function (k, v) {
-      if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '';
-      return '<p><b>' + k + ':</b> ' + esc(Array.isArray(v) ? v.join(', ') : v) + '</p>';
-    };
-    const rng = function (o) { return [o.min, o.max].filter(function (x) { return x != null; }).join(' to '); };
-    let b = '<h1>FastLocations &mdash; Site Selection Intake</h1>';
-    b += '<h2>Project</h2>' + row('Project', c.project.project_name) + row('Submitted by', c.project.submitted_by.name) + row('Firm', c.project.submitted_by.firm) + row('Email', c.project.submitted_by.email) + row('Use type', c.use_type.primary) + row('NAICS', c.use_type.naics);
-    b += '<h2>Real Estate</h2>' + row('Facility type', c.facility.type) + row('Building sqft', rng(c.facility.building_sqft)) + row('Site acres', rng(c.facility.site_acres));
-    b += '<h2>Workforce</h2>' + row('Headcount at start', c.workforce.headcount.initial) + row('Headcount yr 5', c.workforce.headcount.year_5) + row('Skill profile', c.workforce.skill_profile);
-    b += '<h2>Geography</h2>' + row('Country', c.geography.countries) + row('Required states', c.geography.required_regions) + row('Preferred states', c.geography.preferred_regions) + row('Excluded states', c.geography.excluded_regions);
-    b += '<h2>Incentives</h2>' + row('Priorities', c.incentives.priorities);
-    b += '<h2>Weights</h2>' + Object.keys(c.weights).map(function (k) { return row(k, Math.round(c.weights[k] * 100) + '%'); }).join('');
-    const res = document.getElementById('results');
-    if (res && res.classList.contains('show') && res.innerHTML.trim()) b += '<h2>Matches</h2>' + res.innerHTML;
-    const doc = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"></head><body>' + b + '</body></html>';
-    const blob = new Blob(['\uFEFF' + doc], { type: 'application/msword' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = ((c.project.project_name || 'site_selection').replace(/[^a-z0-9]+/gi, '_').toLowerCase()) + '.doc';
-    a.click();
-    URL.revokeObjectURL(a.href);
+  // ---- Strategic plan (Word) ----
+  // One generator for both tools, in /js/strategicPlan.js. Here it gets the
+  // criteria as edited on the form, the last matches if any were generated,
+  // and the Stay or Grow seed if the reader arrived from that report (or
+  // opened a scenario file that carried one).
+  const planMsg = document.getElementById('planMsg');
+  const planMsgDefault = planMsg ? planMsg.textContent : '';
+  function say(t, bad) {
+    if (!planMsg) return;
+    planMsg.textContent = t || planMsgDefault;
+    planMsg.style.color = bad ? '#9a2017' : '';
+  }
+  const planBtn = document.getElementById('wordBtn');
+  if (planBtn) planBtn.addEventListener('click', async function () {
+    if (!window.FLStrategicPlan) { say('The plan builder did not load. Refresh the page and try again.', true); return; }
+    planBtn.disabled = true; say('Building the Word document\u2026');
+    try {
+      const name = await FLStrategicPlan.download({ seed: window.__flProjectSeed || null, criteria: buildCriteria(), results: lastResults });
+      say('Saved as ' + name + ' \u2014 look in your downloads folder. It is a draft: text in [brackets] is for you to complete.' +
+        (lastResults ? '' : ' The candidate locations in it were scored from the form as it stands; generate matches here to refine them.'));
+    } catch (err) {
+      say('Could not build the document: ' + ((err && err.message) || 'unknown error'), true);
+    }
+    planBtn.disabled = false;
   });
+
+  // ---- Apply a ProjectCriteria object to the form ----
+  // The inverse of buildCriteria(). Used by scenario files, the unsaved-draft
+  // restore, and the Stay or Grow prefill (which passes partial:true so the
+  // untouched fields keep their defaults and the use-type preset still runs).
+  function setText(name, v) {
+    const el = $(name);
+    if (!el || v == null || v === '') return false;
+    el.value = String(v);
+    return true;
+  }
+  function setSelect(name, v) {
+    const el = $(name);
+    if (!el || v == null) return false;
+    const ok = [...el.options].some(function (o) { return o.value === v; });
+    if (!ok) return false;
+    el.value = v;
+    return true;
+  }
+  function setCheck(name, v) {
+    const el = $(name);
+    if (!el || typeof v !== 'boolean') return false;
+    el.checked = v;
+    return true;
+  }
+  function setRadio(name, v) {
+    const r = form.querySelector('[name="' + name + '"][value="' + v + '"]');
+    if (!r) return false;
+    const changed = !r.checked;
+    r.checked = true;
+    return changed;
+  }
+  function setGroup(group, values) {
+    if (!Array.isArray(values)) return false;
+    let hit = false;
+    form.querySelectorAll('[data-group="' + group + '"] input').forEach(function (i) {
+      i.checked = values.indexOf(i.value) >= 0;
+      if (i.checked) hit = true;
+    });
+    return hit;
+  }
+  function setMsel(name, values) {
+    const pop = document.querySelector('.msel[data-name="' + name + '"] .msel-pop');
+    if (!pop) return;
+    const want = Array.isArray(values) ? values : [];
+    pop.querySelectorAll('input').forEach(function (i) { i.checked = want.indexOf(i.value) >= 0; });
+    pop.dispatchEvent(new Event('change'));
+  }
+  function setIncentives(order) {
+    incOrder.length = 0;
+    const chips = [...document.querySelectorAll('#incChips input')];
+    chips.forEach(function (i) { i.checked = false; });
+    (Array.isArray(order) ? order : []).forEach(function (v) {
+      const inp = chips.filter(function (i) { return i.value === v; })[0];
+      if (inp) { inp.checked = true; incOrder.push(v); }
+    });
+    renumberIncentives();
+  }
+  function setWeights(w) {
+    if (!w || typeof w !== 'object') return;
+    let any = false;
+    sliders.forEach(function (s) {
+      const v = w[s.dataset.w];
+      if (typeof v === 'number' && isFinite(v)) { s.value = Math.round(v <= 1 ? v * 100 : v); any = true; }
+    });
+    if (any) refreshWeights();
+  }
+  function resetForm() {
+    form.reset();
+    populateRegions(); updateUnits();
+    incOrder.length = 0; renumberIncentives();
+    refreshWeights();
+  }
+
+  function applyCriteria(c, opts) {
+    opts = opts || {}; c = c || {};
+    const p = c.project || {}, sb = p.submitted_by || {}, tl = p.timeline || {};
+    const u = c.use_type || {}, f = c.facility || {}, w = c.workforce || {}, hc = w.headcount || {}, tw = w.target_wage || {};
+    const inf = c.infrastructure || {}, dem = c.demographics || {}, inc = c.incentives || {}, geo = c.geography || {}, bud = c.budget || {};
+    if (!opts.partial) resetForm();
+
+    // Country first: changing it rebuilds the region lists the next lines fill.
+    if (Array.isArray(geo.countries) && geo.countries.length === 1 && setRadio('country', geo.countries[0])) { populateRegions(); updateUnits(); }
+
+    setText('project_name', p.project_name);
+    setText('submit_name', sb.name); setText('submit_firm', sb.firm); setText('submit_email', sb.email); setText('submit_phone', sb.phone);
+    setSelect('submit_confidentiality', p.confidentiality);
+    setText('decision_by', tl.decision_by); setText('operational_by', tl.operational_by);
+    setText('notes', p.notes);
+
+    // A partial prefill lets the use-type change handler set the weight preset;
+    // a full scenario carries its own weights, applied below, so no preset.
+    if (setSelect('use_primary', u.primary) && useSel && opts.partial) useSel.dispatchEvent(new Event('change'));
+    setText('naics', u.naics);
+
+    setSelect('facility_type', f.type);
+    if (f.building_sqft) { setText('bldg_min', f.building_sqft.min); setText('bldg_max', f.building_sqft.max); }
+    if (f.site_acres) { setText('acre_min', f.site_acres.min); setText('acre_max', f.site_acres.max); }
+    setText('ceiling_ft', f.ceiling_clear_height_ft);
+    setCheck('expandability', f.expandability_required);
+
+    setText('hc_initial', hc.initial); setText('hc_year5', hc.year_5);
+    setGroup('skills', w.skill_profile);
+    setSelect('shift', w.shift_pattern);
+    setSelect('right_to_work', w.right_to_work);
+    setText('wage_value', tw.value); setSelect('wage_basis', tw.basis);
+
+    setText('power_mw', inf.power_mw); setSelect('power_reliability', inf.power_reliability);
+    setCheck('gas', inf.natural_gas_required);
+    setText('water_gpd', inf.water_gpd); setText('sewer_gpd', inf.sewer_gpd);
+    setSelect('rail', inf.rail); setText('broadband_gbps', inf.broadband_min_gbps);
+    setText('hwy_miles', inf.highway_access_max_miles); setText('air_miles', inf.commercial_airport_max_miles);
+    setCheck('port', inf.port_required);
+    setSelect('renewable', inf.renewable); setSelect('drought', inf.drought); setSelect('hazard', inf.hazard);
+
+    setText('draw_radius', dem.labor_draw_radius_miles); setText('min_pop', dem.min_population); setText('min_lf', dem.min_labor_force);
+    setSelect('education', dem.education_priority);
+
+    if (Array.isArray(inc.priorities)) setIncentives(inc.priorities);
+    setText('inc_target', inc.min_value_target_usd);
+
+    if (!opts.partial || geo.required_regions) setMsel('req_regions', geo.required_regions);
+    if (!opts.partial || geo.preferred_regions) setMsel('pref_regions', geo.preferred_regions);
+    if (!opts.partial || geo.excluded_regions) setMsel('excl_regions', geo.excluded_regions);
+    const mp = Array.isArray(geo.market_proximity) && geo.market_proximity[0];
+    if (mp && mp.to) {
+      setText('prox_to', mp.to);
+      if (typeof mp.max_miles === 'number') setText('prox_miles', currentCountry() === 'CA' ? Math.round(mp.max_miles * 1.609) : mp.max_miles);
+    }
+
+    setText('capex', bud.capex_usd); setText('opex', bud.annual_opex_target_usd);
+    setWeights(c.weights);
+  }
+
+  // ---- Scenarios: save to / open from a file ----
+  // A scenario is the criteria plus the matches they produced, so a saved file
+  // reopens with its results on screen and the reader can change one input,
+  // generate again, and compare. The Stay or Grow seed travels too, so the
+  // strategic plan built from a reopened scenario still has the report in it.
+  const SCENARIO_FORMAT = 'fastlocations-project-scenario';
+  function scenarioFilename(c) {
+    return ((c.project.project_name || 'project').replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').toLowerCase() || 'project') +
+      '_scenario_' + new Date().toISOString().slice(0, 10) + '.json';
+  }
+  function saveScenario() {
+    const c = buildCriteria();
+    const doc = {
+      format: SCENARIO_FORMAT, version: 1, savedAt: new Date().toISOString(),
+      project: c.project.project_name || null,
+      criteria: c,
+      results: lastResults,
+      seed: window.__flProjectSeed || null
+    };
+    try {
+      const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = scenarioFilename(c);
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500);
+      say('Saved as ' + a.download + ' \u2014 look in your downloads folder.' + (lastResults ? ' The matches on screen are in the file.' : ''));
+    } catch (err) {
+      say('This browser would not let the page write a file.', true);
+    }
+  }
+  function openScenario(file) {
+    const reader = new FileReader();
+    reader.onerror = function () { say('That file could not be read.', true); };
+    reader.onload = function () {
+      let doc;
+      try { doc = JSON.parse(String(reader.result)); } catch (_) { say('That file is not a saved scenario. Nothing on screen has changed.', true); return; }
+      if (!doc || doc.format !== SCENARIO_FORMAT || !doc.criteria || typeof doc.criteria !== 'object') {
+        say('That is not a FastLocations scenario file. Nothing on screen has changed.', true); return;
+      }
+      try {
+        applyCriteria(doc.criteria);
+      } catch (err) {
+        say('The scenario could not be applied: ' + ((err && err.message) || 'unknown error'), true); return;
+      }
+      window.__flProjectSeed = (doc.seed && doc.seed.source === 'stay_or_grow') ? doc.seed : null;
+      const results = document.getElementById('results');
+      if (doc.results && Array.isArray(doc.results.results)) {
+        lastResults = doc.results;
+        renderResults(doc.results);
+        results.classList.add('show');
+      } else {
+        lastResults = null;
+        results.classList.remove('show'); results.innerHTML = '';
+      }
+      document.getElementById('errbox').classList.remove('show');
+      saveDraft();
+      say('Opened ' + (doc.project || 'scenario') + (doc.savedAt ? ', saved ' + new Date(doc.savedAt).toLocaleString() : '') +
+        '. Change any input and choose Generate matches to compare.');
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    reader.readAsText(file);
+  }
+  const saveBtn = document.getElementById('saveScenarioBtn');
+  const openBtn = document.getElementById('openScenarioBtn');
+  const fileInput = document.getElementById('scenarioFile');
+  if (saveBtn) saveBtn.addEventListener('click', saveScenario);
+  if (openBtn && fileInput) {
+    openBtn.addEventListener('click', function () { fileInput.value = ''; fileInput.click(); });
+    fileInput.addEventListener('change', function () { if (fileInput.files && fileInput.files[0]) openScenario(fileInput.files[0]); });
+  }
+
+  // ---- Unsaved draft ----
+  // Kept in this browser so a closed tab does not cost the reader the form.
+  // The Stay or Grow seed, when present, takes precedence over a draft.
+  const DRAFT_KEY = 'fl_project_draft_v1';
+  let draftTimer = null;
+  function saveDraft() {
+    try {
+      const c = buildCriteria();
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ savedAt: new Date().toISOString(), criteria: c }));
+    } catch (_) {}
+  }
+  document.addEventListener('input', function () { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 700); });
+  document.addEventListener('change', function () { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 700); });
+  function dropDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (_) {} }
+  function restoreDraft() {
+    let doc = null;
+    try { doc = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (_) { return false; }
+    if (!doc || !doc.criteria) return false;
+    const c = doc.criteria;
+    // Only a draft with something in it is worth announcing.
+    const touched = (c.project && c.project.project_name) || (c.use_type && c.use_type.primary) ||
+      (c.workforce && c.workforce.headcount && c.workforce.headcount.initial != null) ||
+      (c.geography && ((c.geography.preferred_regions || []).length || (c.geography.required_regions || []).length));
+    if (!touched) return false;
+    try { applyCriteria(c); } catch (_) { dropDraft(); return false; }
+    const box = document.createElement('div');
+    box.className = 'seedbox'; box.id = 'draftbox';
+    box.innerHTML = '<div class="seed-head"><div><b>Unsaved draft restored</b>' +
+      (doc.savedAt ? ' from ' + escHtml(new Date(doc.savedAt).toLocaleString()) : '') +
+      '. Your answers were kept in this browser. Save a scenario to keep them as a file.</div>' +
+      '<button type="button" class="seed-clear" id="draftClear">Start over</button></div>';
+    form.insertBefore(box, form.firstElementChild);
+    box.classList.add('show');
+    document.getElementById('draftClear').addEventListener('click', function () { dropDraft(); location.replace(location.pathname); });
+    return true;
+  }
+
+  // ---- Prefill from Stay or Grow ----
+  // /StayOrGrow/intake.html writes a partial ProjectCriteria (plus a list of
+  // which fields it filled and why) to localStorage, then opens this page.
+  // Everything it touches is listed in a banner at the top of the form so the
+  // reader knows what to check. Nothing here submits anything — Generate
+  // matches is still the reader's own click.
+  const SEED_KEY = 'fl_project_seed_v1';
+  const SEED_SESSION_KEY = 'fl_project_seed_active';
+  const SEED_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
+
+  function takeSeed() {
+    // The localStorage copy is consumed on first read and parked in
+    // sessionStorage, so a refresh of this tab re-applies it but a later,
+    // unrelated visit to the form does not open prefilled with stale figures.
+    let raw = null;
+    try {
+      raw = localStorage.getItem(SEED_KEY);
+      if (raw) { localStorage.removeItem(SEED_KEY); sessionStorage.setItem(SEED_SESSION_KEY, raw); }
+      else raw = sessionStorage.getItem(SEED_SESSION_KEY);
+    } catch (_) { return null; }
+    if (!raw) return null;
+    let seed;
+    try { seed = JSON.parse(raw); } catch (_) { return null; }
+    if (!seed || seed.version !== 1 || seed.source !== 'stay_or_grow' || !seed.criteria) return null;
+    const age = Date.now() - Date.parse(seed.createdAt || 0);
+    if (!(age >= 0 && age < SEED_MAX_AGE_MS)) return null;
+    return seed;
+  }
+
+  function dropSeed() {
+    try { localStorage.removeItem(SEED_KEY); sessionStorage.removeItem(SEED_SESSION_KEY); } catch (_) {}
+  }
+
+  function applySeed(seed) {
+    applyCriteria(seed.criteria, { partial: true });
+    const nudges = seed.weightNudges || {};
+    let nudged = false;
+    sliders.forEach(function (s) {
+      const d = nudges[s.dataset.w];
+      if (typeof d === 'number' && d) { s.value = Math.max(0, Math.min(Number(s.max) || 100, Number(s.value) + d)); nudged = true; }
+    });
+    if (nudged) refreshWeights();
+  }
+
+  function showSeedBanner(seed) {
+    const rep = seed.report || {};
+    const box = document.createElement('div');
+    box.className = 'seedbox';
+    box.id = 'seedbox';
+    const when = rep.reportDate ? ' run on ' + escHtml(rep.reportDate) : '';
+    const verdict = rep.verdictLabel ? ' Its verdict was <b>' + escHtml(rep.verdictLabel) + '</b>' +
+      (rep.endStateLabel ? ', with <b>' + escHtml(rep.endStateLabel.toLowerCase()) + '</b> as the long-term fix' : '') + '.' : '';
+    const chips = (seed.seeded || []).map(function (s) {
+      return '<span title="' + escHtml((s.value != null ? s.value + ' \u2014 ' : '') + (s.basis || '')) + '">' + escHtml(s.label) + '</span>';
+    }).join('');
+    box.innerHTML =
+      '<div class="seed-head"><div><b>Prefilled from your Stay or Grow report</b>' + when + '.' + verdict +
+      ' The fields below were filled from that report and are yours to change; everything about <b>where</b> is still blank, because that is the question this page asks.</div>' +
+      '<button type="button" class="seed-clear" id="seedClear">Start blank instead</button></div>' +
+      (chips ? '<div class="seed-fields">Filled: ' + chips + '</div>' : '');
+    form.insertBefore(box, form.firstElementChild);
+    box.classList.add('show');
+    document.getElementById('seedClear').addEventListener('click', function () {
+      dropSeed(); dropDraft();
+      location.replace(location.pathname);
+    });
+  }
+
+  (function initSeed() {
+    const seed = takeSeed();
+    if (!seed) { try { restoreDraft(); } catch (_) {} return; }
+    try {
+      applySeed(seed);
+      showSeedBanner(seed);
+      window.__flProjectSeed = seed;   // inspectable in the console while testing
+      saveDraft();
+    } catch (err) {
+      // A bad seed must never take the form down with it: drop it and carry on blank.
+      dropSeed();
+      if (window.console) console.warn('Stay or Grow prefill skipped:', err);
+    }
+  })();
 })();
