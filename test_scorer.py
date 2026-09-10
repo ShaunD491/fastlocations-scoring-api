@@ -408,6 +408,18 @@ def test_region_diversity_cap():
     assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
     assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
 
+def test_identical_across_processes():
+    """Identical inputs must give identical outputs in every process, not just within one. Python
+    randomises set order per process (PYTHONHASHSEED); summing a dimension's metrics in set order made
+    sub-scores differ by 0.1 between processes, so a redeploy could reorder near-ties."""
+    import os, subprocess, sys
+    code = ("import json, scorer; R = scorer.run({'geography': {'countries': ['US', 'CA']}}, top=5000)['results'];"
+            "print(json.dumps([[r['geoid'], r['final_score'], r['weighted_total'], r['sub_scores']] for r in R]))")
+    here = os.path.dirname(os.path.abspath(__file__))
+    outs = [subprocess.run([sys.executable, "-c", code], cwd=here, capture_output=True, text=True, check=True,
+                           env=dict(os.environ, PYTHONHASHSEED=seed)).stdout for seed in ("1", "2")]
+    assert outs[0] and outs[0] == outs[1], "scores differ between processes with different hash seeds"
+
 def test_top5_spreads_across_divisions():
     """The Top 5 takes one result per Census division first, so it cannot cluster in one region."""
     out = scorer.run(US, top=5)

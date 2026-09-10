@@ -985,6 +985,9 @@ def score_dimension(cands,extract,crit,tiered=False):
     for r in raws.values():
         if r: keys|=set(r.keys())
     if not keys: return {ff:None for ff in cands}
+    # Sorted, not set order: Python randomises set order per process (PYTHONHASHSEED), and _wavg's
+    # float sum in that order made sub-scores differ by 0.1 between processes and across redeploys.
+    keys=sorted(keys)
     # Percentile-rank WITHIN EACH COUNTRY, never across both. Several metric keys are shared by the US
     # and Canadian extractors but come from sources that are not comparable on one scale:
     #   labor_availability -> US unemployment comes from the ACS/current-year model, Canada's from the
