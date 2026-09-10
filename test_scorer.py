@@ -408,6 +408,45 @@ def test_region_diversity_cap():
     assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
     assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
 
+def test_cost_and_safety_use_the_metro_labor_market():
+    """Inside a multi-county MSA, employer wages are the metro's and resident income, cost of living and
+    crime are half the metro's, so an outer county is not scored as if it were rural. Real estate stays
+    the county's own, and counties outside a multi-county MSA are untouched."""
+    F = scorer.FEAT
+    henry, paulding, fulton = F["13151"], F["13223"], F["13121"]
+    assert scorer.MSA_MAP["13151"] == scorer.MSA_MAP["13121"], "Henry and Fulton should share the Atlanta MSA"
+    # employer wages: one labor market, one value (per resident, the county figure tracks job location)
+    ew = {g: scorer.m_cost(F[g], {})["low_employer_wages"] for g in ("13151", "13223", "13121")}
+    assert len(set(ew.values())) == 1, ew
+    # crime: halfway between the county's own rate and the metro's
+    m = scorer.METRO["13151"]["crime_rate"]
+    assert abs(-scorer.m_safety(henry, {})["low_crime"] - (0.5 * henry["crime_rate"] + 0.5 * m)) < 1e-6
+    # real estate is not blended
+    assert scorer.m_real_estate(henry, {})["low_property_tax"] == -henry["property_tax_rate"]
+    # a county in no multi-county MSA keeps its own values
+    lone = next(g for g, f in F.items() if scorer.gsys(f) == "US" and g not in scorer.METRO
+                and f.get("MEDHINC_CY") is not None and f.get("crime_rate") is not None)
+    assert scorer.m_cost(F[lone], {})["low_labor_cost"] == -F[lone]["MEDHINC_CY"]
+    assert scorer.m_safety(F[lone], {})["low_crime"] == -F[lone]["crime_rate"]
+    assert not any(scorer.gsys(scorer.ALLFEAT[g]) == "CA" for g in scorer.METRO), "Canada must not be blended"
+    # the effect: the Atlanta core no longer trails its outer counties on cost by ~50 points
+    sub = {r["geoid"]: r["sub_scores"]["cost"] for r in scorer.run(US, top=5000)["results"]}
+    assert sub["13151"] - sub["13121"] < 30, "Henry still reads far cheaper than Fulton"
+
+def test_office_real_estate_leans_on_property_tax():
+    """Farmland price per acre says little about an office project's cost, so it counts less for offices."""
+    assert scorer.USE_METRIC_WEIGHTS["office"]["low_land_cost"] < scorer.METRIC_WEIGHTS["low_land_cost"]
+    arl = "51013"   # Arlington VA: $150k/acre land, a low property-tax rate
+    base = {r["geoid"]: r["sub_scores"]["real_estate"] for r in scorer.run(US, top=5000)["results"]}
+    off = {r["geoid"]: r["sub_scores"]["real_estate"] for r in
+           scorer.run(dict(US, use_type={"primary": "office"}), top=5000)["results"]}
+    assert off[arl] > base[arl], "office real estate should weigh land price less"
+    # other use types are unchanged, and a malformed use type is ignored rather than crashing
+    assert {r["geoid"]: r["sub_scores"]["real_estate"] for r in
+            scorer.run(dict(US, use_type={"primary": "manufacturing"}), top=5000)["results"]} == base
+    assert scorer.run(dict(US, use_type={"primary": ["office"]}), top=3)["results"]
+    assert scorer.run(dict(US, use_type="office"), top=3)["results"]
+
 def test_identical_across_processes():
     """Identical inputs must give identical outputs in every process, not just within one. Python
     randomises set order per process (PYTHONHASHSEED); summing a dimension's metrics in set order made

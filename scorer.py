@@ -388,6 +388,44 @@ def market_tier(f):
     if gsys(f)=="CA": return "CA"
     v=f.get("catchment_pop") or f.get("TOTPOP_CY") or 0
     return next(name for lo,hi,name in COST_TIERS if lo<=v<hi)
+# METRO LABOR MARKET. Market size already reaches across the metro (catchment), but cost and safety were
+# read from the county alone, so a cheap, low-crime county on a big metro's edge got the metro's people
+# at its own prices: Henry and Paulding (Atlanta), LaPorte (Chicago) and Alexandria (DC) out-ranked
+# their metro cores, even on an Office search. Wages are set by the labor market, which is the metro --
+# and BEA earnings by place of work PER RESIDENT is worse than noisy inside one: it measures where the
+# jobs sit, not what they pay (Paulding $12k, Fulton $128k, one labor market). So within a multi-county
+# MSA (Census CBSA delineation, fips_to_msa.json):
+#   low_employer_wages                       -> the metro's value (its earnings over its residents)
+#   resident income, cost of living, crime   -> METRO_BLEND of the metro value, the rest the county's own
+# Real estate stays county-level: the land price and tax rate are the site's own, a genuine local edge.
+# Metro values are population-weighted, so a rate like crime becomes the metro's own rate. Counties
+# outside a multi-county MSA, and Canada (whose crime index is already CMA-level), are unchanged.
+METRO_BLEND=0.5
+def _metro_values():
+    members=collections.defaultdict(list)
+    for g,m in MSA_MAP.items():
+        if g in FEAT: members[m].append(g)
+    def wmean(gs,get):
+        num=den=0.0
+        for g in gs:
+            v=get(g); p=FEAT[g].get("TOTPOP_CY") or 0
+            if v is not None and p>0: num+=v*p; den+=p
+        return num/den if den else None
+    out={}
+    for gs in members.values():
+        if len(gs)<2: continue
+        mv={"MEDHINC_CY":wmean(gs,lambda g:FEAT[g].get("MEDHINC_CY")),
+            "WLTHINDXCY":wmean(gs,lambda g:FEAT[g].get("WLTHINDXCY")),
+            "crime_rate":wmean(gs,lambda g:FEAT[g].get("crime_rate")),
+            "earn_pow_pc":wmean(gs,lambda g:(BEA_COST.get(g) or {}).get("earn_pow_pc"))}
+        for g in gs: out[g]=mv
+    return out
+METRO=_metro_values()                              # fips -> its multi-county MSA's values
+def metro_blend(f,key,v):
+    """County value v blended with its metro's (METRO_BLEND on the metro). A missing v stays missing."""
+    mv=(METRO.get(f.get("fips") or "") or {}).get(key)
+    if v is None or mv is None: return v
+    return (1-METRO_BLEND)*v+METRO_BLEND*mv
 def water_risk(d):
     """0-100 water-supply risk (higher = worse), US and CA, for the drought preference penalty."""
     if gsys(d)=="CA":
@@ -924,9 +962,11 @@ def m_cost(f,crit):
         out={"low_labor_cost":-inc}
         if tgt: out["wage_headroom"]=tgt-inc        # local pay below the budgeted wage = easier/cheaper to hire
         return out
-    inc=f.get("MEDHINC_CY"); wl=f.get("WLTHINDXCY")
+    inc=metro_blend(f,"MEDHINC_CY",f.get("MEDHINC_CY")); wl=metro_blend(f,"WLTHINDXCY",f.get("WLTHINDXCY"))
     bea=BEA_COST.get(f.get("fips") or "") or {}
     epw=bea.get("earn_pow_pc")                     # BEA earnings by place of work per capita = employer wage level
+    mepw=(METRO.get(f.get("fips") or "") or {}).get("earn_pow_pc")
+    if mepw is not None: epw=mepw                  # inside a metro the county figure tracks job location, not pay
     if inc is None and wl is None and epw is None: return None
     out={"low_labor_cost":(-inc if inc is not None else None),        # household income (residence)
          "low_employer_wages":(-epw if epw is not None else None),    # BEA place-of-work earnings (~0.17 corr w/ MEDHINC)
@@ -943,7 +983,7 @@ def m_safety(f,crit):
     if gsys(f)=="CA":                              # StatCan Crime Severity Index (CMA-precise, else province); lower=safer
         cs=f.get("ca_csi")
         return {"low_crime":-cs} if cs is not None else None
-    cr=f.get("crime_rate")
+    cr=metro_blend(f,"crime_rate",f.get("crime_rate"))
     if cr is None: return None
     return {"low_crime":-cr}
 
@@ -974,6 +1014,10 @@ METRIC_WEIGHTS={"education_attainment":2.0,"incentive_value":2.0,
                 "rd_intensity":0.75,"innovation_output":1.0,"business_dynamism":1.0,
                 # Acquisition cost outweighs the annual tax rate in the real-estate dimension.
                 "low_land_cost":2.0}
+# Metric weights that depend on the project's use type (criteria use_type.primary), over METRIC_WEIGHTS.
+# An office project leases or buys built space, so the per-acre raw-land price (a farmland proxy) says
+# little about its cost; the property tax that leases pass through carries its real estate score.
+USE_METRIC_WEIGHTS={"office":{"low_land_cost":0.5}}
 def _wavg(pairs):   # pairs = list of (percentile_or_None, weight)
     num=den=0.0
     for v,wt in pairs:
@@ -1007,7 +1051,9 @@ def score_dimension(cands,extract,crit,tiered=False):
     for members in groups.values():
         for k in keys:
             pcts[k].update(pct_rank({ff:(raws[ff].get(k) if raws[ff] else None) for ff in members}))
-    return {ff:_wavg([(pcts[k].get(ff),METRIC_WEIGHTS.get(k,1.0)) for k in keys]) for ff in cands}
+    ut=(crit or {}).get("use_type"); use=ut.get("primary") if isinstance(ut,dict) else None
+    mw={**METRIC_WEIGHTS,**(USE_METRIC_WEIGHTS.get(use,{}) if isinstance(use,str) else {})}
+    return {ff:_wavg([(pcts[k].get(ff),mw.get(k,1.0)) for k in keys]) for ff in cands}
 
 def serving_edos(geoid,g):
     rows=[MASTER[i] for i in index_for(g).get(geoid,[]) if i in MASTER]

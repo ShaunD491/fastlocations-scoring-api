@@ -44,9 +44,10 @@ def scenarios():
         out[name] = {k: int(v) / 100 for k, v in re.findall(r"(\w+):\s*(\d+)", body)}
     return out
 
-def top5(weights, spread):
+def top5(name, weights, spread):
     crit = {"geography": {"countries": ["US"]}}
-    if weights: crit["weights"] = weights
+    if weights:                           # a preset: send its use type too, as the form does
+        crit["weights"] = weights; crit["use_type"] = {"primary": name}
     saved = scorer.MAX_PER_DIVISION
     scorer.MAX_PER_DIVISION = saved if spread else 0
     try:
@@ -69,7 +70,7 @@ def measure():
     scen = scenarios()
     for name, w in scen.items():
         for mode in slots:
-            R = top5(w, mode == "spread")
+            R = top5(name, w, mode == "spread")
             slots[mode].update(region(r["state"]) for r in R)
             if mode == "spread":
                 lists[name] = ["%s, %s" % (r["county"], r["state"]) for r in R]

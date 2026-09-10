@@ -37,6 +37,16 @@ presets in `intake.js` override them per project type.
 over 2M; see `COST_TIERS` in `scorer.py`), so a metro's wages are compared with other metros rather than
 with rural counties. Every other dimension ranks nationally. Canada is a single tier.
 
+Cost and safety read the metro labor market, not just the county (`METRO`, `METRO_BLEND` in
+`scorer.py`). Inside a multi-county MSA, employer wages are the metro's value (BEA earnings per resident
+measures where jobs sit, not what they pay), and resident income, cost of living and crime are half the
+metro's, half the county's. Without it a cheap outer county got the metro's people at its own prices
+(Henry and Paulding outranked Fulton even for offices). Real estate stays county-level, since land and
+tax are the site's own. For `use_type.primary = "office"` the per-acre land price counts 0.5 instead of
+2 within real estate (`USE_METRIC_WEIGHTS`), so property tax carries it. Counties that are their own
+metro but sit near a big one (LaPorte IN, Riverside CA) are not affected; their pull comes from the
+catchment in market size.
+
 The county DAI score (0-100, higher is better; US counties only) is part of `workforce`, not a factor of
 its own, and the form does not name it. It holds a fixed share of the workforce dimension
 (`DAI_WORKFORCE_SHARE` = 7/23 in `scorer.py`), so it moves with the Workforce slider. At the default
