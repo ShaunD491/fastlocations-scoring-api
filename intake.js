@@ -99,7 +99,10 @@
     manufacturing:          { workforce:26, cost:17, real_estate:10, incentives:11, infrastructure:8,  logistics:8,  market_size:5,  livability:4, safety:4, demographics:4,  innovation:3 },
     warehouse_distribution: { workforce:19, cost:14, real_estate:12, incentives:8,  infrastructure:6,  logistics:23, market_size:8,  livability:3, safety:4, demographics:2,  innovation:1 },
     data_center:            { workforce:14, cost:14, real_estate:10, incentives:11, infrastructure:23, logistics:6,  market_size:8,  livability:3, safety:4, demographics:3,  innovation:4 },
-    office:                 { workforce:24, cost:12, real_estate:11, incentives:6,  infrastructure:6,  logistics:6,  market_size:11, livability:9, safety:7, demographics:4,  innovation:4 },
+    // Office is led by talent: workforce, education (demographics) and the knowledge economy (innovation)
+    // carry 48, with market size and livability for scale and staff attraction. Cost, real estate and safety
+    // carry 16 -- it was 30, which put affordable logistics counties (Wood OH, Platte MO) in the Office Top 5.
+    office:                 { workforce:26, cost:8,  real_estate:4,  incentives:4,  infrastructure:2,  logistics:6,  market_size:14, livability:10, safety:4, demographics:12, innovation:10 },
     // R&D runs the lowest cost weight of any use type: these projects compete for scarce talent and
     // proximity to research, and rarely site on operating cost. What they do care about is land to
     // build a campus on, so the points come off cost and go to innovation and real estate.

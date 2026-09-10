@@ -471,6 +471,17 @@ def test_office_real_estate_leans_on_property_tax():
     assert scorer.run(dict(US, use_type={"primary": ["office"]}), top=3)["results"]
     assert scorer.run(dict(US, use_type="office"), top=3)["results"]
 
+def test_office_preset_is_led_by_talent():
+    """The Office preset must weigh talent (workforce, education, knowledge economy) well above cheapness
+    (cost, real estate, safety): at 30% cheapness it put logistics counties in the Office Top 5."""
+    import os, re
+    js = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "intake.js"), encoding="utf-8").read()
+    body = re.search(r"^\s*office:\s*\{([^}]*)\}", js, re.M).group(1)
+    w = {k: int(v) for k, v in re.findall(r"(\w+):\s*(\d+)", body)}
+    talent = w["workforce"] + w["demographics"] + w["innovation"]
+    cheap = w["cost"] + w["real_estate"] + w["safety"]
+    assert talent >= 2 * cheap and cheap <= 20, f"office preset: talent {talent}, cheapness {cheap}"
+
 def test_identical_across_processes():
     """Identical inputs must give identical outputs in every process, not just within one. Python
     randomises set order per process (PYTHONHASHSEED); summing a dimension's metrics in set order made

@@ -19,17 +19,17 @@
   },
   "top5_share": {
     "spread": {
-      "Northeast": 2.5,
+      "Northeast": 5.0,
       "Northwest": 5.0,
       "Mid-Atlantic": 2.5,
       "Southeast": 17.5,
-      "Rest of US": 72.5
+      "Rest of US": 70.0
     },
     "scores_only": {
       "Northeast": 0.0,
       "Northwest": 5.0,
-      "Mid-Atlantic": 2.5,
-      "Southeast": 37.5,
+      "Mid-Atlantic": 5.0,
+      "Southeast": 35.0,
       "Rest of US": 55.0
     }
   },
@@ -93,11 +93,11 @@
       "Harris County, TX"
     ],
     "office": [
-      "Maricopa County, AZ",
       "Seminole County, FL",
       "King County, WA",
-      "Wood County, OH",
-      "Platte County, MO"
+      "Arapahoe County, CO",
+      "Johnson County, KS",
+      "Suffolk County, MA"
     ],
     "r_and_d": [
       "Arapahoe County, CO",
