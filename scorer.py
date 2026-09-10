@@ -5,8 +5,9 @@ scorer.py — FastLocations deterministic site-matching scorer  (ProjectCriteria
 Dual-spine: ranks US counties (FIPS) and Canadian Census Divisions (CDUID), then
 rolls each up to the serving EDO customer from organizations.json.
 
-Twelve weighted dimensions (percentile-ranked within the candidate set, then weighted):
-  workforce      US: unemployment, staffability, prime-age share, skill supply ; CA: unemployment + staffability
+Eleven weighted dimensions (percentile-ranked within the candidate set, then weighted):
+  workforce      US: unemployment, staffability, prime-age share, skill supply, blended with the county
+                 DAI score at a fixed share (DAI_WORKFORCE_SHARE) ; CA: unemployment + staffability
   demographics   US: education (2x), growth, participation ; CA: bachelor share, growth, participation
   infrastructure US: ASCE state grade ; CA: CMA = high, mid elsewhere
   logistics      US: airports + ports + commute ; CA: airport/port/grid counts
@@ -17,7 +18,6 @@ Twelve weighted dimensions (percentile-ranked within the candidate set, then wei
   market_size    regional catchment population (US and CA)
   livability     US: County Health Rankings outcomes ; CA: Numbeo most-livable cities (ranked CDs only)
   innovation     US: technical employment, R&D presence, patenting, business dynamism ; CA: provincial index
-  dai            US only: county DAI score (county_dai.json, built from DAI.csv); CA has no equivalent -> null
 
 Rules: required/excluded = filters, preferred = bonus; coverage gaps -> null
 (weights renormalise over non-null dims, never penalise). Every metric is percentile-ranked
@@ -247,13 +247,13 @@ except FileNotFoundError: INNOV={}
 try: LANDC=_load("county_land_cost.json")          # fips -> land $/acre (USDA NASS 2022) via build_land_cost.py
 except FileNotFoundError: LANDC={}
 try:                                               # DAI score (0-100, higher = better) via build_county_dai.py from DAI.csv
-    _DAI=_load("county_dai.json")                  # fips -> {dai, ref}; feeds the `dai` dimension
+    _DAI=_load("county_dai.json")                  # fips -> {dai, ref}; blended into workforce (m_dai)
     for _k,_v in FEAT.items():
         _d=_DAI.get(_k)
         if _d and _d.get("dai") is not None: _v["dai"]=_d["dai"]
 except FileNotFoundError:
-    # The same numbers were shipped inside county_features.json as `critical_thinking` before the
-    # DAI dimension existed. Fall back to them so a deploy without county_dai.json still scores DAI.
+    # The same numbers were shipped inside county_features.json as `critical_thinking` before
+    # county_dai.json existed. Fall back to them so a deploy without it still scores DAI.
     for _v in FEAT.values():
         if _v.get("critical_thinking") is not None: _v["dai"]=_v["critical_thinking"]
 try:                                               # fips -> StatsAmerica Innovation Intelligence subset via build_innovation_index.py
@@ -294,7 +294,7 @@ for _nm in ("Toronto","Montréal","Vancouver","Calgary","Edmonton","Ottawa","Win
 RTW_STATES={"AL","AZ","AR","FL","GA","ID","IN","IA","KS","KY","LA","MS","NE","NV","NC","ND",
             "OK","SC","SD","TN","TX","UT","VA","WV","WI","WY"}
 
-DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability","innovation","dai"]
+DIMS=["workforce","demographics","infrastructure","logistics","incentives","real_estate","cost","safety","market_size","livability","innovation"]
 # Rebalanced (was cost .20 / real_estate .15 / market_size .06 / logistics .08 / infrastructure .08).
 # The old default put 35% on cheapness and only 14% on market access, so an unweighted search ranked
 # largely by low incomes -- 8,000-person rural counties beat every real market, and expensive but
@@ -305,15 +305,17 @@ DIMS=["workforce","demographics","infrastructure","logistics","incentives","real
 # drops to .04 because it gave up knowledge_economy and rd_intensity; the remaining .04 comes off
 # real_estate, logistics, cost and market_size. Default is a deliberately modest .05 -- most projects
 # are not R&D, and the r_and_d use-type preset in intake.js raises it where it matters.
-# dai is the county DAI score promoted to a dimension of its own at a FIXED ~7% under every scenario
-# (the use-type presets in intake.js all carry dai:7 too). It used to be the `critical_thinking`
-# metric inside workforce at 2x, where its effective share of the final score drifted with the
-# workforce slider and the number of workforce metrics the query happened to populate (roughly 4-6%)
-# and was invisible to the user. The 7 points came off workforce (-2, which is where the metric
-# left), cost, real_estate, infrastructure, incentives and logistics (-1 each).
-DEFAULT_WEIGHTS={"workforce":0.16,"infrastructure":0.09,"incentives":0.09,"real_estate":0.10,
+# The county DAI score is part of workforce. It was briefly a twelfth dimension (`dai`, fixed at .07,
+# with its own slider); that slider is now folded into the workforce slider, so workforce carries the
+# old workforce .16 plus dai .07. Inside the dimension DAI holds a FIXED share (DAI_WORKFORCE_SHARE =
+# 7/23) rather than being one more metric in the average: as a metric its pull drifted with how many
+# other workforce metrics a query populated. The fixed share also means default weights score every
+# US county that has a DAI value as they did when DAI was its own dimension at .07 (to rounding).
+# Where there is no DAI (Canada, Alaska) workforce is its other metrics alone -- a gap, not a penalty.
+DEFAULT_WEIGHTS={"workforce":0.23,"infrastructure":0.09,"incentives":0.09,"real_estate":0.10,
                  "demographics":0.04,"logistics":0.08,"cost":0.13,"safety":0.05,"market_size":0.09,
-                 "livability":0.05,"innovation":0.05,"dai":0.07}
+                 "livability":0.05,"innovation":0.05}
+DAI_WORKFORCE_SHARE=7/23
 # Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
 # by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
@@ -742,8 +744,8 @@ def m_workforce(f,crit):
             "employee_availability":avail,
             "shift_fit":shift_fit,
             "prime_workage_share":(f["WORKAGE_CY"]/f["TOTPOP_CY"] if (f.get("WORKAGE_CY") is not None and f.get("TOTPOP_CY")) else None),
-            # critical_thinking (the DAI score) left this dimension: it is scored on its own as `dai`
-            # (m_dai) so it cannot be double-counted here.
+            # The DAI score is NOT a metric here: run() blends it into this dimension at a fixed
+            # share (DAI_WORKFORCE_SHARE, via m_dai) so its pull does not drift with the metric count.
             # supply of the SELECTED skill profiles (attainment-band share). Null unless the intake
             # picks at least one profile, so blank searches score exactly as before.
             "skill_supply":skill_supply(f,profiles)}
@@ -819,9 +821,9 @@ def m_livability(f,crit):
             "life_expectancy":le}
 
 def m_dai(f,crit):
-    """County DAI score (0-100, higher = better), US only. Single-metric dimension so its share of the
-    final score is exactly its weight. Canada has no DAI, so it returns None there and the other
-    weights renormalise over the dimensions that do have data (a gap, never a penalty)."""
+    """County DAI score (0-100, higher = better), US only. Scored like a single-metric dimension, then
+    blended into workforce at DAI_WORKFORCE_SHARE by run(). Canada has no DAI, so it returns None there
+    and workforce is scored on its other metrics alone (a gap, never a penalty)."""
     if gsys(f)=="CA": return None
     v=f.get("dai")
     return {"dai_score":v} if v is not None else None
@@ -999,7 +1001,6 @@ def serving_edos(geoid,g):
 DIM_PHRASE={"workforce":"labor availability, the ability to staff the headcount, and workforce skills",
             "demographics":"educational attainment, growth, and labor-force participation",
             "innovation":"technical employment, R&D presence, patenting and knowledge spillovers, and business dynamism",
-            "dai":"its DAI score",
             "logistics":"airport, port, and commute access",
             "incentives":"the breadth of incentive programs",
             "infrastructure":"infrastructure quality",
@@ -1051,6 +1052,10 @@ def build_rationale(rank,r,pending):
 
 def run(criteria,top=10):
     w={**DEFAULT_WEIGHTS,**(criteria.get("weights") or {})}
+    # Scenarios saved while DAI had its own slider still carry a `dai` weight; it now lives in workforce.
+    if "dai" in w:
+        d=w.pop("dai")
+        if isinstance(d,(int,float)) and d>0 and isinstance(w.get("workforce"),(int,float)): w["workforce"]+=d
     # Guard: every slider can be dragged to 0. An all-zero vector made total weight 0, so the weighted
     # average was None -> final_score null, "score of None out of 100" in the rationale, and results
     # fell back to FIPS order (unranked). Fall back to the defaults instead of emitting a broken page.
@@ -1070,7 +1075,10 @@ def run(criteria,top=10):
             ("workforce",m_workforce),("demographics",m_demographics),("logistics",m_logistics),
             ("incentives",m_incentives),("infrastructure",m_infrastructure),("real_estate",m_real_estate),
             ("cost",m_cost),("safety",m_safety),("market_size",m_market_size),("livability",m_livability),
-            ("innovation",m_innovation),("dai",m_dai))}
+            ("innovation",m_innovation))}
+    dai=score_dimension(refset,m_dai,criteria)
+    sub["workforce"]={ff:_wavg([(v,1-DAI_WORKFORCE_SHARE),(dai[ff],DAI_WORKFORCE_SHARE)])
+                      for ff,v in sub["workforce"].items()}
     cands=list(refset)
     trace={"candidates_start":len(cands)}
     if weights_fallback:
@@ -1255,7 +1263,7 @@ def run(criteria,top=10):
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
                     "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
     return {"schema_version":"1.0","trace":trace,"weights_used":w,
-            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation","dai"],
+            "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation"],
             "dimensions_pending_data":[],
             "results":top_results,"other_notable":other_notable}
 

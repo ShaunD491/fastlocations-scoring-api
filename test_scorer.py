@@ -408,15 +408,16 @@ def test_region_diversity_cap():
     assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
     assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
 
-def test_dai_is_its_own_dimension():
-    # The county DAI score was the `critical_thinking` metric inside workforce (2x). It is now a
-    # dimension of its own at ~7%, and must not still be counted inside workforce.
-    assert "dai" in scorer.DIMS
-    assert abs(scorer.DEFAULT_WEIGHTS.get("dai", 0) - 0.07) < 1e-9, "dai default weight must be 7%"
+def test_dai_is_blended_into_workforce():
+    # The county DAI score had its own dimension and slider at 7%. It is now part of workforce at a
+    # fixed share of the dimension, not a dimension of its own and not one more workforce metric.
+    assert "dai" not in scorer.DIMS
+    assert "dai" not in scorer.DEFAULT_WEIGHTS
+    assert abs(scorer.DEFAULT_WEIGHTS["workforce"] - 0.23) < 1e-9, "workforce must carry the old 16 + 7"
     assert abs(sum(scorer.DEFAULT_WEIGHTS.values()) - 1.0) < 1e-9, "default weights must sum to 1"
+    assert abs(scorer.DAI_WORKFORCE_SHARE - 7 / 23) < 1e-9
     wf = scorer.m_workforce(scorer.FEAT["11001"], {})
-    assert "critical_thinking" not in wf, "critical_thinking still double-counted inside workforce"
-    assert "critical_thinking" not in scorer.METRIC_WEIGHTS
+    assert "critical_thinking" not in wf and "dai_score" not in wf, "DAI must not also be a workforce metric"
     # direction: DC (90.3) must out-rank Clay County KY (9.2) on the raw metric
     hi = scorer.m_dai(scorer.FEAT["11001"], {})["dai_score"]
     lo = scorer.m_dai(scorer.FEAT["21051"], {})["dai_score"]
@@ -425,23 +426,36 @@ def test_dai_is_its_own_dimension():
     have = sum(1 for f in scorer.FEAT.values() if scorer.m_dai(f, {}) is not None)
     assert have >= 3100, f"only {have} US counties carry a DAI score"
     out = scorer.run(US, top=3)
-    assert "dai" in out["dimensions_live"]
-    assert out["results"][0]["sub_scores"].get("dai") is not None
-    # Canada has no DAI: null sub-score, never a penalty (the other weights renormalise)
+    assert "dai" not in out["dimensions_live"] and "dai" not in out["weights_used"]
+    assert all("dai" not in r["sub_scores"] for r in out["results"])
+    # Canada has no DAI: workforce is still scored on its other metrics
     ca = scorer.run(CA, top=3)["results"]
-    assert all(r["sub_scores"].get("dai") is None for r in ca)
-    assert all(r["final_score"] is not None for r in ca)
+    assert all(r["sub_scores"]["workforce"] is not None and r["final_score"] is not None for r in ca)
 
-def test_dai_weight_actually_moves_ranking():
-    base = {w: 0.1 for w in scorer.DEFAULT_WEIGHTS}
-    heavy = dict(base, dai=0.9)
-    a = [r["county"] for r in scorer.run(dict(US, weights=base), top=25)["results"]]
-    b = [r["county"] for r in scorer.run(dict(US, weights=heavy), top=25)["results"]]
-    assert a != b, "dai weight has no effect on the ranking"
+def test_dai_moves_the_workforce_score():
+    # Same county set scored with and without the blend: DAI must actually move workforce.
+    blended = {r["geoid"]: r["sub_scores"]["workforce"] for r in scorer.run(US, top=5000)["results"]}
+    saved = scorer.DAI_WORKFORCE_SHARE
+    scorer.DAI_WORKFORCE_SHARE = 0.0
+    try:
+        plain = {r["geoid"]: r["sub_scores"]["workforce"] for r in scorer.run(US, top=5000)["results"]}
+    finally:
+        scorer.DAI_WORKFORCE_SHARE = saved
+    moved = sum(1 for g in blended if g in plain and blended[g] != plain[g])
+    assert moved > len(blended) // 2, f"DAI moved workforce for only {moved} of {len(blended)} counties"
 
-def test_dai_is_seven_percent_under_every_scenario():
-    # "Approx 7% under all scenarios": every use-type preset in intake.js and the form's default
-    # sliders must carry dai at 7 out of 100. Parsed from the JS/HTML so the UI cannot drift silently.
+def test_legacy_dai_weight_folds_into_workforce():
+    # A scenario saved while DAI had its own slider must score as if that weight were on workforce.
+    old = dict(scorer.DEFAULT_WEIGHTS, workforce=0.16, dai=0.07)
+    a = scorer.run(dict(US, weights=old), top=10)
+    b = scorer.run(US, top=10)
+    assert "dai" not in a["weights_used"]
+    assert abs(a["weights_used"]["workforce"] - 0.23) < 1e-9
+    assert [r["geoid"] for r in a["results"]] == [r["geoid"] for r in b["results"]]
+
+def test_presets_and_form_match_the_scorer():
+    # Every use-type preset in intake.js and the form's default sliders must cover exactly
+    # scorer.DIMS (no dai slider) and sum to 100. Parsed from the JS/HTML so the UI cannot drift.
     import os, re
     here = os.path.dirname(os.path.abspath(__file__))
     js = open(os.path.join(here, "intake.js"), encoding="utf-8").read()
@@ -450,12 +464,11 @@ def test_dai_is_seven_percent_under_every_scenario():
     assert len(presets) >= 7, "use-type presets not found in intake.js"
     for name, body in presets:
         w = {k: int(v) for k, v in re.findall(r"(\w+):\s*(\d+)", body)}
-        assert w.get("dai") == 7, f"preset {name} has dai={w.get('dai')}, expected 7"
         assert sum(w.values()) == 100, f"preset {name} sums to {sum(w.values())}, expected 100"
         assert set(w) == set(scorer.DIMS), f"preset {name} keys differ from scorer.DIMS: {set(w) ^ set(scorer.DIMS)}"
     html = open(os.path.join(here, "site_selection_intake.html"), encoding="utf-8").read()
+    assert not re.search(r"\bDAI\b", html, re.I), "the form still mentions DAI"
     sliders = dict(re.findall(r'data-w="(\w+)"[^>]*value="(\d+)"', html))
-    assert sliders.get("dai") == "7", f"form default for dai is {sliders.get('dai')}, expected 7"
     assert set(sliders) == set(scorer.DIMS), f"form sliders differ from scorer.DIMS: {set(sliders) ^ set(scorer.DIMS)}"
     assert sum(int(v) for v in sliders.values()) == 100, "form default sliders must sum to 100"
     for d, v in sliders.items():

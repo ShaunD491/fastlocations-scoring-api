@@ -714,7 +714,7 @@
     <p class="section-sub">Set the relative importance of each factor. These weights drive how candidates are ranked.</p>
     <div class="weights-note">Drag to set priority. The values normalize to 100% automatically - you don't have to make them add up yourself.</div>
     <div id="weights">
-      <div class="weight-row"><span class="wlabel">Workforce<span class="wdesc">Labor availability, skills &amp; hiring capacity</span></span><input type="range" data-w="workforce" min="0" max="100" value="16" /><span class="wval">16%</span></div>
+      <div class="weight-row"><span class="wlabel">Workforce<span class="wdesc">Labor availability, skills &amp; hiring capacity</span></span><input type="range" data-w="workforce" min="0" max="100" value="23" /><span class="wval">23%</span></div>
       <div class="weight-row"><span class="wlabel">Cost<span class="wdesc">Wages &amp; cost of living, ranked against markets of similar size</span></span><input type="range" data-w="cost" min="0" max="100" value="13" /><span class="wval">13%</span></div>
       <div class="weight-row"><span class="wlabel">Real estate<span class="wdesc">Land purchase price &amp; property-tax burden</span></span><input type="range" data-w="real_estate" title="Land purchase price (USDA farm real estate per acre, a raw-land proxy) weighted 2x property-tax rate" min="0" max="100" value="10" /><span class="wval">10%</span></div>
       <div class="weight-row"><span class="wlabel">Incentives<span class="wdesc">Program breadth &amp; match to your priorities</span></span><input type="range" data-w="incentives" min="0" max="100" value="9" /><span class="wval">9%</span></div>
@@ -725,7 +725,6 @@
       <div class="weight-row"><span class="wlabel">Safety<span class="wdesc">Public safety, from local crime rates</span></span><input type="range" data-w="safety" min="0" max="100" value="5" /><span class="wval">5%</span></div>
       <div class="weight-row"><span class="wlabel">Demographics<span class="wdesc">Education, growth &amp; labor-force participation</span></span><input type="range" data-w="demographics" min="0" max="100" value="4" /><span class="wval">4%</span></div>
       <div class="weight-row"><span class="wlabel">Innovation<span class="wdesc">Technical employment, R&amp;D presence, patenting &amp; venture activity</span></span><input type="range" data-w="innovation" min="0" max="100" value="5" /><span class="wval">5%</span></div>
-      <div class="weight-row"><span class="wlabel">DAI<span class="wdesc">County DAI score (US counties; higher is stronger)</span></span><input type="range" data-w="dai" title="Held at about 7% of the score under every use-type preset. US counties only; Canadian results are scored on the remaining factors." min="0" max="100" value="7" /><span class="wval">7%</span></div>
             <div class="weight-total"><span class="wlabel">Normalized total</span><b id="wtotal">100%</b></div>
     </div>
   </section>

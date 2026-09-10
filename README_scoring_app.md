@@ -29,18 +29,20 @@ Then open **http://127.0.0.1:8000** and fill out the form.
   `tool/refresh_registry.py` (for example `county_dai.json`, built from `DAI.csv` by `build_county_dai.py`).
 
 ## Dimensions
-Twelve, all live: workforce, demographics, infrastructure, logistics, incentives, real_estate, cost,
-safety, market_size, livability, innovation, dai. Defaults are `scorer.DEFAULT_WEIGHTS`; the use-type
+Eleven, all live: workforce, demographics, infrastructure, logistics, incentives, real_estate, cost,
+safety, market_size, livability, innovation. Defaults are `scorer.DEFAULT_WEIGHTS`; the use-type
 presets in `intake.js` override them per project type.
 
 `cost` is percentile-ranked within market-size tiers (regional catchment under 100k, to 500k, to 2M, and
 over 2M; see `COST_TIERS` in `scorer.py`), so a metro's wages are compared with other metros rather than
 with rural counties. Every other dimension ranks nationally. Canada is a single tier.
 
-`dai` is the county DAI score (0-100, higher is better; US counties only). It is held at about 7% of
-the final score under every scenario: the default weights and every use-type preset carry it at 7, and
-`test_scorer.py` enforces that. Canada has no DAI, so Canadian results are scored on the other eleven
-factors with the weights renormalised (a data gap is never a penalty). To load a new DAI table, run
+The county DAI score (0-100, higher is better; US counties only) is part of `workforce`, not a factor of
+its own, and the form does not name it. It holds a fixed share of the workforce dimension
+(`DAI_WORKFORCE_SHARE` = 7/23 in `scorer.py`), so it moves with the Workforce slider. At the default
+weights that is the same 7% of the final score it carried when it had its own slider. Canada and Alaska
+have no DAI, so workforce there is scored on its other metrics (a data gap is never a penalty). Scenarios
+saved with a separate `dai` weight still open: the form and the scorer add it to workforce. To load a new DAI table, run
 `python build_county_dai.py DAI.csv` (or drop the CSV in `tool/staging/county_dai/` and use the refresh
 tool) and redeploy.
 
