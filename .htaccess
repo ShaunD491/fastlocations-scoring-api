@@ -25,7 +25,30 @@
     </IfModule>
 </FilesMatch>
 
-# ── 2. Block dotfiles (.gitignore and friends) ───────────────────────────
+# ── 2. Block HTML that is not the one public page ────────────────────────
+# This folder serves exactly one public page, so everything else ending .html
+# is internal: the runbooks under tool/ (an .htaccess applies to subdirectories
+# too), the artifact sources they are built from, and fl_intake_embed.html,
+# which is a snippet to paste into a page rather than a page itself.
+#
+# Apache DOES have a handler for .html, so unlike the .py files above these
+# render as real pages rather than source -- which is worse, not better: an
+# internal runbook that reads like a finished document is the kind of thing
+# that gets found and followed.
+#
+# Named exception rather than a whitelist of internal files: a new runbook
+# added later is then blocked by default instead of on remembering to list it.
+<FilesMatch "^(?!site_selection_intake\.html$).+\.html?$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ── 3. Block dotfiles (.gitignore and friends) ───────────────────────────
 # .well-known is excluded on purpose — denying it breaks ACME/Let's Encrypt
 # certificate renewal. That matters if this file is ever copied to the site
 # root; harmless but correct to keep here.
@@ -39,9 +62,12 @@
     </IfModule>
 </FilesMatch>
 
-# ── 3. Never let a blocked file be cached as if it were public ───────────
+# ── 4. Never let a blocked file be cached as if it were public ───────────
 <IfModule mod_headers.c>
     <FilesMatch "\.(py|pyc|pyo|pyw|ipynb|md|bak|log|sh|bat|ps1|ya?ml|toml|ini|sql)$">
+        Header set Cache-Control "no-store"
+    </FilesMatch>
+    <FilesMatch "^(?!site_selection_intake\.html$).+\.html?$">
         Header set Cache-Control "no-store"
     </FilesMatch>
 </IfModule>
