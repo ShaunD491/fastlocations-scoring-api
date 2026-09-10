@@ -53,6 +53,8 @@ FL Project Search/
 !regional_edo_members_TODO.json
 # hand-maintained DAI county table: the only source for county_dai.json, nowhere to re-download it from
 !DAI.csv
+# dated snapshots from check_regional_balance.py --save: kept so balance can be compared over time
+!reports/regional_balance/*.json
 
 # --- Data Refresh Tool (tool/) ---------------------------------------------
 # refresh_config.json holds the Brave and Census API keys and is already covered

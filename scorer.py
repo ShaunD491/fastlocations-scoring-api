@@ -348,6 +348,23 @@ PRIORITY_DECAY=0.6      # incentive priority ranking: weight of each pick = 0.6^
 PRIORITY_DEPTH=10
 MAX_PER_REGION=2        # max results one state/province may take in the Top-N (0 = uncapped). Counters
                         # the fact that county granularity varies ~5x by state; see run().
+# REGIONAL SPREAD: the state cap alone still let the Top 5 cluster in one part of the continent -- across
+# the default and every use-type preset, the Northeast (17% of US population) took 0% of Top-5 slots and
+# the Southeast (19%) took 30% (measured 2026-09-10), driven by where customer EDOs are and how finely
+# states are subdivided.
+# So the Top-N first takes at most MAX_PER_DIVISION result per division (US Census divisions; Statistics
+# Canada's standard regions), then backfills by rank. Skipped when the user names preferred regions,
+# since they asked for those areas. check_regional_balance.py measures the effect.
+MAX_PER_DIVISION=1      # 0 = off
+DIVISION={}
+for _dv,_sts in (("New England","ME NH VT MA RI CT"),("Middle Atlantic","NY NJ PA"),
+                 ("East North Central","OH IN IL MI WI"),("West North Central","MN IA MO ND SD NE KS"),
+                 ("South Atlantic","DE MD DC VA WV NC SC GA FL"),("East South Central","KY TN AL MS"),
+                 ("West South Central","AR LA OK TX"),("Mountain","MT ID WY CO NM AZ UT NV"),
+                 ("Pacific","WA OR CA AK HI"),
+                 ("Atlantic Canada","NL PE NS NB"),("Quebec","QC"),("Ontario","ON"),
+                 ("Prairies","MB SK AB"),("British Columbia","BC"),("Northern Canada","YT NT NU")):
+    for _s in _sts.split(): DIVISION[_s]=_dv
 # COST is percentile-ranked within MARKET-SIZE TIERS (US only), not against all 3,144 counties.
 # Ranked nationally, every large metro sat in the bottom decile on cost simply because wages rise
 # with market size: Seattle 1, Santa Clara 0, Phoenix 10, San Diego 5, Las Vegas 25. Cost plus real
@@ -1249,15 +1266,23 @@ def run(criteria,top=10):
     # states get several times the chances of appearing. Cap how many slots one state/province can
     # take (same idea as the distinct-serving-EDO rule above). Scores are untouched; this only decides
     # which of the already-ranked results surface. Overflow is kept and used as backfill if the cap
-    # would otherwise leave the list short.
+    # would otherwise leave the list short. The regional spread (MAX_PER_DIVISION) works the same way.
     ordered=primary+extra
-    if MAX_PER_REGION and len(ordered)>top:
-        per=collections.Counter(); capped=[]; overflow=[]
-        for r in ordered:
-            st=r["state"]
-            if per[st]<MAX_PER_REGION: capped.append(r); per[st]+=1
-            else: overflow.append(r)
-        ordered=capped+overflow
+    spread=bool(MAX_PER_DIVISION) and not geo.get("preferred_regions")
+    if (MAX_PER_REGION or spread) and len(ordered)>top:
+        pos={r["geoid"]:i for i,r in enumerate(ordered)}
+        per=collections.Counter(); per_div=collections.Counter(); picked=[]; taken=set()
+        # Pass 1 honours both caps, pass 2 backfills under the state cap only, pass 3 takes what is left.
+        for use_div,use_state in ((True,True),(False,True),(False,False)):
+            for r in ordered:
+                if len(picked)>=top: break
+                st=r["state"]; dv=DIVISION.get(st,st)
+                if r["geoid"] in taken: continue
+                if use_state and MAX_PER_REGION and per[st]>=MAX_PER_REGION: continue
+                if use_div and spread and per_div[dv]>=MAX_PER_DIVISION: continue
+                picked.append(r); taken.add(r["geoid"]); per[st]+=1; per_div[dv]+=1
+        ordered=sorted(picked,key=lambda r:pos[r["geoid"]])   # backfill slots back into rank order
+        if spread: trace["division_spread"]=MAX_PER_DIVISION
     top_results=ordered[:top]
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],

@@ -1,0 +1,124 @@
+{
+  "date": "2026-09-10",
+  "scenarios": [
+    "default",
+    "manufacturing",
+    "warehouse_distribution",
+    "data_center",
+    "office",
+    "r_and_d",
+    "flex",
+    "mixed"
+  ],
+  "population_share": {
+    "Northeast": 17.0,
+    "Northwest": 4.5,
+    "Mid-Atlantic": 5.5,
+    "Southeast": 19.4,
+    "Rest of US": 53.6
+  },
+  "top5_share": {
+    "spread": {
+      "Northeast": 7.5,
+      "Northwest": 5.0,
+      "Mid-Atlantic": 10.0,
+      "Southeast": 10.0,
+      "Rest of US": 67.5
+    },
+    "scores_only": {
+      "Northeast": 0.0,
+      "Northwest": 2.5,
+      "Mid-Atlantic": 15.0,
+      "Southeast": 30.0,
+      "Rest of US": 52.5
+    }
+  },
+  "edo_coverage": {
+    "Northeast": 47.4,
+    "Northwest": 35.3,
+    "Mid-Atlantic": 65.1,
+    "Southeast": 84.3,
+    "Rest of US": 67.6
+  },
+  "low_coverage_states": {
+    "AK": 0,
+    "AR": 13,
+    "CA": 27,
+    "CO": 34,
+    "DC": 0,
+    "HI": 0,
+    "MD": 7,
+    "MO": 29,
+    "MS": 15,
+    "MT": 23,
+    "NE": 5,
+    "NH": 30,
+    "NJ": 12,
+    "OK": 24,
+    "OR": 20,
+    "PA": 12,
+    "SD": 4,
+    "TN": 38,
+    "VT": 0,
+    "WA": 29,
+    "WI": 47
+  },
+  "top5_lists": {
+    "default": [
+      "Maricopa County, AZ",
+      "Broward County, FL",
+      "Monroe County, IN",
+      "Riverside County, CA",
+      "Suffolk County, MA"
+    ],
+    "manufacturing": [
+      "Maricopa County, AZ",
+      "LaPorte County, IN",
+      "Broward County, FL",
+      "Riverside County, CA",
+      "Linn County, IA"
+    ],
+    "warehouse_distribution": [
+      "Maricopa County, AZ",
+      "Broward County, FL",
+      "Riverside County, CA",
+      "Monroe County, IN",
+      "Linn County, IA"
+    ],
+    "data_center": [
+      "Maricopa County, AZ",
+      "Broward County, FL",
+      "LaPorte County, IN",
+      "Riverside County, CA",
+      "Waller County, TX"
+    ],
+    "office": [
+      "Maricopa County, AZ",
+      "Alexandria city, VA",
+      "King County, WA",
+      "Northampton County, PA",
+      "Wood County, OH"
+    ],
+    "r_and_d": [
+      "Arapahoe County, CO",
+      "Alexandria city, VA",
+      "King County, WA",
+      "Suffolk County, MA",
+      "Monroe County, IN"
+    ],
+    "flex": [
+      "Maricopa County, AZ",
+      "LaPorte County, IN",
+      "Pittsylvania County, VA",
+      "Riverside County, CA",
+      "Linn County, IA"
+    ],
+    "mixed": [
+      "Maricopa County, AZ",
+      "LaPorte County, IN",
+      "Pittsylvania County, VA",
+      "Riverside County, CA",
+      "Walker County, TX"
+    ]
+  }
+}

@@ -304,7 +304,10 @@
     const dimOrder = allDims.filter(function (d) { return data.results.some(function (r) { return r.sub_scores[d] != null; }); });
     let html = '<h3>Your Top ' + data.results.length + ' Matches</h3>' +
       '<p class="cap">Ranked by <b>FastLocations Score</b>. ' + data.trace.candidates_after_filters + ' of ' + data.trace.candidates_start +
-      ' candidates passed the filters. Scored on the factors with data for the selected region.</p>' +
+      ' candidates passed the filters. Scored on the factors with data for the selected region.' +
+      // The scorer takes the best match per region first so the list is not clustered in one area.
+      (data.trace.division_spread ? ' The list takes the strongest match from each region first, so it covers more of the map.' : '') +
+      '</p>' +
       // Warn when a proximity place couldn't be geocoded -- otherwise the user sees an unfiltered
       // result set and believes the distance constraint was applied.
       ((data.trace.market_proximity_unresolved || []).length

@@ -408,6 +408,30 @@ def test_region_diversity_cap():
     assert worst <= scorer.MAX_PER_REGION, f"one region took {worst} slots"
     assert len(set(r["state"] for r in R)) >= 8, "too few distinct regions represented"
 
+def test_top5_spreads_across_divisions():
+    """The Top 5 takes one result per Census division first, so it cannot cluster in one region."""
+    out = scorer.run(US, top=5)
+    divs = [scorer.DIVISION[r["state"]] for r in out["results"]]
+    assert len(divs) == 5 and len(set(divs)) == 5, f"Top 5 repeats a division: {divs}"
+    assert out["trace"].get("division_spread") == scorer.MAX_PER_DIVISION
+    assert all(st in scorer.DIVISION for st in {d["ST_ABBREV"] for d in scorer.ALLFEAT.values()}), \
+        "a state or province has no division"
+
+def test_spread_skipped_for_preferred_regions():
+    # The user asked for these areas: spreading the list away from them would undo the preference.
+    out = scorer.run(dict(US, geography={"countries": ["US"], "preferred_regions": ["GA", "FL"]}), top=5)
+    assert "division_spread" not in out["trace"]
+    assert sum(1 for r in out["results"] if r["state"] in ("GA", "FL")) >= 3
+
+def test_spread_backfills_within_one_division():
+    # GA, FL and NC are all South Atlantic: the spread must backfill rather than return one result,
+    # and still honour the per-state cap.
+    out = scorer.run(dict(US, geography={"countries": ["US"], "required_regions": ["GA", "FL", "NC"]}), top=5)
+    R = out["results"]
+    assert len(R) == 5
+    import collections
+    assert max(collections.Counter(r["state"] for r in R).values()) <= scorer.MAX_PER_REGION
+
 def test_dai_is_blended_into_workforce():
     # The county DAI score had its own dimension and slider at 7%. It is now part of workforce at a
     # fixed share of the dimension, not a dimension of its own and not one more workforce metric.

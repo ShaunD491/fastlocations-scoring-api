@@ -46,6 +46,20 @@ saved with a separate `dai` weight still open: the form and the scorer add it to
 `python build_county_dai.py DAI.csv` (or drop the CSV in `tool/staging/county_dai/` and use the refresh
 tool) and redeploy.
 
+## Which results surface
+Only counties served by a customer EDO can appear in Top Matches; the best of the rest are listed as
+Other Notable Matches. The Top-N then takes at most two results per state or province
+(`MAX_PER_REGION`) and, first, one per region (`MAX_PER_DIVISION`: US Census divisions and Statistics
+Canada's standard regions), backfilling by rank when a search is confined to fewer regions. Scores are
+not changed by either rule. The regional rule is skipped when the user names preferred regions, and the
+response carries `trace.division_spread` when it applied (the form then says so under the results).
+
+Because customer-EDO coverage drives which regions can appear, re-check the balance whenever the EDO
+list changes: `python check_regional_balance.py` reports each region's share of the Top 5 (with and
+without the regional rule) against its share of population, plus EDO coverage by region and the states
+it barely reaches. `--save` keeps a dated snapshot in `reports/regional_balance/`; `--compare` shows the
+change since the latest one. The 2026-09-10 snapshot is the pre-launch baseline.
+
 ## API
 `POST /match?top=5` with a ProjectCriteria JSON body → ranked results, each with
 per-dimension sub-scores, weighted total, and `serving_edos`.
