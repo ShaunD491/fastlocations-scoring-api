@@ -1,0 +1,736 @@
+<title>Add a New Client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --ground:#f5f7fa;
+    --panel:#ffffff;
+    --panel-2:#eef2f7;
+    --ink:#16202e;
+    --ink-2:#33445a;
+    --muted:#5f6d7e;
+    --rule:#dfe6ee;
+    --rule-2:#c8d3e0;
+    --accent:#0b5fa5;
+    --accent-soft:#e6eff8;
+    --go:#1b7a4d;
+    --go-soft:#e2f2ea;
+    --warn:#a2600b;
+    --warn-soft:#fbeedb;
+    --stop:#b0382b;
+    --stop-soft:#fbe6e3;
+    --shadow:0 1px 2px rgba(18,32,52,.06),0 4px 14px rgba(18,32,52,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#10161e; --panel:#18202a; --panel-2:#1f2935;
+      --ink:#e6ecf4; --ink-2:#c2cedd; --muted:#93a2b5;
+      --rule:#27313e; --rule-2:#354252;
+      --accent:#74b6f2; --accent-soft:#15263a;
+      --go:#5cc38c; --go-soft:#142a20;
+      --warn:#dfa552; --warn-soft:#2c2314;
+      --stop:#ef8579; --stop-soft:#2f1a18;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10161e; --panel:#18202a; --panel-2:#1f2935;
+    --ink:#e6ecf4; --ink-2:#c2cedd; --muted:#93a2b5;
+    --rule:#27313e; --rule-2:#354252;
+    --accent:#74b6f2; --accent-soft:#15263a;
+    --go:#5cc38c; --go-soft:#142a20;
+    --warn:#dfa552; --warn-soft:#2c2314;
+    --stop:#ef8579; --stop-soft:#2f1a18;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font:16px/1.62 "IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{
+    max-width:1180px; margin:0 auto; padding:0 28px 96px;
+    display:grid; grid-template-columns:212px minmax(0,1fr);
+    gap:0 56px; align-items:start;
+  }
+
+  .mast{grid-column:1/-1;padding:52px 0 30px;border-bottom:2px solid var(--ink)}
+  .eyebrow{
+    font:500 12px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 16px;
+  }
+  h1{
+    font:700 clamp(34px,5.2vw,52px)/1.06 "Zilla Slab",Georgia,serif;
+    margin:0 0 14px;letter-spacing:-.015em;text-wrap:balance;
+  }
+  .standfirst{font-size:18px;color:var(--muted);max-width:60ch;margin:0}
+  .facts{
+    display:flex;flex-wrap:wrap;gap:0 34px;margin-top:28px;
+    padding-top:20px;border-top:1px solid var(--rule);
+  }
+  .fact{display:flex;flex-direction:column;gap:3px}
+  .fact b{
+    font:600 21px/1 "IBM Plex Mono",ui-monospace,monospace;
+    font-variant-numeric:tabular-nums;color:var(--ink);
+  }
+  .fact span{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+  nav.rail{position:sticky;top:24px;padding-top:44px;font-size:13.5px}
+  nav.rail p{
+    font:500 11px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;
+  }
+  nav.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  nav.rail a{
+    display:flex;gap:9px;padding:5px 8px;margin-left:-8px;border-radius:5px;
+    color:var(--muted);text-decoration:none;line-height:1.35;
+  }
+  nav.rail a:hover{background:var(--panel-2);color:var(--ink)}
+  nav.rail a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  nav.rail em{
+    font:500 11.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;
+    font-style:normal;color:var(--rule-2);
+  }
+
+  main{padding-top:44px;min-width:0;max-width:70ch}
+  section{margin-bottom:52px;scroll-margin-top:24px}
+  h2{font:600 27px/1.2 "Zilla Slab",Georgia,serif;margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+  .sec-note{color:var(--muted);font-size:15px;margin:0 0 22px}
+  h3{font:600 17px/1.35 "IBM Plex Sans",sans-serif;margin:30px 0 8px}
+  p{margin:0 0 15px}
+  strong{font-weight:600}
+  a{color:var(--accent)}
+
+  code{
+    font:500 13.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;
+    background:var(--panel-2);border:1px solid var(--rule);border-radius:4px;
+    padding:1px 5px;word-break:break-word;
+  }
+  pre{
+    background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--accent);
+    border-radius:6px;padding:14px 16px;overflow-x:auto;margin:0 0 16px;box-shadow:var(--shadow);
+  }
+  pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.65}
+
+  ul{margin:0 0 15px;padding-left:20px}
+  ul li{margin-bottom:7px}
+  ul li::marker{color:var(--rule-2)}
+
+  ol.steps{list-style:none;counter-reset:step;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:0}
+  ol.steps > li{counter-increment:step;position:relative;padding:0 0 22px 46px;border-left:1px solid var(--rule);margin-left:13px}
+  ol.steps > li:last-child{border-left-color:transparent;padding-bottom:0}
+  ol.steps > li::before{
+    content:counter(step);position:absolute;left:-13px;top:-2px;width:26px;height:26px;
+    border-radius:50%;background:var(--accent);color:#fff;
+    font:600 13px/26px "IBM Plex Mono",ui-monospace,monospace;text-align:center;
+  }
+  ol.steps h4{font:600 16px/1.4 "IBM Plex Sans",sans-serif;margin:1px 0 6px}
+  ol.steps p{margin-bottom:9px}
+  ol.steps p:last-child{margin-bottom:0}
+
+  .tw{overflow-x:auto;margin:0 0 18px;border:1px solid var(--rule);border-radius:7px;background:var(--panel);box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--rule);vertical-align:top}
+  thead th{
+    font:500 11px/1.3 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    background:var(--panel-2);white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.mono,th.mono{font:400 13px/1.5 "IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .note{
+    border:1px solid var(--rule);border-left:3px solid var(--accent);background:var(--panel);
+    border-radius:6px;padding:15px 17px;margin:0 0 18px;font-size:15px;box-shadow:var(--shadow);
+  }
+  .note.warn{border-left-color:var(--warn)}
+  .note.stop{border-left-color:var(--stop)}
+  .note .lbl{
+    display:block;font:600 11px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;
+  }
+  .note.warn .lbl{color:var(--warn)}
+  .note.stop .lbl{color:var(--stop)}
+  .note p:last-child{margin-bottom:0}
+
+  .chip{display:inline-block;padding:2px 9px;border-radius:99px;font:600 11.5px/1.7 "IBM Plex Sans",sans-serif;white-space:nowrap}
+  .chip.go{background:var(--go-soft);color:var(--go)}
+  .chip.warn{background:var(--warn-soft);color:var(--warn)}
+  .chip.stop{background:var(--stop-soft);color:var(--stop)}
+  .chip.acc{background:var(--accent-soft);color:var(--accent)}
+
+  .btn{
+    display:inline-block;padding:1px 9px;border-radius:5px;background:var(--accent-soft);
+    color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);
+    font:600 13.5px/1.6 "IBM Plex Sans",sans-serif;white-space:nowrap;
+  }
+  .kicker{
+    font:500 11.5px/1 "IBM Plex Mono",ui-monospace,monospace;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 9px;
+  }
+  hr.div{border:0;border-top:1px solid var(--rule);margin:0 0 30px}
+
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;gap:0;padding:0 20px 72px}
+    nav.rail{display:none}
+    main{padding-top:34px;max-width:none}
+    .facts{gap:0 24px}
+  }
+
+  /* ---------- screenshots ---------- */
+  figure.shot{
+    margin:0 0 18px;border:1px solid var(--rule);border-radius:7px;
+    background:var(--panel);box-shadow:var(--shadow);overflow:hidden;
+  }
+  figure.shot img{display:block;width:100%;height:auto;border-bottom:1px solid var(--rule)}
+  figure.shot figcaption{
+    padding:9px 14px;color:var(--muted);
+    font:400 12.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;
+  }
+  ol.steps figure.shot{margin-top:11px}
+  /* screenshots are light-mode UI: keep them from glaring on a dark page */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) figure.shot img{filter:brightness(.88) contrast(1.04)}
+  }
+  :root[data-theme="dark"] figure.shot img{filter:brightness(.88) contrast(1.04)}
+</style>
+
+<div class="shell">
+
+  <header class="mast">
+    <p class="eyebrow">FastLocations &middot; Operations</p>
+    <h1>Add a New Client</h1>
+    <p class="standfirst">Everything it takes to put a new organisation live &mdash; its AI assistant, its pin on the map, its properties, its dashboard and its place in the matching engine &mdash; and how to tell each part worked.</p>
+    <div class="facts">
+      <div class="fact"><b>5</b><span>Steps end to end</span></div>
+      <div class="fact"><b>1</b><span>OBJECTID, shared by all</span></div>
+      <div class="fact"><b>5000 &middot; 5002</b><span>Local ports</span></div>
+      <div class="fact"><b>AD_AI2</b><span>Map layer</span></div>
+      <div class="fact"><b>~$0.22</b><span>Research cost</span></div>
+    </div>
+  </header>
+
+  <nav class="rail">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#short"><em>1</em> The short version</a></li>
+      <li><a href="#before"><em>2</em> Before you start</a></li>
+      <li><a href="#chatbot"><em>3</em> The AI assistant</a></li>
+      <li><a href="#map"><em>4</em> The map record</a></li>
+      <li><a href="#properties"><em>5</em> The properties</a></li>
+      <li><a href="#dashboard"><em>6</em> The dashboard record</a></li>
+      <li><a href="#engine"><em>7</em> The matching engine</a></li>
+      <li><a href="#objectid"><em>8</em> One number, five places</a></li>
+      <li><a href="#checking"><em>9</em> Checking it worked</a></li>
+      <li><a href="#wrong"><em>10</em> When it goes wrong</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="short">
+      <h2>The short version</h2>
+      <p class="sec-note">If you already know the tools.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Duplicate a chatbot</h4>
+          <p>At <a href="https://dash.elfsight.com/apps/ai-chatbot">dash.elfsight.com</a>, duplicate an existing widget, point it at the client's website, publish it, and copy its <strong>Share by Link</strong> URL.</p>
+        </li>
+        <li>
+          <h4>Put them on the map</h4>
+          <p>One row in <code>FL_Add_Client Template.csv</code>, uploaded to <strong>AD_AI2</strong> in ArcGIS Online. <strong>The OBJECTID you choose here is the dash ID every later step uses.</strong></p>
+        </li>
+        <li>
+          <h4>Harvest their properties</h4>
+          <p>Only if the client lists any. <code>Start_Scraper.bat</code> &rarr; <a href="http://localhost:5000">localhost:5000</a>, register the account against that dash ID, run it.</p>
+        </li>
+        <li>
+          <h4>Build the dashboard record</h4>
+          <p><code>Start_Organizations.bat</code> &rarr; <a href="http://localhost:5002">localhost:5002</a>. Supply five fields, research the other thirty, save, then Put both data files in Dreamweaver.</p>
+        </li>
+        <li>
+          <h4>Tell the matching engine</h4>
+          <p>Add the organisation to <code>edo_master_table_dual.json</code>, rebuild the routing indexes, push. Skip this and the client is visible everywhere but never receives a lead.</p>
+        </li>
+      </ol>
+
+      <div class="note">
+        <span class="lbl">Choose the OBJECTID first</span>
+        <p>Steps 2 to 5 are four separate systems that agree on one thing: a number. Decide it at step 2, write it down, and use the same value in every tool afterwards. Nothing validates this for you &mdash; each system will happily accept a different number and simply fail to join up.</p>
+      </div>
+
+      <div class="note warn">
+        <span class="lbl">Nothing here publishes itself</span>
+        <p>Elfsight goes live when you press <span class="btn">Publish</span>. ArcGIS goes live on upload. The dashboard goes live when you Put the files in Dreamweaver. The engine goes live when Railway redeploys. Four separate acts of publishing, and a client half-added is the normal failure.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="before">
+      <h2>Before you start</h2>
+      <p class="sec-note">Five minutes of gathering saves restarting at step 3.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>You need</th><th>For</th></tr></thead>
+          <tbody>
+            <tr><td>The client's <strong>website URL</strong></td><td>Seeds the chatbot's knowledge base (step 1) and becomes the <code>Embed</code> value (steps 2 and 4)</td></tr>
+            <tr><td>Their <strong>property-search URL</strong>, if they have one</td><td>Step 3. If they have no property database, skip that step entirely.</td></tr>
+            <tr><td><strong>Elfsight</strong> sign-in</td><td>Step 1. Check the widget allowance on the way in &mdash; the header shows it, e.g. 392 / 400.</td></tr>
+            <tr><td><strong>ArcGIS Online</strong> sign-in &mdash; user <code>FastFacility1</code></td><td>Step 2</td></tr>
+            <tr><td><strong>Anthropic API credit</strong></td><td>Step 4 researches thirty fields for about $0.22. Click <span class="btn">Test API keys</span> before you begin, not during.</td></tr>
+            <tr><td><strong>Dreamweaver</strong></td><td>Publishing the dashboard files in step 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note stop">
+        <span class="lbl">The ArcGIS password is not in this document</span>
+        <p>Deliberately. This runbook is version-controlled and sits in a web-served folder, so a password written here is a password published. Keep it in your password manager alongside the Elfsight and Anthropic credentials.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="chatbot">
+      <h2>Step 1 &middot; The AI assistant</h2>
+      <p class="sec-note">Elfsight. The output of this step is a single URL, and everything else in it exists to produce that URL.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Duplicate an existing chatbot</h4>
+          <p>Sign in to <a href="https://dash.elfsight.com/apps/ai-chatbot">dash.elfsight.com/apps/ai-chatbot</a>, pick a widget you are happy with, and choose <strong>Duplicate</strong> from its <span class="btn">&hellip;</span> menu.</p>
+          <p>Duplicate rather than <span class="btn">Create Widget</span>: the copy inherits the placement, theme, visibility and email settings already tuned for FastLocations, so the only thing left to change is the knowledge base.</p>
+          <figure class="shot">
+            <img src="add_client_media/image1.png" alt="The Elfsight AI Chatbot widget list with the Duplicate option highlighted in the overflow menu">
+            <figcaption>The &hellip; menu on any existing widget &rarr; Duplicate.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Open the copy</h4>
+          <p>It appears at the top of the list as <em>&lt;name&gt; Copy</em>, with its project showing as <code>&mdash;</code>. Click <span class="btn">Edit</span>.</p>
+          <figure class="shot">
+            <img src="add_client_media/image2.png" alt="The duplicated widget at the top of the list, named Iowa Interstate Railroad, IA Copy, with the Edit button highlighted">
+            <figcaption>The duplicate arrives unassigned &mdash; note the project column reads &ldquo;&mdash;&rdquo;.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Point it at the client's site</h4>
+          <p>Paste the client's URL and let Elfsight scan. It reads the site, builds a knowledge base from the content it finds, and shapes a name, icon, role and tone of voice from it.</p>
+          <figure class="shot">
+            <img src="add_client_media/image3.png" alt="The Create Your AI Agent dialog, with a field for the website address and a description of how the scan builds a knowledge base">
+            <figcaption>One URL does the work: scan the site, build the knowledge base, shape the personality.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Check the settings, rename, assign, publish</h4>
+          <p>Work through <strong>Placement &amp; Layout</strong>, <strong>Theme</strong>, <strong>Visibility</strong> and <strong>Email Notifications</strong>, then rename the widget from &ldquo;&hellip; Copy&rdquo; to the client's name and press <span class="btn">Publish</span>.</p>
+          <figure class="shot">
+            <img src="add_client_media/image4.png" alt="The chatbot editor with the settings list on the left, a live preview on the right, and the Publish button highlighted">
+            <figcaption>Publish is the only thing that makes the widget answer.</figcaption>
+          </figure>
+          <div class="note warn">
+            <span class="lbl">Assign it to the FastLocations project</span>
+            <p>A duplicate is created outside any project. Leave it that way and the widget works perfectly but drops out of the FastLocations list, which is how you find it again in a year. Use <strong>Assign to Project&hellip;</strong> in the same <span class="btn">&hellip;</span> menu.</p>
+          </div>
+        </li>
+        <li>
+          <h4>Copy the share link</h4>
+          <p>From the widget's <span class="btn">&hellip;</span> menu choose <strong>Share by Link</strong>, then <span class="btn">Copy Link</span>. Not <strong>Embed Code</strong> &mdash; the map and the dashboard both want a plain URL.</p>
+          <figure class="shot">
+            <img src="add_client_media/image5.png" alt="The widget list overflow menu with Share by Link highlighted">
+            <figcaption>Share by Link, not Embed Code.</figcaption>
+          </figure>
+          <figure class="shot">
+            <img src="add_client_media/image6.png" alt="The Share Link panel showing a URL of the form https://<hex>.elf.site with a Copy Link button">
+            <figcaption>The result is a bare <code>elf.site</code> URL. This is the <strong>AI Link</strong>.</figcaption>
+          </figure>
+          <p>It takes the form <code>https://1c1a624b45604350bd28837bc0512d41.elf.site</code>. Keep it on the clipboard &mdash; you need it twice, in step 2 and again in step 4.</p>
+        </li>
+      </ol>
+    </section>
+
+    <hr class="div">
+
+    <section id="map">
+      <h2>Step 2 &middot; The map record</h2>
+      <p class="sec-note">ArcGIS Online, the <code>AD_AI2</code> hosted feature layer. This is where the OBJECTID is decided.</p>
+
+      <h3>Fill in the template row</h3>
+      <p>Open <code>FL_Add_Client Template.csv</code> in the FastLocations folder and replace the template values with the client's. Three fields carry more weight than the rest:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Field</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">OBJECTID</td><td>A new number, <strong>larger than the last entry</strong>. This becomes the dash ID used by every other system.</td></tr>
+            <tr><td class="mono">AI Link</td><td>The <code>elf.site</code> URL from step 1.</td></tr>
+            <tr><td class="mono">Embed</td><td>The client's current website URL.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>You can stage several clients in one CSV and add them together; the steps below are identical.</p>
+
+      <h3>Upload it</h3>
+      <ol class="steps">
+        <li>
+          <h4>Find the layer</h4>
+          <p>Sign in at <a href="https://www.arcgis.com/home/signin.html">arcgis.com</a>, then <strong>Content &rarr; My favorites &rarr; AD_AI2</strong>. It is the hosted feature layer, not either of the web maps beside it.</p>
+          <figure class="shot">
+            <img src="add_client_media/image7.png" alt="The ArcGIS Online Content page, My favorites tab, listing AD_AI2 as a hosted feature layer">
+            <figcaption>Content &rarr; My favorites. AD_AI2 is the <em>Feature layer (hosted)</em> row.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Open the Data tab</h4>
+          <figure class="shot">
+            <img src="add_client_media/image8.png" alt="The AD_AI2 item page with the Data tab highlighted in the blue navigation bar">
+            <figcaption>The item page. Data, not Visualization.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Update data &rarr; Update from a file</h4>
+          <p>In the left column of the table view. The layer underneath is <code>EDs_ai_XYTableToPoint12a</code>.</p>
+          <figure class="shot">
+            <img src="add_client_media/image9.png" alt="The Data tab table view with Update data expanded and Update from a file highlighted">
+            <figcaption>Update data &rarr; Update from a file.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Choose Add features</h4>
+          <p>ArcGIS says it plainly: <em>this feature service only supports adding new features</em>. The other three options are greyed out, which is the safeguard working.</p>
+          <figure class="shot">
+            <img src="add_client_media/image10.png" alt="The Update data dialog offering Add features, with Update features, Add and update features, and Overwrite entire feature layer disabled">
+            <figcaption>Add features is the only live option.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <h4>Drop in the CSV</h4>
+          <p>Drag the file in or pick it from your computer, then <span class="btn">Next</span> through the rest. The new row or rows are appended.</p>
+          <figure class="shot">
+            <img src="add_client_media/image11.png" alt="The Select data step of the Update data dialog, with a drag-and-drop area and a Your device button">
+            <figcaption>Drag and drop, or choose from your device.</figcaption>
+          </figure>
+        </li>
+      </ol>
+
+      <div class="note stop">
+        <span class="lbl">Never reorder the clients in AD_AI2</span>
+        <p>Row order in this layer is load-bearing. Add to the end, and only to the end &mdash; which is why the OBJECTID must exceed the previous entry and why the service refuses to overwrite. Sorting the CSV before upload, or overwriting the layer to &ldquo;tidy it up&rdquo;, breaks the pins.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="properties">
+      <h2>Step 3 &middot; The properties</h2>
+      <p class="sec-note">Only if the client lists sites or buildings. The full detail is in the <em>Property Scraper Runbook</em>; this is what adding one account involves.</p>
+
+      <p>Double-click <code>Start_Scraper.bat</code> in the FastLocations folder. A black window opens and the browser lands on <a href="http://localhost:5000">localhost:5000</a>. Leave the window open while you work, and close it when you are done &mdash; that is what shuts the tool off.</p>
+
+      <h3>Register the account</h3>
+      <p>Four boxes at the top of the page:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Box</th><th>What to enter</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Property search URL</strong></td><td>The client's property or site-search page &mdash; or the map/tool URL itself.</td></tr>
+            <tr><td><strong>dashId</strong></td><td><strong>The OBJECTID from step 2.</strong> This is what ties the harvested file to the right dashboard.</td></tr>
+            <tr><td><strong>Label</strong></td><td>A readable name, e.g. <em>Hancock EDC</em>.</td></tr>
+            <tr><td><strong>State / Province</strong></td><td>From the dropdown. Required.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><span class="btn">Detect + Add + Run</span> identifies the platform, registers the account and runs it immediately &mdash; the right choice for the browserless platforms. <span class="btn">Detect only</span> reports what it found without committing, which is worth a click first on an unfamiliar site.</p>
+
+      <p>Every run writes the dated JSON file <em>and</em> rebuilds <code>properties_all.json</code>, the single merged file the website loads. There is no separate publish step for property data.</p>
+
+      <div class="note">
+        <span class="lbl">A NOTE instead of a run is normal</span>
+        <p>Some accounts register but cannot run until a value has been captured from the live site &mdash; VEDP regional sites need a property-list capture, ArcGIS Experience and Geocortex apps need their Feature Service URL. The tool says so plainly. Send the URL to Claude; it is typically a one-minute fix, after which the account runs itself on every future refresh.</p>
+      </div>
+
+      <h3>What runs without a browser</h3>
+      <p>Platforms marked <span class="chip go">api</span> are browserless and fast; <span class="chip warn">browser</span> opens a Playwright window that pages through listings and closes itself.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Platform</th><th>Mode</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>ZoomProspector</td><td><span class="chip warn">browser</span></td><td>Also branded domains and broker/region filters</td></tr>
+            <tr><td>Buildings &amp; Sites</td><td><span class="chip warn">browser</span></td><td>Main site and branded <code>*siteselection.com</code> domains</td></tr>
+            <tr><td>GISWebTechGuru</td><td><span class="chip go">api</span></td><td>Resolves the Tenant ID automatically</td></tr>
+            <tr><td>LocationOne</td><td><span class="chip go">api</span></td><td>Common in Canada too</td></tr>
+            <tr><td>Resimplifi</td><td><span class="chip go">api</span></td><td>Needs a county/city filter, set by Claude</td></tr>
+            <tr><td>Catylist / Moody's</td><td><span class="chip go">api</span></td><td>Can be scoped to one county</td></tr>
+            <tr><td>SiteLinkWeb</td><td><span class="chip go">api</span></td><td>Catylist data behind a Blazor front-end</td></tr>
+            <tr><td>VEDP (Virginia)</td><td><span class="chip go">api</span> / <span class="chip acc">Claude</span></td><td>Statewide runs itself; regional sites need a capture</td></tr>
+            <tr><td>EDSuite (Statamic)</td><td><span class="chip go">api</span></td><td>Public content API</td></tr>
+            <tr><td>Tevolution (WordPress)</td><td><span class="chip go">api</span></td><td>Category-page directory sites</td></tr>
+            <tr><td>ArcGIS Feature Service / Experience / Geocortex</td><td><span class="chip go">api</span> / <span class="chip acc">Claude</span></td><td>Experience Builder apps need the service URL captured</td></tr>
+            <tr><td>ArcGIS StoryMap</td><td><span class="chip go">api</span></td><td>Pins on an embedded express map</td></tr>
+            <tr><td>Atlantic4</td><td><span class="chip go">api</span></td><td>Atlantic Canada certified sites</td></tr>
+            <tr><td>Custom WordPress (<code>grow_wp</code>)</td><td><span class="chip go">api</span></td><td>e.g. Grow Laurens County</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <span class="lbl">A statewide database is not a local one</span>
+        <p>Paste a statewide ZoomProspector URL and the tool warns you, because it will pull the entire state. The local EDO's filter is usually applied by JavaScript, so the tool cannot see it. If the client really is statewide, click Run. If you want only their patch, send the URL to Claude to capture the right broker ID or region.</p>
+      </div>
+
+      <div class="note stop">
+        <span class="lbl">Three sites are refused on purpose</span>
+        <p><strong>LoopNet</strong> (CoStar LoopLink) and <strong>realtor.ca</strong> (CREA/MLS) are refused with a clear message: aggressive anti-bot measures, and scraping against their terms. <strong>MapMe</strong> is impractical to automate reliably. If the client's property search is one of these, they get no property dataset &mdash; note it and move on to step 4.</p>
+      </div>
+
+      <p>If the client's data is a hand-built JSON file rather than a scrape, drop it in <code>properties\JSON\</code> and ask Claude to add its <code>datasets.json</code> entries. Manual files sit outside the account list, so <span class="btn">Run All</span> never touches them.</p>
+    </section>
+
+    <hr class="div">
+
+    <section id="dashboard">
+      <h2>Step 4 &middot; The dashboard record</h2>
+      <p class="sec-note">The Organizations editor. You supply five fields; it researches the other thirty. Full detail in the <em>Organizations Data Runbook</em>.</p>
+
+      <p>Double-click <code>Start_Organizations.bat</code> &rarr; <a href="http://localhost:5002">localhost:5002</a>. Click <span class="btn">Test API keys</span> before anything else: if Claude shows a cross, top up at <a href="https://console.anthropic.com">console.anthropic.com</a> rather than discovering it mid-record.</p>
+
+      <h3>The five fields that are yours</h3>
+      <p>Click <span class="btn">+ New record</span>. Two of these cannot be discovered by any amount of searching, and three of them steer every search that follows:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Field</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">OBJECTID</td><td><strong>The number from step 2.</strong> The tool pre-fills the next free id &mdash; type over it. See <a href="#objectid">section 8</a>.</td></tr>
+            <tr><td class="mono">AI Link</td><td>The <code>elf.site</code> URL from step 1.</td></tr>
+            <tr><td class="mono">Organization</td><td>The seed everything else is found from. The one field that cannot be blank.</td></tr>
+            <tr><td class="mono">Category</td><td>Decides which geography the figures describe &mdash; see below. Not cosmetic.</td></tr>
+            <tr><td class="mono">City</td><td>Plus <code>State</code>, and <code>Address 1</code> / <code>Address 2</code> if you have them.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Those five start unticked; everything else starts ticked. So <span class="btn">Research ticked fields</span> is one click that fills the remaining thirty, in three Claude calls, for roughly $0.22.</p>
+
+      <div class="note">
+        <span class="lbl">Set the State yourself</span>
+        <p>It is ticked for research by default, but choosing it narrows every subsequent search and rules out a whole class of error &mdash; the Arizona Commerce Authority sat in the data as <code>AR</code> for a long time. Dozens of places have a &ldquo;Chamber of Commerce&rdquo;; City and State are the difference between the right one and a plausible wrong one.</p>
+      </div>
+
+      <h3>Category decides what &ldquo;the area&rdquo; means</h3>
+      <p>This is the quietest way to produce a record that looks right and is useless. The Category picks one of three geographies, and it changes the searches, the instructions and the field rules together:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Scope</th><th>Applies to</th><th>The figures describe</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">statewide</td><td>State Agency</td><td>The whole state &mdash; not the town the office sits in</td></tr>
+            <tr><td class="mono">territory</td><td>A Utility that is the only one of its name in its state</td><td>Its service territory</td></tr>
+            <tr><td class="mono">local</td><td>Everything else</td><td>The city and its county</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Get this wrong on a new state agency and you get its host city's population presented as the state's. Ten of the 31 statewide records trip the warning for exactly that reason today.</p>
+
+      <h3>Read it, then save</h3>
+      <p>Researched values land in the form, not on disk. The badge at the top must read <span class="chip go">valid</span>: <span class="chip stop">error</span> blocks the save because the dashboard would drop or mis-render the value, while <span class="chip warn">warning</span> only means it looks unlike the rest of the dataset.</p>
+
+      <p>The dashboard parses these fields with regular expressions to build its charts, so a value in the wrong <em>shape</em> produces an empty chart and no error anywhere. That silent failure is what the validation exists to catch. Read the red message under a field &mdash; it names the exact pattern &mdash; or copy the wording from a good record in the same state.</p>
+
+      <p><span class="btn">Save</span> backs up the whole file to <code>dash\data\_backups\&lt;timestamp&gt;\</code> first, then rewrites it. To undo anything at all, copy that backup over <code>dash\data\organizations.json</code> and restart the tool.</p>
+
+      <h3>Publish it</h3>
+      <p>Saving updates your PC. The website serves the old data until you upload, in Dreamweaver, <strong>both</strong> of:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>File</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">dash/data/organizations.json</td><td>The records themselves</td></tr>
+            <tr><td class="mono">dash/data/meta.json</td><td>Record count and state list, refreshed on every save. The filters read it.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Upload only the records and the filter dropdowns fall out of step with them &mdash; the new client is in the file but unreachable from the interface.</p>
+
+      <div class="note stop">
+        <span class="lbl">Never upload dash/tool/</span>
+        <p><code>orgs_config.json</code> holds both API keys in plain text. It stays on your PC.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="engine">
+      <h2>Step 5 &middot; The matching engine</h2>
+      <p class="sec-note">The step that has no button, no warning and no tool &mdash; and the one that decides whether the client ever receives a lead.</p>
+
+      <p>The dashboard and the scoring engine hold <strong>the same roster of organisations in two different files</strong>, keyed by the same id:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>File</th><th>Lives on</th><th>Read by</th><th>Updated by steps 1&ndash;4?</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">dash/data/organizations.json</td><td>The web host</td><td>The dashboard</td><td><span class="chip go">yes</span> &mdash; step 4</td></tr>
+            <tr><td class="mono">edo_master_table_dual.json</td><td>Railway, in the API</td><td><code>scorer.py</code></td><td><span class="chip stop">no</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Nothing synchronises them. A client added through steps 1 to 4 has a chatbot, a pin, properties and a dashboard &mdash; and is invisible to <em>Where to Expand: My Project</em>. The matching engine rolls every candidate county up to the EDO customer whose territory covers it, and an organisation absent from the master table serves no territory, so it is never anybody's answer.</p>
+
+      <h3>Add the row</h3>
+      <p>Each record carries the same identity fields you have already filled in, plus a territory:</p>
+
+      <pre><code>{
+ "objectid": "4571",
+ "organization": "Hancock County EDC",
+ "category": "Local Development Agency",
+ "city": "Findlay",
+ "state": "OH",
+ "country": "US",
+ "latitude": "41.044", "longitude": "-83.650",
+ "home_county_fips": "39063",
+ "territory_fips": ["39063"],
+ "territory_geoids": ["39063"],
+ "geo_system": "US_FIPS", "geoid_type": "county_fips",
+ "territory_basis": "home_county",
+ "embed_url": "https://...", "ai_link": "https://....elf.site"
+}</code></pre>
+
+      <p><code>objectid</code> is a <strong>string</strong>, and it is the same number as everywhere else. <code>ai_link</code> and <code>embed_url</code> are the two URLs from steps 1 and 2 again.</p>
+
+      <p>How the territory is set depends on what the client is:</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Kind</th><th>Territory</th></tr></thead>
+          <tbody>
+            <tr><td>A local agency</td><td>Its home county. <code>territory_basis: "home_county"</code> &mdash; type it in.</td></tr>
+            <tr><td>An electric utility</td><td>Resolved from EIA-861 by <code>build_utility_territories.py</code>, which writes <code>territory_geoids</code> into the master table.</td></tr>
+            <tr><td>A regional agency</td><td>From <code>regional_edo_members.json</code> via <code>build_regional_territories.py</code>. Add the members there first; without them it keeps a single home county and stays flagged <code>INCOMPLETE</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Rebuild the routing indexes and ship it</h3>
+      <pre><code>python build_edo_indexes.py     # master table -> edo_fips_index.json + edo_ca_cd_index.json
+git add -A &amp;&amp; git commit &amp;&amp; git push</code></pre>
+
+      <p>The two indexes map county FIPS (and Canadian CDUID) to the objectids that serve them. The scorer reads the indexes, not the master table, so a new organisation that is not in them routes to nobody. Railway redeploys from <code>main</code>; confirm the deploy carried it:</p>
+
+      <pre><code>https://fastlocations-scoring-api-production.up.railway.app/health
+
+{"counties":3144,"edos":391,"states_with_incentives":65,"status":"ok"}</code></pre>
+
+      <p><code>edos</code> should have gone up by one. If it still reads the old number, the deploy has not run or ran from the wrong branch.</p>
+
+      <div class="note">
+        <span class="lbl">The property bonus usually needs nothing</span>
+        <p>Counties served by an organisation with listed properties get a scoring bonus. If <code>PROPERTIES_JS_URL</code> is set, the scorer re-reads the dashboard's <code>properties.js</code> every fifteen minutes and resolves the labels itself &mdash; so step 3 propagates on its own, with no rebuild and no push. Only if that variable is unset does it fall back to the bundled snapshot, which is when you rerun <code>build_property_orgs.py</code> (or the <code>orgs_with_properties</code> dataset in the Data Refresh Tool) and push.</p>
+      </div>
+
+      <div class="note warn">
+        <span class="lbl">Re-check the regional balance</span>
+        <p><code>python check_regional_balance.py</code> reports how evenly the Top 5 spreads across regions and where customer coverage is thin. Worth running after a batch of new clients &mdash; it is how you find out that a whole region still has nobody to route to.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="objectid">
+      <h2>One number, five places</h2>
+      <p class="sec-note">The single most common way a client ends up half-added.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Where</th><th>Called</th><th>Watch for</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">FL_Add_Client Template.csv</td><td>OBJECTID</td><td>Must be larger than the previous entry</td></tr>
+            <tr><td class="mono">AD_AI2 feature layer</td><td>OBJECTID</td><td>Appended only, never reordered</td></tr>
+            <tr><td>Scraper account &mdash; port 5000</td><td class="mono">dashId</td><td>Duplicates are blocked; one org's list can feed several dashboards</td></tr>
+            <tr><td class="mono">dash/data/organizations.json</td><td>OBJECTID</td><td><strong>The tool pre-fills a different number</strong> &mdash; type over it</td></tr>
+            <tr><td class="mono">edo_master_table_dual.json</td><td class="mono">objectid</td><td>A string, e.g. <code>"4571"</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note warn">
+        <span class="lbl">The pre-filled id is the trap</span>
+        <p>The Organizations editor pre-fills the next free OBJECTID, and its own runbook tells you to accept it &mdash; correct advice when you are creating a record from scratch, wrong here. You already chose the number in step 2 and three other systems are using it. Type over the suggestion. If the editor refuses it as a duplicate, that number is genuinely taken and it is step 2 that needs revisiting, not step 4.</p>
+      </div>
+
+      <p>Two URLs travel just as far. The <code>elf.site</code> link from step 1 is the <strong>AI Link</strong> in the CSV, the <strong>AI Link</strong> in the dashboard record, and <code>ai_link</code> in the master table. The client's own website is <strong>Embed</strong> in the CSV and <code>embed_url</code> in the master table.</p>
+    </section>
+
+    <hr class="div">
+
+    <section id="checking">
+      <h2>Checking it worked</h2>
+      <p class="sec-note">Five systems, five separate proofs. None of them tells you about the others.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>Step</th><th>Proof</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1</strong> Chatbot</td><td>The <code>elf.site</code> URL opens and the assistant answers a question about the client's business. The widget shows the FastLocations project, not <code>&mdash;</code>.</td></tr>
+            <tr><td><strong>2</strong> Map</td><td>The new row is the last one in AD_AI2's table, with the OBJECTID you chose.</td></tr>
+            <tr><td><strong>3</strong> Properties</td><td>The run logs a record count above zero, and <code>properties_all.json</code> has been rewritten.</td></tr>
+            <tr><td><strong>4</strong> Dashboard</td><td>The badge read <span class="chip go">valid</span> before saving; both files uploaded; the client appears in the live filter dropdowns.</td></tr>
+            <tr><td><strong>5</strong> Engine</td><td><code>/health</code> reports <code>edos</code> one higher than before.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="lbl">The honest end-to-end test</span>
+        <p>Run a search on <em>Where to Expand: My Project</em> that the new client's county should win, and see whether the lead routes to them. That exercises the master table, the routing indexes and the territory in one go &mdash; the three things nothing else checks.</p>
+      </div>
+    </section>
+
+    <hr class="div">
+
+    <section id="wrong">
+      <h2>When it goes wrong</h2>
+      <p class="sec-note">The failures specific to adding a client. The two tool runbooks cover the rest.</p>
+
+      <div class="tw">
+        <table>
+          <thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+          <tbody>
+            <tr><td>The chatbot answers about the wrong company</td><td>The duplicate's knowledge base was never re-scanned</td><td>Edit the widget, paste the client's URL, let it rebuild, publish again</td></tr>
+            <tr><td>The widget vanished from the FastLocations list</td><td>The duplicate was never assigned to a project</td><td><strong>Assign to Project&hellip;</strong> in the &hellip; menu</td></tr>
+            <tr><td>ArcGIS offers only <em>Add features</em></td><td>Working as intended &mdash; the service does not support overwriting</td><td>Nothing. Never try to route around it.</td></tr>
+            <tr><td>&ldquo;Detection failed: platform not recognised&rdquo;</td><td>A new or JavaScript-injected platform</td><td>Send the URL to Claude</td></tr>
+            <tr><td>&ldquo;Registered but not run &mdash; fill in params first&rdquo;</td><td>Needs a captured value (VEDP region, ArcGIS service URL)</td><td>Send the URL to Claude</td></tr>
+            <tr><td>A property run finishes with 0 records</td><td>The site changed, or a session id rotated</td><td>Send it to Claude to refresh</td></tr>
+            <tr><td>&ldquo;OBJECTID is already used by&hellip;&rdquo;</td><td>The number you chose in step 2 was not free</td><td>Fix step 2 first, then match it here &mdash; do not accept the suggested id</td></tr>
+            <tr><td>A dashboard field will not clear its <span class="chip stop">error</span></td><td>The value does not match the shape the charts parse</td><td>Read the red message; copy the wording from a good record in the same state</td></tr>
+            <tr><td>The client is on the dashboard but never wins a search</td><td>Step 5 was skipped, or the territory is empty</td><td>Check <code>/health</code>, then that the objectid appears in <code>edo_fips_index.json</code></td></tr>
+            <tr><td>Charts on the client's dashboard are blank</td><td>A researched value parsed cleanly but in the wrong shape, or <code>meta.json</code> was not uploaded</td><td>Re-open the record and read the badge; upload both files</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <span class="lbl">Related runbooks</span>
+        <p><em>Property Scraper Runbook</em> for platforms, filters and regional splits. <em>Organizations Data Runbook</em> for bulk research, validation formats and backups. <em>Data Refresh Runbook</em> for the datasets behind the score.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
