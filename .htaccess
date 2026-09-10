@@ -1,0 +1,47 @@
+# FastLocations — Projects/ access control
+#
+# This folder serves ONE public page (site_selection_intake.html) plus
+# intake.js, which talks to the Railway scoring API. Everything else that
+# Dreamweaver has pushed here over time — scorer.py, build_*.py, test_scorer.py,
+# .gitignore — is source that was never meant to be downloadable.
+#
+# Apache has no handler for .py, so it serves the SOURCE as plain text:
+#   https://www.fastlocations.ai/Projects/scorer.py -> HTTP 200, 46,910 bytes
+#
+# Blocking beats deleting here, because this survives a future Dreamweaver Put
+# silently re-uploading the same files.
+
+# ── 1. Block source, scripts and notes ───────────────────────────────────
+# Deliberately NOT blocking .json / .csv / .xlsx: Service_Territory_2024.xlsx
+# is in this folder's dwsync record, so it may be linked as a real download,
+# and the API may read the JSON. Only source and internal notes are denied.
+<FilesMatch "\.(py|pyc|pyo|pyw|ipynb|md|bak|log|sh|bat|ps1|ya?ml|toml|ini|sql)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ── 2. Block dotfiles (.gitignore and friends) ───────────────────────────
+# .well-known is excluded on purpose — denying it breaks ACME/Let's Encrypt
+# certificate renewal. That matters if this file is ever copied to the site
+# root; harmless but correct to keep here.
+<FilesMatch "^\.(?!well-known)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ── 3. Never let a blocked file be cached as if it were public ───────────
+<IfModule mod_headers.c>
+    <FilesMatch "\.(py|pyc|pyo|pyw|ipynb|md|bak|log|sh|bat|ps1|ya?ml|toml|ini|sql)$">
+        Header set Cache-Control "no-store"
+    </FilesMatch>
+</IfModule>
