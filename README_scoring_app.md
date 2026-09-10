@@ -33,9 +33,16 @@ Eleven, all live: workforce, demographics, infrastructure, logistics, incentives
 safety, market_size, livability, innovation. Defaults are `scorer.DEFAULT_WEIGHTS`; the use-type
 presets in `intake.js` override them per project type.
 
-`cost` is percentile-ranked within market-size tiers (regional catchment under 100k, to 500k, to 2M, and
-over 2M; see `COST_TIERS` in `scorer.py`), so a metro's wages are compared with other metros rather than
-with rural counties. Every other dimension ranks nationally. Canada is a single tier.
+`cost` is percentile-ranked within market-size tiers (under 100k, to 500k, to 2M, and over 2M; see
+`COST_TIERS` in `scorer.py`), so a metro's wages are compared with other metros rather than with rural
+counties. Every other dimension ranks nationally. Canada is a single tier.
+
+Market size for the cost tiers and the reliability damping is `market_pop()`: the population of the
+county's Census metro (MSA), or the county's own outside a metro. It used to be the distance catchment,
+which let a small county near a big metro borrow its size: LaPorte, IN (its own 110k metro, 60 miles
+from Chicago) had a 2.1M catchment, so it was costed against Chicago-sized markets and barely damped,
+and ranked #7. The catchment still measures reach where distance is the point: the `market_size`
+dimension and the labor-draw thresholds. Canada keeps its catchment for both.
 
 Cost and safety read the metro labor market, not just the county (`METRO`, `METRO_BLEND` in
 `scorer.py`). Inside a multi-county MSA, employer wages are the metro's value (BEA earnings per resident
@@ -43,9 +50,7 @@ measures where jobs sit, not what they pay), and resident income, cost of living
 metro's, half the county's. Without it a cheap outer county got the metro's people at its own prices
 (Henry and Paulding outranked Fulton even for offices). Real estate stays county-level, since land and
 tax are the site's own. For `use_type.primary = "office"` the per-acre land price counts 0.5 instead of
-2 within real estate (`USE_METRIC_WEIGHTS`), so property tax carries it. Counties that are their own
-metro but sit near a big one (LaPorte IN, Riverside CA) are not affected; their pull comes from the
-catchment in market size.
+2 within real estate (`USE_METRIC_WEIGHTS`), so property tax carries it.
 
 The county DAI score (0-100, higher is better; US counties only) is part of `workforce`, not a factor of
 its own, and the form does not name it. It holds a fixed share of the workforce dimension

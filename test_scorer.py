@@ -433,6 +433,30 @@ def test_cost_and_safety_use_the_metro_labor_market():
     sub = {r["geoid"]: r["sub_scores"]["cost"] for r in scorer.run(US, top=5000)["results"]}
     assert sub["13151"] - sub["13121"] < 30, "Henry still reads far cheaper than Fulton"
 
+def test_cost_tier_and_damping_use_the_metro_not_the_catchment():
+    """A county's market for the cost tier and the reliability damping is its Census metro (or itself,
+    outside one), not everyone within 110 km. LaPorte, IN is its own 110k-person metro 60 miles from
+    Chicago: its 2.1M catchment had it ranked on cost against Chicago-sized markets and barely damped."""
+    F = scorer.FEAT
+    laporte = F["18091"]
+    assert laporte["catchment_pop"] > 1_500_000, "test premise: LaPorte's catchment reaches Chicago"
+    assert scorer.market_pop(laporte) < 200_000 and scorer.market_tier(laporte) == "small"
+    # one metro, one market: Atlanta's core and outer counties share the size and the tier
+    atl = {scorer.market_pop(F[g]) for g in ("13121", "13151", "13223")}
+    assert len(atl) == 1 and atl.pop() > 5_000_000
+    # outside any metro a county is its own market; Canada keeps its regional catchment
+    lone = next(f for g, f in F.items() if scorer.gsys(f) == "US" and g not in scorer.MSA_MAP and f.get("TOTPOP_CY"))
+    assert scorer.market_pop(lone) == lone["TOTPOP_CY"]
+    cd = next(f for f in scorer.ALLFEAT.values() if scorer.gsys(f) == "CA" and f.get("catchment_pop"))
+    assert scorer.market_pop(cd) == cd["catchment_pop"]
+    # the catchment still drives market size: LaPorte keeps its reach to Chicago's customers
+    assert scorer.m_market_size(laporte, {})["population_scale"] == laporte["catchment_pop"]
+    # the effect: damped like the small market it is, and out of the top of the default search
+    R = sorted(scorer.run(US, top=5000)["results"], key=lambda r: -r["final_score"])
+    lp = next(r for r in R if r["geoid"] == "18091")
+    assert lp["reliability"] < 0.6, lp["reliability"]
+    assert R.index(lp) >= 50, f"LaPorte still ranks #{R.index(lp) + 1}"
+
 def test_office_real_estate_leans_on_property_tax():
     """Farmland price per acre says little about an office project's cost, so it counts less for offices."""
     assert scorer.USE_METRIC_WEIGHTS["office"]["low_land_cost"] < scorer.METRIC_WEIGHTS["low_land_cost"]

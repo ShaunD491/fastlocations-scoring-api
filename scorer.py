@@ -370,7 +370,8 @@ for _dv,_sts in (("New England","ME NH VT MA RI CT"),("Middle Atlantic","NY NJ P
 # with market size: Seattle 1, Santa Clara 0, Phoenix 10, San Diego 5, Las Vegas 25. Cost plus real
 # estate plus safety carry 28% of the default weight, and that stack cost the big western markets
 # 7-11 points of weighted total -- the gap between rank 200 and the top 10. Ranking cost within
-# tiers of regional catchment (the same reach measure the reliability damping uses) makes the
+# tiers of market size (market_pop: the county's metro population, the same measure the reliability
+# damping uses; it was the regional catchment until 2026-09-10, see below) makes the
 # sub-score mean "how expensive is this market for one of its size": each tier averages ~50, so
 # no size class is systematically cheap or dear. Measured before adopting: Phoenix 10 -> 49,
 # Las Vegas 25 -> 72, Riverside 22 -> 63, San Diego 5 -> 31; the losers are small Midwest counties
@@ -382,11 +383,28 @@ for _dv,_sts in (("New England","ME NH VT MA RI CT"),("Middle Atlantic","NY NJ P
 # measured too and moved the same counties further for no extra fairness, so it stays national.
 COST_TIERS=((0,100_000,"rural"),(100_000,500_000,"small"),(500_000,2_000_000,"mid"),(2_000_000,float("inf"),"metro"))
 TIERED_DIMS={"cost"}    # dimensions whose metrics are percentile-ranked within market_tier() (US only)
+# The LABOR MARKET a US county belongs to is its Census metro (MSA), and outside any metro, the county
+# itself. That -- not the distance catchment -- sets the cost tier and the reliability damping. The
+# catchment sums everyone within 110 km whatever metro they live in, so it let a small county near a
+# big metro borrow that metro's size: LaPorte, IN (110k people, its own Michigan City-La Porte metro)
+# carried a 2.1M catchment, so its costs were ranked against Chicago-sized markets (cheap) and its
+# score was damped as if it were a deep market. It was the #7 default result; Bloomington, IN (Monroe)
+# was #5 and the Lehigh Valley (Northampton, PA) #12. The catchment still measures market reach in
+# the market_size dimension and the labor-draw thresholds, where distance is the point.
+_MSA_POP=collections.Counter()
+for _g,_m in MSA_MAP.items():
+    if _g in FEAT: _MSA_POP[_m]+=FEAT[_g].get("TOTPOP_CY") or 0
+def market_pop(f):
+    """Population of the market a candidate belongs to, for the cost tiers and the reliability damping:
+    its metro's for a US county in an MSA, its own otherwise. Canada keeps its regional catchment."""
+    if gsys(f)=="CA": return f.get("catchment_pop") or f.get("TOTPOP_CY") or 0
+    m=MSA_MAP.get(f.get("fips") or "")
+    return _MSA_POP[m] if m else (f.get("TOTPOP_CY") or 0)
 def market_tier(f):
-    """Market-size tier of a US county by regional catchment (own population if no catchment).
-    Canadian CDs all return one tier, so tiering is a no-op there."""
+    """Market-size tier of a US county by market_pop(). Canadian CDs all return one tier, so tiering
+    is a no-op there."""
     if gsys(f)=="CA": return "CA"
-    v=f.get("catchment_pop") or f.get("TOTPOP_CY") or 0
+    v=market_pop(f)
     return next(name for lo,hi,name in COST_TIERS if lo<=v<hi)
 # METRO LABOR MARKET. Market size already reaches across the metro (catchment), but cost and safety were
 # read from the county alone, so a cheap, low-crime county on a big metro's edge got the metro's people
@@ -1259,11 +1277,11 @@ def run(criteria,top=10):
         prop=round(PROPERTY_BONUS*max((property_scope_factor(e) for e in prop_edos),default=0.0),2)
         rel=None; final=None; damped=None
         if total is not None:
-            # Reliability from the county's MARKET reach (regional catchment), not just its own
-            # population. A small county inside a big metro (Arlington DC, Nassau NYC, a NJ suburb)
-            # is a reliable, deep market and must not be damped like a thin rural county -- only
-            # genuinely isolated small markets (catchment ~ own pop) get shrunk toward the mean.
-            mkt=d.get("catchment_pop") or d.get("TOTPOP_CY") or 0
+            # Reliability from the county's MARKET (market_pop: its metro's population), not just its
+            # own. A small county inside a big metro (Arlington DC, Nassau NYC, a NJ suburb) is a
+            # reliable, deep market and must not be damped like a thin rural county -- only counties
+            # outside any metro, and small metros, get shrunk toward the mean.
+            mkt=market_pop(d)
             rel=mkt/(mkt+SCALE_DAMP_K)
             damped=base+(total-base)*rel
             # Apply preferred + coverage bonuses to the REMAINING headroom, not as flat points, so a

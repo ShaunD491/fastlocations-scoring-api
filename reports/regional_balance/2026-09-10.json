@@ -19,18 +19,18 @@
   },
   "top5_share": {
     "spread": {
-      "Northeast": 10.0,
-      "Northwest": 2.5,
+      "Northeast": 2.5,
+      "Northwest": 5.0,
       "Mid-Atlantic": 2.5,
       "Southeast": 17.5,
-      "Rest of US": 67.5
+      "Rest of US": 72.5
     },
     "scores_only": {
       "Northeast": 0.0,
-      "Northwest": 2.5,
+      "Northwest": 5.0,
       "Mid-Atlantic": 2.5,
-      "Southeast": 35.0,
-      "Rest of US": 60.0
+      "Southeast": 37.5,
+      "Rest of US": 55.0
     }
   },
   "edo_coverage": {
@@ -67,58 +67,58 @@
     "default": [
       "Maricopa County, AZ",
       "Orange County, FL",
-      "Monroe County, IN",
       "Riverside County, CA",
-      "Northampton County, PA"
+      "Wood County, OH",
+      "Platte County, MO"
     ],
     "manufacturing": [
       "Maricopa County, AZ",
       "Orange County, FL",
-      "LaPorte County, IN",
+      "Wood County, OH",
       "Riverside County, CA",
-      "Linn County, IA"
+      "Clay County, MO"
     ],
     "warehouse_distribution": [
       "Maricopa County, AZ",
       "Broward County, FL",
-      "Monroe County, IN",
       "Riverside County, CA",
-      "Linn County, IA"
+      "Hamilton County, OH",
+      "Platte County, MO"
     ],
     "data_center": [
       "Maricopa County, AZ",
-      "Orange County, FL",
-      "LaPorte County, IN",
+      "Osceola County, FL",
+      "Wood County, OH",
       "Riverside County, CA",
       "Harris County, TX"
     ],
     "office": [
       "Maricopa County, AZ",
       "Seminole County, FL",
-      "Monroe County, IN",
-      "Riverside County, CA",
-      "Northampton County, PA"
+      "King County, WA",
+      "Wood County, OH",
+      "Platte County, MO"
     ],
     "r_and_d": [
       "Arapahoe County, CO",
       "King County, WA",
       "Alexandria city, VA",
-      "Monroe County, IN",
-      "Northampton County, PA"
+      "Suffolk County, MA",
+      "Johnson County, KS"
     ],
     "flex": [
       "Maricopa County, AZ",
       "Orange County, FL",
-      "LaPorte County, IN",
+      "Wood County, OH",
       "Riverside County, CA",
-      "Linn County, IA"
+      "Platte County, MO"
     ],
     "mixed": [
       "Maricopa County, AZ",
-      "LaPorte County, IN",
-      "Orange County, FL",
+      "Osceola County, FL",
+      "Wood County, OH",
       "Riverside County, CA",
-      "Northampton County, PA"
+      "Clay County, MO"
     ]
   }
 }
