@@ -189,6 +189,12 @@ def home_of(row):
     return home
 
 
+def home_name(row):
+    """Home county / division name; the hand-matched Canadian rows only have the geoid."""
+    return ((row.get("home_cd_name") if is_ca(row) else row.get("home_county_name"))
+            or geo_name(home_of(row)))
+
+
 def needs_research(row):
     return (row.get("category") in NEEDS_RESEARCH
             and str(row.get("territory_basis", "")).endswith("INCOMPLETE"))
@@ -290,9 +296,10 @@ def new_row(d, locate, warn):
 def _describe(row):
     basis = row.get("territory_basis")
     if basis in HOME_BASES:
-        return "%s (%s)" % (basis, row.get("home_cd_name") if is_ca(row) else row.get("home_county_name"))
-    return "%s, %d %s" % (basis, row.get("territory_county_count") or 0,
-                          "divisions" if is_ca(row) else "counties")
+        return "%s (%s)" % (basis, home_name(row))
+    n = row.get("territory_county_count") or 0
+    unit = ("division" if n == 1 else "divisions") if is_ca(row) else ("county" if n == 1 else "counties")
+    return "%s, %d %s" % (basis, n, unit)
 
 
 def update_row(row, d, locate, warn):
