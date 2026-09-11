@@ -7,8 +7,9 @@ Compares the dashboard's EDO list with the scorer's EDO master table and reports
     dash/data/organizations.json   (edited in the Organizations editor, port 5002)
     edo_master_table_dual.json     (what the scorer routes leads through)
 
-Nothing syncs these two automatically, so an EDO added on the dashboard gets no leads until it
-is added to the master table (with territory_geoids) and build_edo_indexes.py is rerun.
+The Organizations editor syncs the master on every save (edo_master_sync.py), so drift now means
+an edit made outside it - by hand or by a script - that the master has not picked up. Until it
+does, an EDO added on the dashboard gets no leads. The editor's "Sync all records now" fixes it.
 
     python check_edo_roster.py
     python check_edo_roster.py --orgs "C:\path\to\organizations.json" --json roster_report.json

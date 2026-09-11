@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 MASTER = os.path.join(HERE, "edo_master_table_dual.json")
 FEATURES = os.path.join(HERE, "county_features.json")
 MEMBERS = os.path.join(HERE, "regional_edo_members.json")
+CA_FEATURES = os.path.join(HERE, "ca_features.json")
 
 
 def cnorm(s):
@@ -33,13 +34,47 @@ def cnorm(s):
     return re.sub(r"[^a-z0-9]", "", s)
 
 
-def main():
-    feat = json.load(open(FEATURES, encoding="utf-8"))
-    # (state, normalized-name) -> fips. Independent cities keep their 'city' suffix in NAME, so a
-    # bare "Charlottesville" won't collide with a same-named county; we try both spellings below.
+def county_lookup():
+    """(state or province, normalized name) -> geoid: US county FIPS plus Canadian census-division
+    CDUIDs, so a member list can name either. Independent cities keep their 'city' suffix in NAME,
+    so a bare "Charlottesville" won't collide with a same-named county; resolve_counties tries both."""
     lookup = {}
-    for f, d in feat.items():
+    for f, d in json.load(open(FEATURES, encoding="utf-8")).items():
         lookup[(d["ST_ABBREV"], cnorm(d["NAME"]))] = f
+    for cd, d in json.load(open(CA_FEATURES, encoding="utf-8")).items():
+        lookup.setdefault((d["ST_ABBREV"], cnorm(d["NAME"])), cd)
+    return lookup
+
+
+def resolve_counties(counties, lookup):
+    """{"IN": ["Allen", ...]} -> (sorted geoids, ["Name, ST" that did not match])."""
+    geoids, unmatched = set(), []
+    for st, names in (counties or {}).items():
+        for nm in names:
+            g = (lookup.get((st, cnorm(nm)))
+                 or lookup.get((st, cnorm(nm + " city")))
+                 or lookup.get((st, cnorm(nm + " County"))))
+            if g:
+                geoids.add(g)
+            else:
+                unmatched.append(f"{nm}, {st}")
+    return sorted(geoids), unmatched
+
+
+def apply_members(r, geoids, source):
+    """Write a resolved member list onto one master row (clears the _INCOMPLETE basis)."""
+    r["territory_geoids"] = geoids
+    if r.get("geo_system") == "CA_CSD":
+        r["territory_cd_uids"] = geoids
+    else:
+        r["territory_fips"] = geoids
+    r["territory_county_count"] = len(geoids)
+    r["territory_basis"] = "member_county_list"
+    r["territory_source"] = source
+
+
+def main():
+    lookup = county_lookup()
     members = json.load(open(MEMBERS, encoding="utf-8"))["members"]
     master = json.load(open(MASTER, encoding="utf-8"))
     by_id = {r["objectid"]: r for r in master}
@@ -48,26 +83,13 @@ def main():
     for oid, rec in members.items():
         if oid not in by_id:
             missing.append((oid, rec.get("org", ""), "objectid not in master table")); continue
-        fips = set()
-        for st, names in (rec.get("counties") or {}).items():
-            for nm in names:
-                f = (lookup.get((st, cnorm(nm)))
-                     or lookup.get((st, cnorm(nm + " city")))
-                     or lookup.get((st, cnorm(nm + " County"))))
-                if f:
-                    fips.add(f)
-                else:
-                    missing.append((oid, rec.get("org", ""), f"county not matched: {nm}, {st}"))
-        if not fips:
+        geo, unmatched = resolve_counties(rec.get("counties"), lookup)
+        missing.extend((oid, rec.get("org", ""), f"county not matched: {u}") for u in unmatched)
+        if not geo:
             continue
         r = by_id[oid]
         before = r.get("territory_county_count") or 0
-        geo = sorted(fips)
-        r["territory_geoids"] = geo
-        r["territory_fips"] = geo
-        r["territory_county_count"] = len(geo)
-        r["territory_basis"] = "member_county_list"          # clears the _INCOMPLETE flag
-        r["territory_source"] = rec.get("source", "")
+        apply_members(r, geo, rec.get("source", ""))
         changed.append((oid, r["organization"], before, len(geo)))
 
     json.dump(master, open(MASTER, "w", encoding="utf-8"), indent=1, ensure_ascii=False)

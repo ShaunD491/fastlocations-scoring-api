@@ -46,11 +46,17 @@ def build_indexes(master):
     return us_sorted, ca_sorted, unresolved
 
 
-def main():
-    master = json.load(open(MASTER, encoding="utf-8"))
+def write_indexes(master):
+    """Rebuild both index files from master rows. edo_master_sync.py calls this after a sync."""
     us_sorted, ca_sorted, unresolved = build_indexes(master)
     json.dump(us_sorted, open(US_OUT, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(ca_sorted, open(CA_OUT, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+    return us_sorted, ca_sorted, unresolved
+
+
+def main():
+    master = json.load(open(MASTER, encoding="utf-8"))
+    us_sorted, ca_sorted, unresolved = write_indexes(master)
 
     print(f"{len(master)} EDOs -> US: {len(us_sorted)} county keys, CA: {len(ca_sorted)} CD keys")
     print(f"Wrote {os.path.basename(US_OUT)} and {os.path.basename(CA_OUT)}")
