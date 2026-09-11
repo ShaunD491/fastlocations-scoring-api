@@ -1103,7 +1103,7 @@
    "39049"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -1115,7 +1115,8 @@
   ],
   "embed_url": "http://www.amppartners.org/",
   "ai_link": "https://3558b36fa2334083bc118c4fd7644eb3.elf.site",
-  "territory_note": "joint action agency - territory is its member municipalities"
+  "territory_note": "joint action agency - territory is its member municipalities",
+  "territory_source": "https://www.amppartners.org/about/"
  },
  {
   "objectid": "4481",
@@ -2421,7 +2422,7 @@
    "22079"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2432,7 +2433,8 @@
    "22079"
   ],
   "embed_url": "https://www.cenla.org",
-  "ai_link": "https://2c65b3a8deb34eaea77f3e96d53e3c85.elf.site"
+  "ai_link": "https://2c65b3a8deb34eaea77f3e96d53e3c85.elf.site",
+  "territory_source": "https://labeoc.org/learn-more/find-your-economic-development-region/"
  },
  {
   "objectid": "4462",
@@ -5707,7 +5709,7 @@
    "26049"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -5718,7 +5720,8 @@
    "26049"
   ],
   "embed_url": "https://www.flintandgenesee.org",
-  "ai_link": "https://8e1485edb58e4956ab90aba977ee6eaa.elf.site"
+  "ai_link": "https://8e1485edb58e4956ab90aba977ee6eaa.elf.site",
+  "territory_source": "https://www.flintandgenesee.org/flint-genesee-economic-alliance-releases-genesee-county-small-business-analysis/"
  },
  {
   "objectid": "4373",
@@ -6554,7 +6557,7 @@
    "38035"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -6565,7 +6568,8 @@
    "38035"
   ],
   "embed_url": "http://www.grandforks.org/",
-  "ai_link": "https://78fba2c5dc3341df96d22ad3d89868d1.elf.site"
+  "ai_link": "https://78fba2c5dc3341df96d22ad3d89868d1.elf.site",
+  "territory_source": "http://www.grandforks.org/"
  },
  {
   "objectid": "4394",
@@ -8364,7 +8368,7 @@
    "18057"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -8376,7 +8380,8 @@
   ],
   "embed_url": "https://www.impa.com",
   "ai_link": "https://92f6cb25dd2648228a5f140d76ecf71f.elf.site",
-  "territory_note": "joint action agency - territory is its member municipalities"
+  "territory_note": "joint action agency - territory is its member municipalities",
+  "territory_source": ""
  },
  {
   "objectid": "66",
@@ -9553,7 +9558,7 @@
    "19113"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -9565,7 +9570,8 @@
   ],
   "embed_url": "http://www.iaisrr.com/",
   "ai_link": "https://eeca4963d3f64465ad3464037a6259eb.elf.site",
-  "territory_note": "railroad, not an electric utility"
+  "territory_note": "railroad, not an electric utility",
+  "territory_source": "http://www.iaisrr.com/"
  },
  {
   "objectid": "51",
@@ -12883,7 +12889,7 @@
    "01039"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12895,7 +12901,8 @@
   ],
   "embed_url": "https://www.powersouth.com/economic-development/",
   "ai_link": "https://25f8caf2546e496a82b38cdb0420cb5b.elf.site",
-  "territory_note": "G&T co-op (wholesale) - no retail territory reported to EIA"
+  "territory_note": "G&T co-op (wholesale) - no retail territory reported to EIA",
+  "territory_source": "https://www.powersouth.com/economic-development/"
  },
  {
   "objectid": "4544",
@@ -13405,7 +13412,7 @@
    "06073"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13416,7 +13423,8 @@
    "06073"
   ],
   "embed_url": "http://www.sandiegobusiness.org/",
-  "ai_link": "https://ee6d0aad16a345ce852f83fa4dc82b85.elf.site"
+  "ai_link": "https://ee6d0aad16a345ce852f83fa4dc82b85.elf.site",
+  "territory_source": "https://www.sandiegobusiness.org/about-the-region/"
  },
  {
   "objectid": "4458",
@@ -15120,7 +15128,7 @@
    "48141"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -15131,7 +15139,8 @@
    "48141"
   ],
   "embed_url": "http://www.borderplexalliance.org/",
-  "ai_link": "https://4abeb679468c434cb50ccf781a0e7055.elf.site"
+  "ai_link": "https://4abeb679468c434cb50ccf781a0e7055.elf.site",
+  "territory_source": "http://www.borderplexalliance.org/"
  },
  {
   "objectid": "64",

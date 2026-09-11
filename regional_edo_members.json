@@ -439,6 +439,69 @@
       "counties": {
         "CA": ["Sutter County", "Yuba County"]
       }
+    },
+    "101": {
+      "org": "American Municipal Power",
+      "source": "https://www.amppartners.org/about/",
+      "counties": {
+        "OH": ["Franklin County"]
+      }
+    },
+    "4478": {
+      "org": "Central Louisiana Economic Development Alliance",
+      "source": "https://labeoc.org/learn-more/find-your-economic-development-region/",
+      "counties": {
+        "LA": ["Rapides Parish"]
+      }
+    },
+    "4371": {
+      "org": "Flint & Genesee Economic Alliance",
+      "source": "https://www.flintandgenesee.org/flint-genesee-economic-alliance-releases-genesee-county-small-business-analysis/",
+      "counties": {
+        "MI": ["Genesee County"]
+      }
+    },
+    "107": {
+      "org": "Grand Forks Region EDC",
+      "source": "http://www.grandforks.org/",
+      "counties": {
+        "ND": ["Grand Forks County"]
+      }
+    },
+    "4423": {
+      "org": "Indiana Municipal Power Agency",
+      "source": "",
+      "counties": {
+        "IN": ["Hamilton County"]
+      }
+    },
+    "4569": {
+      "org": "Iowa Interstate Railroad, LLC",
+      "source": "http://www.iaisrr.com/",
+      "counties": {
+        "IA": ["Linn County"]
+      }
+    },
+    "4482": {
+      "org": "PowerSouth Energy Cooperative",
+      "source": "https://www.powersouth.com/economic-development/",
+      "counties": {
+        "AL": ["Covington County"]
+      }
+    },
+    "4455": {
+      "org": "San Diego Regional Economic Development Corp",
+      "source": "https://www.sandiegobusiness.org/about-the-region/",
+      "counties": {
+        "CA": ["San Diego County"]
+      }
+    },
+    "124": {
+      "org": "The Borderplex Alliance",
+      "source": "http://www.borderplexalliance.org/",
+      "counties": {
+        "TX": ["El Paso County"]
+      }
     }
   }
 }
