@@ -2413,8 +2413,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
@@ -3979,14 +3979,13 @@
   "longitude": "-64.78928839",
   "home_county_fips": null,
   "home_county_name": null,
-  "territory_fips": [
-   "1307"
-  ],
+  "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
-   "csd_name_ambiguous(2)"
+   "csd_name_ambiguous(2)",
+   "multi_cd_territory_unenumerated"
   ],
   "geo_system": "CA_CSD",
   "geoid_type": "census_division_uid",
@@ -8587,14 +8586,13 @@
   "longitude": "-80.98984941",
   "home_county_fips": null,
   "home_county_name": null,
-  "territory_fips": [
-   "3553"
-  ],
+  "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
-   "csd_name_no_match"
+   "csd_name_no_match",
+   "multi_cd_territory_unenumerated"
   ],
   "geo_system": "CA_CSD",
   "geoid_type": "census_division_uid",
@@ -8621,8 +8619,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
@@ -10050,14 +10048,13 @@
   "longitude": "-76.94941858",
   "home_county_fips": null,
   "home_county_name": null,
-  "territory_fips": [
-   "3511"
-  ],
+  "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
-   "csd_name_no_match"
+   "csd_name_no_match",
+   "multi_cd_territory_unenumerated"
   ],
   "geo_system": "CA_CSD",
   "geoid_type": "census_division_uid",
@@ -11128,8 +11125,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
@@ -11740,8 +11737,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
@@ -13161,8 +13158,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
@@ -14904,8 +14901,8 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd",
-  "resolution_status": "resolved",
+  "territory_basis": "home_cd_only_INCOMPLETE",
+  "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
   ],
