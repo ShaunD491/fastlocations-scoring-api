@@ -25,8 +25,8 @@ US_OUT = os.path.join(HERE, "edo_fips_index.json")
 CA_OUT = os.path.join(HERE, "edo_ca_cd_index.json")
 
 
-def main():
-    master = json.load(open(MASTER, encoding="utf-8"))
+def build_indexes(master):
+    """master rows -> (us_index, ca_index, unresolved). Pure; check_edo_roster.py reuses it."""
     us, ca = defaultdict(list), defaultdict(list)
     unresolved = []
     for r in master:
@@ -43,6 +43,12 @@ def main():
     # stable ordering so diffs are clean in git
     us_sorted = {k: sorted(v, key=int) for k, v in sorted(us.items())}
     ca_sorted = {k: sorted(v, key=int) for k, v in sorted(ca.items())}
+    return us_sorted, ca_sorted, unresolved
+
+
+def main():
+    master = json.load(open(MASTER, encoding="utf-8"))
+    us_sorted, ca_sorted, unresolved = build_indexes(master)
     json.dump(us_sorted, open(US_OUT, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(ca_sorted, open(CA_OUT, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
 

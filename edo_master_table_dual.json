@@ -1219,7 +1219,7 @@
   "organization": "Arizona Commerce Authority",
   "category": "State Agency",
   "city": "Phoenix",
-  "state": "AR",
+  "state": "AZ",
   "country": "US",
   "latitude": "33.450142",
   "longitude": "-112.082648",
@@ -1245,9 +1245,7 @@
   "territory_county_count": 15,
   "territory_basis": "whole_state",
   "resolution_status": "resolved",
-  "flags": [
-   "state_field_mismatch:AR->AZ"
-  ],
+  "flags": [],
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
@@ -8605,7 +8603,7 @@
    "3553"
   ],
   "embed_url": "https://investsudbury.ca/",
-  "ai_link": "https://0042faa1470d405ca9e366e49819526c.elf.site",
+  "ai_link": "https://eb0f4dcb81b741f0af2449ca71329017.elf.site",
   "territory_cd_uids": [
    "3553"
   ]
