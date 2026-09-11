@@ -79,6 +79,366 @@
       "counties": {
         "VA": ["Albemarle", "Culpeper", "Fluvanna", "Greene", "Louisa", "Madison", "Nelson", "Orange", "Charlottesville city"]
       }
+    },
+    "4477": {
+      "org": "Albuquerque Regional Economic Alliance",
+      "source": "https://www.abq.org/communities/",
+      "counties": {
+        "NM": ["Bernalillo County", "Sandoval County", "Torrance County", "Valencia County"]
+      }
+    },
+    "102": {
+      "org": "Birmingham Business Alliance",
+      "source": "https://cm.hsvchamber.org/list/member/birmingham-business-alliance-25645",
+      "counties": {
+        "AL": ["Bibb County", "Blount County", "Chilton County", "Jefferson County", "St. Clair County", "Shelby County", "Walker County"]
+      }
+    },
+    "56": {
+      "org": "Boise Valley Economic Partnership",
+      "source": "https://www.boisechamber.org/bvep-economic-summit.html",
+      "counties": {
+        "ID": ["Ada County", "Boise County", "Canyon County", "Gem County", "Owyhee County"]
+      }
+    },
+    "45": {
+      "org": "Centergy, Inc.",
+      "source": "https://wmep.org/event-organizer/centergy/",
+      "counties": {
+        "WI": ["Adams County", "Lincoln County", "Marathon County", "Portage County", "Wood County"]
+      }
+    },
+    "103": {
+      "org": "Centerstate CEO",
+      "source": "https://centerstateceo.com/about-us/greater-oswego-fulton-chamber-commerce/oswego-county-initiatives",
+      "counties": {
+        "NY": ["Onondaga County", "Oswego County"]
+      }
+    },
+    "85": {
+      "org": "Central Indiana Corporate Partnership",
+      "source": "https://techpoint.org/central-indiana-corporate-partnership-unveils-new-workforce-initiative/",
+      "counties": {
+        "IN": ["Boone County", "Brown County", "Hamilton County", "Hancock County", "Hendricks County", "Johnson County", "Madison County", "Marion County", "Morgan County", "Putnam County", "Shelby County"]
+      }
+    },
+    "4462": {
+      "org": "Central Nebraska Economic Development District",
+      "source": "http://cnedd.org/",
+      "counties": {
+        "NE": ["Blaine County", "Boyd County", "Brown County", "Cherry County", "Custer County", "Garfield County", "Greeley County", "Holt County", "Keya Paha County", "Loup County", "Rock County", "Sherman County", "Valley County", "Wheeler County"]
+      }
+    },
+    "4303": {
+      "org": "Central Okanagan Economic Development Commission",
+      "source": "https://www.investkelowna.com/about-the-coedc/coedc-strategy-2025-to-2030/",
+      "counties": {
+        "BC": ["Central Okanagan"]
+      }
+    },
+    "104": {
+      "org": "Central South Carolina Alliance",
+      "source": "https://www.centralsc.org/news/central-sc-alliance-launches-new-tool-to-attract-and-retain-skilled-talent",
+      "counties": {
+        "SC": ["Calhoun County", "Clarendon County", "Fairfield County", "Kershaw County", "Lexington County", "Newberry County", "Orangeburg County", "Richland County"]
+      }
+    },
+    "4437": {
+      "org": "Charlotte Regional Business Alliance",
+      "source": "https://charlotteregion.com/news/charlotte-population-increase/",
+      "counties": {
+        "NC": ["Alexander County", "Cabarrus County", "Catawba County", "Cleveland County", "Gaston County", "Iredell County", "Lincoln County", "Mecklenburg County", "Rowan County", "Stanly County", "Union County"],
+        "SC": ["Chester County", "Chesterfield County", "Lancaster County", "York County"]
+      }
+    },
+    "4505": {
+      "org": "Cornerstone Alliance",
+      "source": "https://www.berriencounty.org/329/Local-Economic-Development-Agencies",
+      "counties": {
+        "MI": ["Berrien County", "Cass County", "Van Buren County"]
+      }
+    },
+    "28": {
+      "org": "Detroit Regional Partnership",
+      "source": "https://www.guidestar.org/profile/83-1361974",
+      "counties": {
+        "MI": ["Livingston County", "Macomb County", "Oakland County", "Washtenaw County", "Wayne County"]
+      }
+    },
+    "61": {
+      "org": "East Tennessee Economic Development Agency",
+      "source": "https://www.eteda.org/our-region/local-communities/",
+      "counties": {
+        "TN": ["Anderson County", "Blount County", "Campbell County", "Claiborne County", "Cocke County", "Grainger County", "Jefferson County", "Knox County", "Loudon County", "Monroe County", "Morgan County", "Roane County", "Scott County", "Sevier County", "Union County"]
+      }
+    },
+    "4309": {
+      "org": "Econ Dev Southeast NB",
+      "source": "https://ede.nbse.ca/about/",
+      "counties": {
+        "NB": ["Albert", "Kent", "Westmorland"]
+      }
+    },
+    "4363": {
+      "org": "Enid Regional Development Alliance",
+      "source": "https://growenid.com/about-erda/",
+      "counties": {
+        "OK": ["Garfield County"]
+      }
+    },
+    "4386": {
+      "org": "Great Lakes Bay Regional Alliance",
+      "source": "https://www.mt-pleasant.net/glbr-alliance",
+      "counties": {
+        "MI": ["Bay County", "Midland County", "Isabella County", "Saginaw County"]
+      }
+    },
+    "127": {
+      "org": "Greater Cleveland Partnership",
+      "source": "https://www.guidestar.org/profile/34-0149250",
+      "counties": {
+        "OH": ["Cuyahoga County", "Geauga County", "Lorain County", "Medina County"]
+      }
+    },
+    "4351": {
+      "org": "Greater Des Moines Partnership",
+      "source": "https://www.prnewswire.com/news-releases/greater-des-moines-partnership-builds-on-2025-momentum-unveils-2026-strategic-priorities-302672825.html",
+      "counties": {
+        "IA": ["Adair County", "Clarke County", "Dallas County", "Guthrie County", "Jasper County", "Madison County", "Mahaska County", "Marion County", "Marshall County", "Polk County", "Poweshiek County", "Tama County", "Warren County"]
+      }
+    },
+    "87": {
+      "org": "Greater Peoria EDC",
+      "source": "https://greaterpeoriaedc.org/about-the-greater-peoria-edc/",
+      "counties": {
+        "IL": ["Logan County", "Mason County", "Peoria County", "Tazewell County", "Woodford County"]
+      }
+    },
+    "80": {
+      "org": "Greater Portland Inc.",
+      "source": "https://www.greaterportlandinc.com/about-us",
+      "counties": {
+        "OR": ["Clackamas County", "Multnomah County", "Washington County"],
+        "WA": ["Clark County"]
+      }
+    },
+    "108": {
+      "org": "Hays Caldwell Economic Development Partnership",
+      "source": "https://business.sanmarcostexas.com/list/member/hays-caldwell-economic-development-partnership-5008444",
+      "counties": {
+        "TX": ["Hays County", "Caldwell County"]
+      }
+    },
+    "4509": {
+      "org": "Hoosier Energy",
+      "source": "https://hoosierenergy.com/our-members/",
+      "counties": {
+        "IN": ["Monroe County", "Bartholomew County", "Clark County", "Daviess County", "Martin County", "Decatur County", "Dubois County", "Harrison County", "Henry County", "Jackson County", "Orange County", "Perry County", "Spencer County", "Warrick County", "Rush County", "Shelby County"],
+        "IL": ["Wayne County", "White County"]
+      }
+    },
+    "66": {
+      "org": "Indy Economic Development",
+      "source": "https://www.indyecondev.com/about",
+      "counties": {
+        "IN": ["Marion County"]
+      }
+    },
+    "4419": {
+      "org": "Invest Buffalo Niagara",
+      "source": "https://buffaloniagara.org/about-us/",
+      "counties": {
+        "NY": ["Erie County", "Niagara County", "Chautauqua County", "Cattaraugus County", "Allegany County", "Genesee County", "Orleans County", "Wyoming County"]
+      }
+    },
+    "4565": {
+      "org": "Invest Sudbury",
+      "source": "https://investsudbury.ca/",
+      "counties": {
+        "ON": ["Greater Sudbury / Grand Sudbury"]
+      }
+    },
+    "97": {
+      "org": "Invest Vancouver",
+      "source": "https://canadah2.ca/member/invest-vancouver/",
+      "counties": {
+        "BC": ["Greater Vancouver"]
+      }
+    },
+    "72": {
+      "org": "Lansing Economic Area Partnership",
+      "source": "https://www.iloveoldtown.org/connections/57873-leap-lansing-economic-area-partnership/",
+      "counties": {
+        "MI": ["Clinton County", "Eaton County", "Ingham County"]
+      }
+    },
+    "4321": {
+      "org": "Lennox and Addington County",
+      "source": "https://lennox-addington.on.ca/about/about-the-county-of-lennox-and-addington/",
+      "counties": {
+        "ON": ["Lennox and Addington"]
+      }
+    },
+    "4494": {
+      "org": "Lower Colorado River Authority",
+      "source": "https://www.lcra.org/community-services/public-affairs/",
+      "counties": {
+        "TX": ["Austin County", "Bandera County", "Bastrop County", "Blanco County", "Brown County", "Burleson County", "Burnet County", "Caldwell County", "Coleman County", "Colorado County", "Comal County", "Concho County", "Crane County", "Crockett County", "DeWitt County", "Fayette County", "Gillespie County", "Gonzales County", "Guadalupe County", "Hamilton County", "Hays County", "Kendall County", "Kerr County", "Kimble County", "Lampasas County", "Lavaca County", "Lee County", "Llano County", "Mason County", "Matagorda County", "McCulloch County", "Menard County", "Mills County", "Pecos County", "Reagan County", "San Saba County", "Schleicher County", "Tom Green County", "Travis County", "Upton County", "Waller County", "Washington County", "Wharton County", "Williamson County"]
+      }
+    },
+    "70": {
+      "org": "NCEast Alliance",
+      "source": "https://www.jdnews.com/news/eastern-n-c-economic-development-regions-to-merge/article_8f7e4b9f-03be-59e4-a675-233713f0e0f7.html",
+      "counties": {
+        "NC": ["Beaufort County", "Bertie County", "Camden County", "Carteret County", "Chowan County", "Currituck County", "Dare County", "Edgecombe County", "Gates County", "Greene County", "Halifax County", "Hertford County", "Hyde County", "Jones County", "Martin County", "Northampton County", "Onslow County", "Pasquotank County", "Perquimans County", "Pitt County", "Tyrrell County", "Washington County", "Wilson County"]
+      }
+    },
+    "4559": {
+      "org": "Niagara Economic Development",
+      "source": "https://niagaracanada.com/about-us/",
+      "counties": {
+        "ON": ["Niagara"]
+      }
+    },
+    "4361": {
+      "org": "North Carolina's Southeast",
+      "source": "https://businessnc.com/regional-spotlight-southeast-n-c-20-counties-offering-a-unique-mix-of-resources-and-opportunities/",
+      "counties": {
+        "NC": ["Anson County", "Bladen County", "Brunswick County", "Columbus County", "Craven County", "Cumberland County", "Duplin County", "Hoke County", "Jones County", "Lenoir County", "Montgomery County", "Moore County", "New Hanover County", "Onslow County", "Pender County", "Richmond County", "Robeson County", "Sampson County", "Scotland County", "Wayne County"]
+      }
+    },
+    "71": {
+      "org": "Northeast Nebraska Economic Development District",
+      "source": "https://nenedd.org/memberships/",
+      "counties": {
+        "NE": ["Antelope County", "Boone County", "Burt County", "Cedar County", "Colfax County", "Cuming County", "Dixon County", "Dodge County", "Knox County", "Madison County", "Nance County", "Pierce County", "Platte County", "Stanton County", "Thurston County", "Wayne County"]
+      }
+    },
+    "4333": {
+      "org": "Ohio’s Electric Cooperatives",
+      "source": "https://www.ohioec.org/ed",
+      "counties": {
+        "OH": ["Franklin", "Athens", "Gallia", "Jackson", "Lawrence", "Meigs", "Pike", "Ross", "Scioto", "Vinton", "Darke", "Preble", "Mercer", "Ashland", "Huron", "Lorain", "Richland", "Union", "Carroll", "Butler", "Hamilton", "Montgomery", "Paulding", "Wood", "Muskingum", "Fairfield", "Morrow", "Medina", "Monroe", "Noble", "Knox", "Highland", "Seneca"]
+      }
+    },
+    "8": {
+      "org": "ONE COLUMBUS",
+      "source": "https://columbusregion.com/about-us/what-we-do/regional-economic-development/",
+      "counties": {
+        "OH": ["Delaware County", "Fairfield County", "Franklin County", "Knox County", "Licking County", "Logan County", "Madison County", "Marion County", "Morrow County", "Pickaway County", "Union County"]
+      }
+    },
+    "4561": {
+      "org": "Ontario East EDC",
+      "source": "https://ontarioeast.ca/members/regional-marketing-committee/",
+      "counties": {
+        "ON": ["Frontenac", "Hastings", "Kawartha Lakes", "Lanark", "Leeds and Grenville", "Lennox and Addington", "Northumberland", "Peterborough", "Renfrew", "Stormont, Dundas and Glengarry"]
+      }
+    },
+    "4432": {
+      "org": "Palmetto Railways",
+      "source": "https://palmettorailways.com/about/",
+      "counties": {
+        "SC": ["Charleston County", "Berkeley County", "Hampton County", "Colleton County"]
+      }
+    },
+    "83": {
+      "org": "Pittsburgh Regional Alliance",
+      "source": "https://pittsburghregion.org/real-estate/",
+      "counties": {
+        "PA": ["Allegheny County", "Armstrong County", "Beaver County", "Butler County", "Fayette County", "Greene County", "Indiana County", "Lawrence County", "Washington County", "Westmoreland County"]
+      }
+    },
+    "34": {
+      "org": "Polymer Alliance Zone Inc.",
+      "source": "https://pazwv.org/about-us/",
+      "counties": {
+        "WV": ["Wayne County", "Cabell County", "Mason County", "Jackson County", "Wood County", "Pleasants County", "Tyler County", "Wetzel County", "Marshall County", "Ohio County"]
+      }
+    },
+    "73": {
+      "org": "Roanoke Regional Partnership",
+      "source": "https://roanoke.org/why-the-roanoke-region/regional-overview/",
+      "counties": {
+        "VA": ["Alleghany County", "Bedford County", "Botetourt County", "Franklin County", "Roanoke County", "Roanoke city", "Salem city", "Covington city"]
+      }
+    },
+    "40": {
+      "org": "Rockford Area Economic Development Council",
+      "source": "https://illinoisdefense.uic.edu/about/partners/rockford-area-economic-development-council/",
+      "counties": {
+        "IL": ["Boone County", "Winnebago County"]
+      }
+    },
+    "100": {
+      "org": "SC Power Team",
+      "source": "https://www.broadriverelectric.com/economic-development/sc-power-team/",
+      "counties": {
+        "SC": ["Abbeville County", "Aiken County", "Allendale County", "Anderson County", "Bamberg County", "Barnwell County", "Beaufort County", "Berkeley County", "Calhoun County", "Charleston County", "Cherokee County", "Chester County", "Chesterfield County", "Clarendon County", "Colleton County", "Darlington County", "Dillon County", "Dorchester County", "Edgefield County", "Fairfield County", "Florence County", "Georgetown County", "Greenville County", "Greenwood County", "Hampton County", "Horry County", "Jasper County", "Kershaw County", "Lancaster County", "Laurens County", "Lee County", "Lexington County", "Marion County", "Marlboro County", "McCormick County", "Newberry County", "Oconee County", "Orangeburg County", "Pickens County", "Richland County", "Saluda County", "Spartanburg County", "Sumter County", "Union County", "Williamsburg County", "York County"]
+      }
+    },
+    "91": {
+      "org": "Silicon Valley Economic Development Alliance",
+      "source": "https://www.siliconvalleyonline.org/about-us/",
+      "counties": {
+        "CA": ["San Mateo County", "Santa Clara County", "Santa Cruz County", "Alameda County"]
+      }
+    },
+    "4415": {
+      "org": "Southeast Georgia Alliance",
+      "source": "https://sega-alliance.com/regional-overview.php",
+      "counties": {
+        "GA": ["Brantley County", "Camden County", "Charlton County", "Glynn County", "McIntosh County", "Wayne County"]
+      }
+    },
+    "4345": {
+      "org": "Southern Virginia Regional Alliance",
+      "source": "https://www.ialr.org/southern-virginia-regional-alliance/",
+      "counties": {
+        "VA": ["Danville city", "Halifax County", "Mecklenburg County", "Patrick County", "Pittsylvania County"]
+      }
+    },
+    "92": {
+      "org": "Southwest Arkansas Development Alliance",
+      "source": "https://hopeprescott.com/2025/01/20/southwest-arkansas-development-alliance-recognized-at-conference/",
+      "counties": {
+        "AR": ["Columbia County", "Hempstead County", "Howard County", "Lafayette County", "Little River County", "Miller County", "Nevada County", "Sevier County"]
+      }
+    },
+    "4548": {
+      "org": "St John, NB",
+      "source": "https://saintjohn.ca/en/saint-john-new-brunswick/opening-or-growing-business-saint-john-new-brunswick",
+      "counties": {
+        "NB": ["Saint John"]
+      }
+    },
+    "4326": {
+      "org": "Team NEO",
+      "source": "https://northeastohioregion.com/explore-our-region/counties/",
+      "counties": {
+        "OH": ["Ashland County", "Cuyahoga County", "Erie County", "Geauga County", "Huron County", "Lake County", "Lorain County", "Medina County", "Portage County", "Richland County", "Stark County", "Summit County", "Tuscarawas County", "Wayne County"]
+      }
+    },
+    "128": {
+      "org": "The Right Place, Inc.",
+      "source": "https://www.rightplace.org/#links",
+      "counties": {
+        "MI": ["Kent County", "Ionia County", "Lake County", "Mason County", "Montcalm County", "Newaygo County", "Oceana County"]
+      }
+    },
+    "4554": {
+      "org": "Waterloo EDC",
+      "source": "https://www.waterlooedc.ca/",
+      "counties": {
+        "ON": ["Waterloo"]
+      }
+    },
+    "122": {
+      "org": "Yuba-Sutter Economic Development Corp.",
+      "source": "https://www.ysedc.org/about-us",
+      "counties": {
+        "CA": ["Sutter County", "Yuba County"]
+      }
     }
   }
 }

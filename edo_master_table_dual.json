@@ -721,10 +721,13 @@
   "home_county_fips": "35001",
   "home_county_name": "Bernalillo County",
   "territory_fips": [
-   "35001"
+   "35001",
+   "35043",
+   "35057",
+   "35061"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -732,10 +735,14 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "35001"
+   "35001",
+   "35043",
+   "35057",
+   "35061"
   ],
   "embed_url": "https://www.abq.org",
-  "ai_link": "https://01d84c25a0d6460b9d7f1967d075e712.elf.site"
+  "ai_link": "https://01d84c25a0d6460b9d7f1967d075e712.elf.site",
+  "territory_source": "https://www.abq.org/communities/"
  },
  {
   "objectid": "4479",
@@ -1670,10 +1677,16 @@
   "home_county_fips": "01073",
   "home_county_name": "Jefferson County",
   "territory_fips": [
-   "01073"
+   "01007",
+   "01009",
+   "01021",
+   "01073",
+   "01115",
+   "01117",
+   "01127"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 7,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -1681,10 +1694,17 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "01073"
+   "01007",
+   "01009",
+   "01021",
+   "01073",
+   "01115",
+   "01117",
+   "01127"
   ],
   "embed_url": "http://www.birminghambusinessalliance.com/",
-  "ai_link": "https://12e948c8599545949214751a7d283765.elf.site"
+  "ai_link": "https://12e948c8599545949214751a7d283765.elf.site",
+  "territory_source": "https://cm.hsvchamber.org/list/member/birmingham-business-alliance-25645"
  },
  {
   "objectid": "4511",
@@ -1724,10 +1744,14 @@
   "home_county_fips": "16001",
   "home_county_name": "Ada County",
   "territory_fips": [
-   "16001"
+   "16001",
+   "16015",
+   "16027",
+   "16045",
+   "16073"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 5,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -1735,10 +1759,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "16001"
+   "16001",
+   "16015",
+   "16027",
+   "16045",
+   "16073"
   ],
   "embed_url": "http://www.bvep.org/",
-  "ai_link": "https://539859895f224e5b8e9e6400dc51aaa7.elf.site"
+  "ai_link": "https://539859895f224e5b8e9e6400dc51aaa7.elf.site",
+  "territory_source": "https://www.boisechamber.org/bvep-economic-summit.html"
  },
  {
   "objectid": "120",
@@ -2272,10 +2301,14 @@
   "home_county_fips": "55073",
   "home_county_name": "Marathon County",
   "territory_fips": [
-   "55073"
+   "55001",
+   "55069",
+   "55073",
+   "55097",
+   "55141"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 5,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2283,10 +2316,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "55073"
+   "55001",
+   "55069",
+   "55073",
+   "55097",
+   "55141"
   ],
   "embed_url": "https://www.centergy.net/",
-  "ai_link": "https://00fdaf655018474c82abeffeaf9b4557.elf.site"
+  "ai_link": "https://00fdaf655018474c82abeffeaf9b4557.elf.site",
+  "territory_source": "https://wmep.org/event-organizer/centergy/"
  },
  {
   "objectid": "103",
@@ -2300,10 +2338,11 @@
   "home_county_fips": "36067",
   "home_county_name": "Onondaga County",
   "territory_fips": [
-   "36067"
+   "36067",
+   "36075"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 2,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2311,10 +2350,12 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "36067"
+   "36067",
+   "36075"
   ],
   "embed_url": "http://www.centerstateceo.com/",
-  "ai_link": "https://e046b7cd04e1483886b1e39c69f71b8a.elf.site"
+  "ai_link": "https://e046b7cd04e1483886b1e39c69f71b8a.elf.site",
+  "territory_source": "https://centerstateceo.com/about-us/greater-oswego-fulton-chamber-commerce/oswego-county-initiatives"
  },
  {
   "objectid": "85",
@@ -2328,10 +2369,20 @@
   "home_county_fips": "18097",
   "home_county_name": "Marion County",
   "territory_fips": [
-   "18097"
+   "18011",
+   "18013",
+   "18057",
+   "18059",
+   "18063",
+   "18081",
+   "18095",
+   "18097",
+   "18109",
+   "18133",
+   "18145"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 11,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2339,10 +2390,21 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "18097"
+   "18011",
+   "18013",
+   "18057",
+   "18059",
+   "18063",
+   "18081",
+   "18095",
+   "18097",
+   "18109",
+   "18133",
+   "18145"
   ],
   "embed_url": "https://www.cicpindiana.com/",
-  "ai_link": "https://f092dec2e4ae41cf8f2c928c263c19e7.elf.site"
+  "ai_link": "https://f092dec2e4ae41cf8f2c928c263c19e7.elf.site",
+  "territory_source": "https://techpoint.org/central-indiana-corporate-partnership-unveils-new-workforce-initiative/"
  },
  {
   "objectid": "4478",
@@ -2384,10 +2446,23 @@
   "home_county_fips": "31089",
   "home_county_name": "Holt County",
   "territory_fips": [
-   "31089"
+   "31009",
+   "31015",
+   "31017",
+   "31031",
+   "31041",
+   "31071",
+   "31077",
+   "31089",
+   "31103",
+   "31115",
+   "31149",
+   "31163",
+   "31175",
+   "31183"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 14,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2395,10 +2470,24 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "31089"
+   "31009",
+   "31015",
+   "31017",
+   "31031",
+   "31041",
+   "31071",
+   "31077",
+   "31089",
+   "31103",
+   "31115",
+   "31149",
+   "31163",
+   "31175",
+   "31183"
   ],
   "embed_url": "http://cnedd.org/",
-  "ai_link": "https://b54db48e415c434dbd918a41aefa614e.elf.site"
+  "ai_link": "https://b54db48e415c434dbd918a41aefa614e.elf.site",
+  "territory_source": "http://cnedd.org/"
  },
  {
   "objectid": "4303",
@@ -2413,7 +2502,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -2431,7 +2520,8 @@
   "ai_link": "https://a9423affe5d242fd854987f3de4f1928.elf.site",
   "territory_cd_uids": [
    "5935"
-  ]
+  ],
+  "territory_source": "https://www.investkelowna.com/about-the-coedc/coedc-strategy-2025-to-2030/"
  },
  {
   "objectid": "104",
@@ -2445,10 +2535,17 @@
   "home_county_fips": "45079",
   "home_county_name": "Richland County",
   "territory_fips": [
+   "45017",
+   "45027",
+   "45039",
+   "45055",
+   "45063",
+   "45071",
+   "45075",
    "45079"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 8,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2456,10 +2553,18 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "45017",
+   "45027",
+   "45039",
+   "45055",
+   "45063",
+   "45071",
+   "45075",
    "45079"
   ],
   "embed_url": "http://www.centralsc.org/",
-  "ai_link": "https://82534e9cc9ed4f7f89d706c0f10dc48f.elf.site"
+  "ai_link": "https://82534e9cc9ed4f7f89d706c0f10dc48f.elf.site",
+  "territory_source": "https://www.centralsc.org/news/central-sc-alliance-launches-new-tool-to-attract-and-retain-skilled-talent"
  },
  {
   "objectid": "4438",
@@ -2601,10 +2706,24 @@
   "home_county_fips": "37119",
   "home_county_name": "Mecklenburg County",
   "territory_fips": [
-   "37119"
+   "37003",
+   "37025",
+   "37035",
+   "37045",
+   "37071",
+   "37097",
+   "37109",
+   "37119",
+   "37159",
+   "37167",
+   "37179",
+   "45023",
+   "45025",
+   "45057",
+   "45091"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 15,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -2612,10 +2731,25 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "37119"
+   "37003",
+   "37025",
+   "37035",
+   "37045",
+   "37071",
+   "37097",
+   "37109",
+   "37119",
+   "37159",
+   "37167",
+   "37179",
+   "45023",
+   "45025",
+   "45057",
+   "45091"
   ],
   "embed_url": "https://charlotteregion.com",
-  "ai_link": "https://02c033f21ded4f0f89611202e25d4475.elf.site"
+  "ai_link": "https://02c033f21ded4f0f89611202e25d4475.elf.site",
+  "territory_source": "https://charlotteregion.com/news/charlotte-population-increase/"
  },
  {
   "objectid": "4521",
@@ -3346,10 +3480,12 @@
   "home_county_fips": "26021",
   "home_county_name": "Berrien County",
   "territory_fips": [
-   "26021"
+   "26021",
+   "26027",
+   "26159"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 3,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -3357,10 +3493,13 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "26021"
+   "26021",
+   "26027",
+   "26159"
   ],
   "embed_url": "https://cstonealliance.org/",
-  "ai_link": "https://40457f2c6fb0460e8f5870dd96295348.elf.site"
+  "ai_link": "https://40457f2c6fb0460e8f5870dd96295348.elf.site",
+  "territory_source": "https://www.berriencounty.org/329/Local-Economic-Development-Agencies"
  },
  {
   "objectid": "4340",
@@ -3747,10 +3886,14 @@
   "home_county_fips": "26163",
   "home_county_name": "Wayne County",
   "territory_fips": [
+   "26093",
+   "26099",
+   "26125",
+   "26161",
    "26163"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 5,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -3758,10 +3901,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "26093",
+   "26099",
+   "26125",
+   "26161",
    "26163"
   ],
   "embed_url": "http://www.detroitregionalpartnership.com/",
-  "ai_link": "https://0832c15718114d0395ef2109134d8a0e.elf.site"
+  "ai_link": "https://0832c15718114d0395ef2109134d8a0e.elf.site",
+  "territory_source": "https://www.guidestar.org/profile/83-1361974"
  },
  {
   "objectid": "4474",
@@ -3952,10 +4100,24 @@
   "home_county_fips": "47093",
   "home_county_name": "Knox County",
   "territory_fips": [
-   "47093"
+   "47001",
+   "47009",
+   "47013",
+   "47025",
+   "47029",
+   "47057",
+   "47089",
+   "47093",
+   "47105",
+   "47123",
+   "47129",
+   "47145",
+   "47151",
+   "47155",
+   "47173"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 15,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -3963,10 +4125,25 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "47093"
+   "47001",
+   "47009",
+   "47013",
+   "47025",
+   "47029",
+   "47057",
+   "47089",
+   "47093",
+   "47105",
+   "47123",
+   "47129",
+   "47145",
+   "47151",
+   "47155",
+   "47173"
   ],
   "embed_url": "http://www.eteda.org/",
-  "ai_link": "https://9e529ab604044c1da95ae53a44957564.elf.site"
+  "ai_link": "https://9e529ab604044c1da95ae53a44957564.elf.site",
+  "territory_source": "https://www.eteda.org/our-region/local-communities/"
  },
  {
   "objectid": "4309",
@@ -3980,8 +4157,8 @@
   "home_county_fips": null,
   "home_county_name": null,
   "territory_fips": [],
-  "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_county_count": 3,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "csd_name_ambiguous(2)",
@@ -3991,13 +4168,18 @@
   "geoid_type": "census_division_uid",
   "province": "NB",
   "territory_geoids": [
-   "1307"
+   "1306",
+   "1307",
+   "1308"
   ],
   "embed_url": "https://ede.nbse.ca/",
   "ai_link": "https://6946d5e5e9f44cf4a34640c8265646a2.elf.site",
   "territory_cd_uids": [
-   "1307"
-  ]
+   "1306",
+   "1307",
+   "1308"
+  ],
+  "territory_source": "https://ede.nbse.ca/about/"
  },
  {
   "objectid": "4456",
@@ -4800,7 +4982,7 @@
    "40047"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -4811,7 +4993,8 @@
    "40047"
   ],
   "embed_url": "https://www.growenid.com",
-  "ai_link": "https://d70054fb4d1e4d74ac100f665a49d97b.elf.site"
+  "ai_link": "https://d70054fb4d1e4d74ac100f665a49d97b.elf.site",
+  "territory_source": "https://growenid.com/about-erda/"
  },
  {
   "objectid": "4500",
@@ -6448,10 +6631,13 @@
   "home_county_fips": "26017",
   "home_county_name": "Bay County",
   "territory_fips": [
-   "26017"
+   "26017",
+   "26073",
+   "26111",
+   "26145"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -6459,10 +6645,14 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "26017"
+   "26017",
+   "26073",
+   "26111",
+   "26145"
   ],
   "embed_url": "https://www.greatlakesbay.com",
-  "ai_link": "https://2a87eb4dda1645f7afb9e064be3a1eb5.elf.site"
+  "ai_link": "https://2a87eb4dda1645f7afb9e064be3a1eb5.elf.site",
+  "territory_source": "https://www.mt-pleasant.net/glbr-alliance"
  },
  {
   "objectid": "4525",
@@ -6710,10 +6900,13 @@
   "home_county_fips": "39035",
   "home_county_name": "Cuyahoga County",
   "territory_fips": [
-   "39035"
+   "39035",
+   "39055",
+   "39093",
+   "39103"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -6721,10 +6914,14 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "39035"
+   "39035",
+   "39055",
+   "39093",
+   "39103"
   ],
   "embed_url": "https://greatercle.com/",
-  "ai_link": "https://8281d270bf2047a184563e67dcbfacc6.elf.site"
+  "ai_link": "https://8281d270bf2047a184563e67dcbfacc6.elf.site",
+  "territory_source": "https://www.guidestar.org/profile/34-0149250"
  },
  {
   "objectid": "4331",
@@ -6764,10 +6961,22 @@
   "home_county_fips": "19153",
   "home_county_name": "Polk County",
   "territory_fips": [
-   "19153"
+   "19001",
+   "19039",
+   "19049",
+   "19077",
+   "19099",
+   "19121",
+   "19123",
+   "19125",
+   "19127",
+   "19153",
+   "19157",
+   "19171",
+   "19181"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 13,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -6775,10 +6984,23 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "19153"
+   "19001",
+   "19039",
+   "19049",
+   "19077",
+   "19099",
+   "19121",
+   "19123",
+   "19125",
+   "19127",
+   "19153",
+   "19157",
+   "19171",
+   "19181"
   ],
   "embed_url": "https://www.desmoinesmetro.com",
-  "ai_link": "https://8d99a17302d84099bc3641526c056366.elf.site"
+  "ai_link": "https://8d99a17302d84099bc3641526c056366.elf.site",
+  "territory_source": "https://www.prnewswire.com/news-releases/greater-des-moines-partnership-builds-on-2025-momentum-unveils-2026-strategic-priorities-302672825.html"
  },
  {
   "objectid": "62",
@@ -6972,10 +7194,14 @@
   "home_county_fips": "17143",
   "home_county_name": "Peoria County",
   "territory_fips": [
-   "17143"
+   "17107",
+   "17125",
+   "17143",
+   "17179",
+   "17203"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 5,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -6983,10 +7209,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "17143"
+   "17107",
+   "17125",
+   "17143",
+   "17179",
+   "17203"
   ],
   "embed_url": "https://www.greaterpeoriaedc.org/",
-  "ai_link": "https://74a4a88ecb34405a8886ce632d183d8a.elf.site"
+  "ai_link": "https://74a4a88ecb34405a8886ce632d183d8a.elf.site",
+  "territory_source": "https://greaterpeoriaedc.org/about-the-greater-peoria-edc/"
  },
  {
   "objectid": "80",
@@ -7000,10 +7231,13 @@
   "home_county_fips": "41051",
   "home_county_name": "Multnomah County",
   "territory_fips": [
-   "41051"
+   "41005",
+   "41051",
+   "41067",
+   "53011"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -7011,10 +7245,14 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "41051"
+   "41005",
+   "41051",
+   "41067",
+   "53011"
   ],
   "embed_url": "https://greaterportlandinc.com/",
-  "ai_link": "https://6aa9d931ee294dd7a69962dc33d86a03.elf.site"
+  "ai_link": "https://6aa9d931ee294dd7a69962dc33d86a03.elf.site",
+  "territory_source": "https://www.greaterportlandinc.com/about-us"
  },
  {
   "objectid": "35",
@@ -7401,10 +7639,11 @@
   "home_county_fips": "48209",
   "home_county_name": "Hays County",
   "territory_fips": [
+   "48055",
    "48209"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 2,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -7412,10 +7651,12 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "48055",
    "48209"
   ],
   "embed_url": "https://hayscaldwelledp.com/",
-  "ai_link": "https://c45c083a7e5248e19caaaed93609e46b.elf.site"
+  "ai_link": "https://c45c083a7e5248e19caaaed93609e46b.elf.site",
+  "territory_source": "https://business.sanmarcostexas.com/list/member/hays-caldwell-economic-development-partnership-5008444"
  },
  {
   "objectid": "4527",
@@ -7507,10 +7748,27 @@
   "home_county_fips": "18105",
   "home_county_name": "Monroe County",
   "territory_fips": [
-   "18105"
+   "17191",
+   "17193",
+   "18005",
+   "18019",
+   "18027",
+   "18031",
+   "18037",
+   "18061",
+   "18065",
+   "18071",
+   "18101",
+   "18105",
+   "18117",
+   "18123",
+   "18139",
+   "18145",
+   "18147",
+   "18173"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 18,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -7518,11 +7776,29 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "18105"
+   "17191",
+   "17193",
+   "18005",
+   "18019",
+   "18027",
+   "18031",
+   "18037",
+   "18061",
+   "18065",
+   "18071",
+   "18101",
+   "18105",
+   "18117",
+   "18123",
+   "18139",
+   "18145",
+   "18147",
+   "18173"
   ],
   "embed_url": "https://www.hoosierenergy.com/economic-development/",
   "ai_link": "https://1ffc73c6a47840099f602032b572bc8b.elf.site",
-  "territory_note": "G&T co-op (wholesale) - no retail territory reported to EIA"
+  "territory_note": "G&T co-op (wholesale) - no retail territory reported to EIA",
+  "territory_source": "https://hoosierenergy.com/our-members/"
  },
  {
   "objectid": "4329",
@@ -8117,7 +8393,7 @@
    "18097"
   ],
   "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -8128,7 +8404,8 @@
    "18097"
   ],
   "embed_url": "http://www.indyecondev.com/",
-  "ai_link": "https://9d3d227f0d5941efa414b5cfa5c056fc.elf.site"
+  "ai_link": "https://9d3d227f0d5941efa414b5cfa5c056fc.elf.site",
+  "territory_source": "https://www.indyecondev.com/about"
  },
  {
   "objectid": "113",
@@ -8347,10 +8624,17 @@
   "home_county_fips": "36029",
   "home_county_name": "Erie County",
   "territory_fips": [
-   "36029"
+   "36003",
+   "36009",
+   "36013",
+   "36029",
+   "36037",
+   "36063",
+   "36073",
+   "36121"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 8,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -8358,10 +8642,18 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "36029"
+   "36003",
+   "36009",
+   "36013",
+   "36029",
+   "36037",
+   "36063",
+   "36073",
+   "36121"
   ],
   "embed_url": "https://www.buffaloniagara.org",
-  "ai_link": "https://0a7d68a53bcb4db284246c44d081459f.elf.site"
+  "ai_link": "https://0a7d68a53bcb4db284246c44d081459f.elf.site",
+  "territory_source": "https://buffaloniagara.org/about-us/"
  },
  {
   "objectid": "4551",
@@ -8718,7 +9010,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "csd_name_no_match",
@@ -8734,7 +9026,8 @@
   "ai_link": "https://eb0f4dcb81b741f0af2449ca71329017.elf.site",
   "territory_cd_uids": [
    "3553"
-  ]
+  ],
+  "territory_source": "https://investsudbury.ca/"
  },
  {
   "objectid": "97",
@@ -8749,7 +9042,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -8767,7 +9060,8 @@
   "ai_link": "https://4c35fae4fabf4b2f87d57df2b9b3faed.elf.site",
   "territory_cd_uids": [
    "5915"
-  ]
+  ],
+  "territory_source": "https://canadah2.ca/member/invest-vancouver/"
  },
  {
   "objectid": "4319",
@@ -10016,10 +10310,12 @@
   "home_county_fips": "26065",
   "home_county_name": "Ingham County",
   "territory_fips": [
+   "26037",
+   "26045",
    "26065"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 3,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -10027,10 +10323,13 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "26037",
+   "26045",
    "26065"
   ],
   "embed_url": "http://www.purelansing.com/",
-  "ai_link": "https://0d0595712191434d88454884b5071438.elf.site"
+  "ai_link": "https://0d0595712191434d88454884b5071438.elf.site",
+  "territory_source": "https://www.iloveoldtown.org/connections/57873-leap-lansing-economic-area-partnership/"
  },
  {
   "objectid": "4471",
@@ -10180,7 +10479,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "csd_name_no_match",
@@ -10196,7 +10495,8 @@
   "ai_link": "https://167e9591f91043b394ab03f95718166f.elf.site",
   "territory_cd_uids": [
    "3511"
-  ]
+  ],
+  "territory_source": "https://lennox-addington.on.ca/about/about-the-county-of-lennox-and-addington/"
  },
  {
   "objectid": "4557",
@@ -10393,10 +10693,53 @@
   "home_county_fips": "48453",
   "home_county_name": "Travis County",
   "territory_fips": [
-   "48453"
+   "48015",
+   "48019",
+   "48021",
+   "48031",
+   "48049",
+   "48051",
+   "48053",
+   "48055",
+   "48083",
+   "48089",
+   "48091",
+   "48095",
+   "48103",
+   "48105",
+   "48123",
+   "48149",
+   "48171",
+   "48177",
+   "48187",
+   "48193",
+   "48209",
+   "48259",
+   "48265",
+   "48267",
+   "48281",
+   "48285",
+   "48287",
+   "48299",
+   "48307",
+   "48319",
+   "48321",
+   "48327",
+   "48333",
+   "48371",
+   "48383",
+   "48411",
+   "48413",
+   "48451",
+   "48453",
+   "48461",
+   "48473",
+   "48477",
+   "48481",
+   "48491"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 44,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -10404,11 +10747,55 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "48453"
+   "48015",
+   "48019",
+   "48021",
+   "48031",
+   "48049",
+   "48051",
+   "48053",
+   "48055",
+   "48083",
+   "48089",
+   "48091",
+   "48095",
+   "48103",
+   "48105",
+   "48123",
+   "48149",
+   "48171",
+   "48177",
+   "48187",
+   "48193",
+   "48209",
+   "48259",
+   "48265",
+   "48267",
+   "48281",
+   "48285",
+   "48287",
+   "48299",
+   "48307",
+   "48319",
+   "48321",
+   "48327",
+   "48333",
+   "48371",
+   "48383",
+   "48411",
+   "48413",
+   "48451",
+   "48453",
+   "48461",
+   "48473",
+   "48477",
+   "48481",
+   "48491"
   ],
   "embed_url": "https://www.lcra.org",
   "ai_link": "https://95a0271f1c0543d091fe7711e1b099b3.elf.site",
-  "territory_note": "wholesale river authority - no retail territory reported to EIA"
+  "territory_note": "wholesale river authority - no retail territory reported to EIA",
+  "territory_source": "https://www.lcra.org/community-services/public-affairs/"
  },
  {
   "objectid": "4468",
@@ -10978,10 +11365,32 @@
   "home_county_fips": "37147",
   "home_county_name": "Pitt County",
   "territory_fips": [
-   "37147"
+   "37013",
+   "37015",
+   "37029",
+   "37031",
+   "37041",
+   "37053",
+   "37055",
+   "37065",
+   "37073",
+   "37079",
+   "37083",
+   "37091",
+   "37095",
+   "37103",
+   "37117",
+   "37131",
+   "37133",
+   "37139",
+   "37143",
+   "37147",
+   "37177",
+   "37187",
+   "37195"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 23,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -10989,10 +11398,33 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "37147"
+   "37013",
+   "37015",
+   "37029",
+   "37031",
+   "37041",
+   "37053",
+   "37055",
+   "37065",
+   "37073",
+   "37079",
+   "37083",
+   "37091",
+   "37095",
+   "37103",
+   "37117",
+   "37131",
+   "37133",
+   "37139",
+   "37143",
+   "37147",
+   "37177",
+   "37187",
+   "37195"
   ],
   "embed_url": "http://www.nceast.org/",
-  "ai_link": "https://703f5146e30c42b0992ae4f3793b41fb.elf.site"
+  "ai_link": "https://703f5146e30c42b0992ae4f3793b41fb.elf.site",
+  "territory_source": "https://www.jdnews.com/news/eastern-n-c-economic-development-regions-to-merge/article_8f7e4b9f-03be-59e4-a675-233713f0e0f7.html"
  },
  {
   "objectid": "4426",
@@ -11255,7 +11687,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -11273,7 +11705,8 @@
   "ai_link": "https://9567fc20e2f0459ead2eda11c96ac9a1.elf.site",
   "territory_cd_uids": [
    "3526"
-  ]
+  ],
+  "territory_source": "https://niagaracanada.com/about-us/"
  },
  {
   "objectid": "4397",
@@ -11313,10 +11746,29 @@
   "home_county_fips": "37017",
   "home_county_name": "Bladen County",
   "territory_fips": [
-   "37017"
+   "37007",
+   "37017",
+   "37019",
+   "37047",
+   "37049",
+   "37051",
+   "37061",
+   "37093",
+   "37103",
+   "37107",
+   "37123",
+   "37125",
+   "37129",
+   "37133",
+   "37141",
+   "37153",
+   "37155",
+   "37163",
+   "37165",
+   "37191"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 20,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -11324,10 +11776,30 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "37017"
+   "37007",
+   "37017",
+   "37019",
+   "37047",
+   "37049",
+   "37051",
+   "37061",
+   "37093",
+   "37103",
+   "37107",
+   "37123",
+   "37125",
+   "37129",
+   "37133",
+   "37141",
+   "37153",
+   "37155",
+   "37163",
+   "37165",
+   "37191"
   ],
   "embed_url": "https://www.ncse.org",
-  "ai_link": "https://758dd1fc7ae249e386efbe9d2d09d5cd.elf.site"
+  "ai_link": "https://758dd1fc7ae249e386efbe9d2d09d5cd.elf.site",
+  "territory_source": "https://businessnc.com/regional-spotlight-southeast-n-c-20-counties-offering-a-unique-mix-of-resources-and-opportunities/"
  },
  {
   "objectid": "69",
@@ -11598,10 +12070,25 @@
   "home_county_fips": "31119",
   "home_county_name": "Madison County",
   "territory_fips": [
-   "31119"
+   "31003",
+   "31011",
+   "31021",
+   "31027",
+   "31037",
+   "31039",
+   "31051",
+   "31053",
+   "31107",
+   "31119",
+   "31125",
+   "31139",
+   "31141",
+   "31167",
+   "31173",
+   "31179"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 16,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -11609,10 +12096,26 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "31119"
+   "31003",
+   "31011",
+   "31021",
+   "31027",
+   "31037",
+   "31039",
+   "31051",
+   "31053",
+   "31107",
+   "31119",
+   "31125",
+   "31139",
+   "31141",
+   "31167",
+   "31173",
+   "31179"
   ],
   "embed_url": "http://www.nenedd.org/",
-  "ai_link": "https://365fb9b9526d4da09a33def576d2e6c7.elf.site"
+  "ai_link": "https://365fb9b9526d4da09a33def576d2e6c7.elf.site",
+  "territory_source": "https://nenedd.org/memberships/"
  },
  {
   "objectid": "16",
@@ -11712,10 +12215,42 @@
   "home_county_fips": "39049",
   "home_county_name": "Franklin County",
   "territory_fips": [
-   "39049"
+   "39005",
+   "39009",
+   "39017",
+   "39019",
+   "39037",
+   "39045",
+   "39049",
+   "39053",
+   "39061",
+   "39071",
+   "39077",
+   "39079",
+   "39083",
+   "39087",
+   "39093",
+   "39103",
+   "39105",
+   "39107",
+   "39111",
+   "39113",
+   "39117",
+   "39119",
+   "39121",
+   "39125",
+   "39131",
+   "39135",
+   "39139",
+   "39141",
+   "39145",
+   "39147",
+   "39159",
+   "39163",
+   "39173"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 33,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -11723,11 +12258,44 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "39049"
+   "39005",
+   "39009",
+   "39017",
+   "39019",
+   "39037",
+   "39045",
+   "39049",
+   "39053",
+   "39061",
+   "39071",
+   "39077",
+   "39079",
+   "39083",
+   "39087",
+   "39093",
+   "39103",
+   "39105",
+   "39107",
+   "39111",
+   "39113",
+   "39117",
+   "39119",
+   "39121",
+   "39125",
+   "39131",
+   "39135",
+   "39139",
+   "39141",
+   "39145",
+   "39147",
+   "39159",
+   "39163",
+   "39173"
   ],
   "embed_url": "https://www.ohioec.org/ed",
   "ai_link": "https://fa0ceddb44644fcc91e31801127a90b6.elf.site",
-  "territory_note": "statewide co-op association - members not a single EIA entity"
+  "territory_note": "statewide co-op association - members not a single EIA entity",
+  "territory_source": "https://www.ohioec.org/ed"
  },
  {
   "objectid": "8",
@@ -11741,10 +12309,20 @@
   "home_county_fips": "39049",
   "home_county_name": "Franklin County",
   "territory_fips": [
-   "39049"
+   "39041",
+   "39045",
+   "39049",
+   "39083",
+   "39089",
+   "39091",
+   "39097",
+   "39101",
+   "39117",
+   "39129",
+   "39159"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 11,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -11752,10 +12330,21 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "39049"
+   "39041",
+   "39045",
+   "39049",
+   "39083",
+   "39089",
+   "39091",
+   "39097",
+   "39101",
+   "39117",
+   "39129",
+   "39159"
   ],
   "embed_url": "https://columbusregion.com/about-us/what-we-do/regional-economic-development/",
-  "ai_link": "https://74e5bbdd71b04282986b7881d3a8c44f.elf.site"
+  "ai_link": "https://74e5bbdd71b04282986b7881d3a8c44f.elf.site",
+  "territory_source": "https://columbusregion.com/about-us/what-we-do/regional-economic-development/"
  },
  {
   "objectid": "4492",
@@ -11866,8 +12455,8 @@
   "home_county_fips": null,
   "home_county_name": null,
   "territory_fips": [],
-  "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_county_count": 10,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -11876,7 +12465,16 @@
   "geoid_type": "census_division_uid",
   "province": "ON",
   "territory_geoids": [
-   "3510"
+   "3501",
+   "3507",
+   "3509",
+   "3510",
+   "3511",
+   "3512",
+   "3514",
+   "3515",
+   "3516",
+   "3547"
   ],
   "home_csduid": "3510010",
   "home_cduid": "3510",
@@ -11884,8 +12482,18 @@
   "embed_url": "https://ontarioeast.ca/",
   "ai_link": "https://f6c1952b73414018b0ebf077ba85c5d7.elf.site",
   "territory_cd_uids": [
-   "3510"
-  ]
+   "3501",
+   "3507",
+   "3509",
+   "3510",
+   "3511",
+   "3512",
+   "3514",
+   "3515",
+   "3516",
+   "3547"
+  ],
+  "territory_source": "https://ontarioeast.ca/members/regional-marketing-committee/"
  },
  {
   "objectid": "4549",
@@ -12038,10 +12646,13 @@
   "home_county_fips": "45019",
   "home_county_name": "Charleston County",
   "territory_fips": [
-   "45019"
+   "45015",
+   "45019",
+   "45029",
+   "45049"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12049,11 +12660,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "45019"
+   "45015",
+   "45019",
+   "45029",
+   "45049"
   ],
   "embed_url": "https://www.palmettorailways.com",
   "ai_link": "https://22c423eda37b48aca03af41963448d8c.elf.site",
-  "territory_note": "railroad, not an electric utility"
+  "territory_note": "railroad, not an electric utility",
+  "territory_source": "https://palmettorailways.com/about/"
  },
  {
   "objectid": "4342",
@@ -12145,10 +12760,19 @@
   "home_county_fips": "42003",
   "home_county_name": "Allegheny County",
   "territory_fips": [
-   "42003"
+   "42003",
+   "42005",
+   "42007",
+   "42019",
+   "42051",
+   "42059",
+   "42063",
+   "42073",
+   "42125",
+   "42129"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 10,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12156,10 +12780,20 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "42003"
+   "42003",
+   "42005",
+   "42007",
+   "42019",
+   "42051",
+   "42059",
+   "42063",
+   "42073",
+   "42125",
+   "42129"
   ],
   "embed_url": "https://pittsburghregion.org/",
-  "ai_link": "https://e401cdeb839b487bbc988f6a8e1f37aa.elf.site"
+  "ai_link": "https://e401cdeb839b487bbc988f6a8e1f37aa.elf.site",
+  "territory_source": "https://pittsburghregion.org/real-estate/"
  },
  {
   "objectid": "52",
@@ -12199,10 +12833,19 @@
   "home_county_fips": "54107",
   "home_county_name": "Wood County",
   "territory_fips": [
+   "54011",
+   "54035",
+   "54051",
+   "54053",
+   "54069",
+   "54073",
+   "54095",
+   "54099",
+   "54103",
    "54107"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 10,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12210,10 +12853,20 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "54011",
+   "54035",
+   "54051",
+   "54053",
+   "54069",
+   "54073",
+   "54095",
+   "54099",
+   "54103",
    "54107"
   ],
   "embed_url": "http://www.pazwv.org/",
-  "ai_link": "https://cbdb6ea94c354be8b16308e3d45418fa.elf.site"
+  "ai_link": "https://cbdb6ea94c354be8b16308e3d45418fa.elf.site",
+  "territory_source": "https://pazwv.org/about-us/"
  },
  {
   "objectid": "4482",
@@ -12616,10 +13269,17 @@
   "home_county_fips": "51770",
   "home_county_name": "Roanoke city",
   "territory_fips": [
-   "51770"
+   "51005",
+   "51019",
+   "51023",
+   "51067",
+   "51161",
+   "51580",
+   "51770",
+   "51775"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 8,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12627,10 +13287,18 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "51770"
+   "51005",
+   "51019",
+   "51023",
+   "51067",
+   "51161",
+   "51580",
+   "51770",
+   "51775"
   ],
   "embed_url": "http://www.roanoke.org/",
-  "ai_link": "https://ca5e9c208a3e4a14a4f7b249c1eff027.elf.site"
+  "ai_link": "https://ca5e9c208a3e4a14a4f7b249c1eff027.elf.site",
+  "territory_source": "https://roanoke.org/why-the-roanoke-region/regional-overview/"
  },
  {
   "objectid": "40",
@@ -12644,10 +13312,11 @@
   "home_county_fips": "17201",
   "home_county_name": "Winnebago County",
   "territory_fips": [
+   "17007",
    "17201"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 2,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12655,10 +13324,12 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "17007",
    "17201"
   ],
   "embed_url": "https://rockfordil.com/",
-  "ai_link": "https://f22ce3edd2774addb5e1373e738507e5.elf.site"
+  "ai_link": "https://f22ce3edd2774addb5e1373e738507e5.elf.site",
+  "territory_source": "https://illinoisdefense.uic.edu/about/partners/rockford-area-economic-development-council/"
  },
  {
   "objectid": "110",
@@ -12920,10 +13591,55 @@
   "home_county_fips": "45079",
   "home_county_name": "Richland County",
   "territory_fips": [
-   "45079"
+   "45001",
+   "45003",
+   "45005",
+   "45007",
+   "45009",
+   "45011",
+   "45013",
+   "45015",
+   "45017",
+   "45019",
+   "45021",
+   "45023",
+   "45025",
+   "45027",
+   "45029",
+   "45031",
+   "45033",
+   "45035",
+   "45037",
+   "45039",
+   "45041",
+   "45043",
+   "45045",
+   "45047",
+   "45049",
+   "45051",
+   "45053",
+   "45055",
+   "45057",
+   "45059",
+   "45061",
+   "45063",
+   "45065",
+   "45067",
+   "45069",
+   "45071",
+   "45073",
+   "45075",
+   "45077",
+   "45079",
+   "45081",
+   "45083",
+   "45085",
+   "45087",
+   "45089",
+   "45091"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 46,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -12931,11 +13647,57 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "45079"
+   "45001",
+   "45003",
+   "45005",
+   "45007",
+   "45009",
+   "45011",
+   "45013",
+   "45015",
+   "45017",
+   "45019",
+   "45021",
+   "45023",
+   "45025",
+   "45027",
+   "45029",
+   "45031",
+   "45033",
+   "45035",
+   "45037",
+   "45039",
+   "45041",
+   "45043",
+   "45045",
+   "45047",
+   "45049",
+   "45051",
+   "45053",
+   "45055",
+   "45057",
+   "45059",
+   "45061",
+   "45063",
+   "45065",
+   "45067",
+   "45069",
+   "45071",
+   "45073",
+   "45075",
+   "45077",
+   "45079",
+   "45081",
+   "45083",
+   "45085",
+   "45087",
+   "45089",
+   "45091"
   ],
   "embed_url": "http://scpowerteam.com/",
   "ai_link": "https://fd18af06772c4b38a34365cef580b46a.elf.site",
-  "territory_note": "marketing arm of the SC electric co-ops - not an EIA utility"
+  "territory_note": "marketing arm of the SC electric co-ops - not an EIA utility",
+  "territory_source": "https://www.broadriverelectric.com/economic-development/sc-power-team/"
  },
  {
   "objectid": "36",
@@ -13001,10 +13763,13 @@
   "home_county_fips": "06085",
   "home_county_name": "Santa Clara County",
   "territory_fips": [
-   "06085"
+   "06001",
+   "06081",
+   "06085",
+   "06087"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 4,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13012,10 +13777,14 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "06085"
+   "06001",
+   "06081",
+   "06085",
+   "06087"
   ],
   "embed_url": "https://www.siliconvalleyonline.org/",
-  "ai_link": "https://96fd5b96d261449d81b966b344ac943b.elf.site"
+  "ai_link": "https://96fd5b96d261449d81b966b344ac943b.elf.site",
+  "territory_source": "https://www.siliconvalleyonline.org/about-us/"
  },
  {
   "objectid": "119",
@@ -13177,10 +13946,15 @@
   "home_county_fips": "13127",
   "home_county_name": "Glynn County",
   "territory_fips": [
-   "13127"
+   "13025",
+   "13039",
+   "13049",
+   "13127",
+   "13191",
+   "13305"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 6,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13188,10 +13962,16 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "13127"
+   "13025",
+   "13039",
+   "13049",
+   "13127",
+   "13191",
+   "13305"
   ],
   "embed_url": "https://sega-alliance.com",
-  "ai_link": "https://e47aa55eb35b4c6f8d2f7e327a2ddf2d.elf.site"
+  "ai_link": "https://e47aa55eb35b4c6f8d2f7e327a2ddf2d.elf.site",
+  "territory_source": "https://sega-alliance.com/regional-overview.php"
  },
  {
   "objectid": "4339",
@@ -13231,10 +14011,14 @@
   "home_county_fips": "51590",
   "home_county_name": "Danville city",
   "territory_fips": [
+   "51083",
+   "51117",
+   "51141",
+   "51143",
    "51590"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 5,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13242,10 +14026,15 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
+   "51083",
+   "51117",
+   "51141",
+   "51143",
    "51590"
   ],
   "embed_url": "https://svra.org/",
-  "ai_link": "https://7b479aa159df4f5d8f92941f559bf617.elf.site"
+  "ai_link": "https://7b479aa159df4f5d8f92941f559bf617.elf.site",
+  "territory_source": "https://www.ialr.org/southern-virginia-regional-alliance/"
  },
  {
   "objectid": "92",
@@ -13259,10 +14048,17 @@
   "home_county_fips": "05027",
   "home_county_name": "Columbia County",
   "territory_fips": [
-   "05027"
+   "05027",
+   "05057",
+   "05061",
+   "05073",
+   "05081",
+   "05091",
+   "05099",
+   "05133"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 8,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13270,10 +14066,18 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "05027"
+   "05027",
+   "05057",
+   "05061",
+   "05073",
+   "05081",
+   "05091",
+   "05099",
+   "05133"
   ],
   "embed_url": "https://www.southwestar.org/",
-  "ai_link": "https://a8e933fb731e493ba0d95c34a3aeb886.elf.site"
+  "ai_link": "https://a8e933fb731e493ba0d95c34a3aeb886.elf.site",
+  "territory_source": "https://hopeprescott.com/2025/01/20/southwest-arkansas-development-alliance-recognized-at-conference/"
  },
  {
   "objectid": "4548",
@@ -13288,7 +14092,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -13306,7 +14110,8 @@
   "ai_link": "https://a4d304194f114bbcafca19219283a7bd.elf.site",
   "territory_cd_uids": [
    "1301"
-  ]
+  ],
+  "territory_source": "https://saintjohn.ca/en/saint-john-new-brunswick/opening-or-growing-business-saint-john-new-brunswick"
  },
  {
   "objectid": "20",
@@ -13590,10 +14395,23 @@
   "home_county_fips": "39035",
   "home_county_name": "Cuyahoga County",
   "territory_fips": [
-   "39035"
+   "39005",
+   "39035",
+   "39043",
+   "39055",
+   "39077",
+   "39085",
+   "39093",
+   "39103",
+   "39133",
+   "39139",
+   "39151",
+   "39153",
+   "39157",
+   "39169"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 14,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -13601,10 +14419,24 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "39035"
+   "39005",
+   "39035",
+   "39043",
+   "39055",
+   "39077",
+   "39085",
+   "39093",
+   "39103",
+   "39133",
+   "39139",
+   "39151",
+   "39153",
+   "39157",
+   "39169"
   ],
   "embed_url": "https://teamneo.org",
-  "ai_link": "https://74aa58630e094d75a837afd90e39f531.elf.site"
+  "ai_link": "https://74aa58630e094d75a837afd90e39f531.elf.site",
+  "territory_source": "https://northeastohioregion.com/explore-our-region/counties/"
  },
  {
   "objectid": "4421",
@@ -14339,10 +15171,16 @@
   "home_county_fips": "26081",
   "home_county_name": "Kent County",
   "territory_fips": [
-   "26081"
+   "26067",
+   "26081",
+   "26085",
+   "26105",
+   "26117",
+   "26123",
+   "26127"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 7,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -14350,10 +15188,17 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "26081"
+   "26067",
+   "26081",
+   "26085",
+   "26105",
+   "26117",
+   "26123",
+   "26127"
   ],
   "embed_url": "https://www.rightplace.org/",
-  "ai_link": "https://c982ec4f23244c698f755769f85b217e.elf.site"
+  "ai_link": "https://c982ec4f23244c698f755769f85b217e.elf.site",
+  "territory_source": "https://www.rightplace.org/#links"
  },
  {
   "objectid": "4566",
@@ -15031,7 +15876,7 @@
   "home_county_name": null,
   "territory_fips": [],
   "territory_county_count": 1,
-  "territory_basis": "home_cd_only_INCOMPLETE",
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_cd_territory_unenumerated"
@@ -15049,7 +15894,8 @@
   "ai_link": "https://23910088d7a240288d63de1c96ee6db4.elf.site",
   "territory_cd_uids": [
    "3530"
-  ]
+  ],
+  "territory_source": "https://www.waterlooedc.ca/"
  },
  {
   "objectid": "4356",
@@ -15498,10 +16344,11 @@
   "home_county_fips": "06101",
   "home_county_name": "Sutter County",
   "territory_fips": [
-   "06101"
+   "06101",
+   "06115"
   ],
-  "territory_county_count": 1,
-  "territory_basis": "home_county_only_INCOMPLETE",
+  "territory_county_count": 2,
+  "territory_basis": "member_county_list",
   "resolution_status": "partial",
   "flags": [
    "multi_county_territory_unenumerated"
@@ -15509,10 +16356,12 @@
   "geo_system": "US_FIPS",
   "geoid_type": "county_fips",
   "territory_geoids": [
-   "06101"
+   "06101",
+   "06115"
   ],
   "embed_url": "https://www.ysedc.org/",
-  "ai_link": "https://972a63166d0247f59bd0722aaa64e2a6.elf.site"
+  "ai_link": "https://972a63166d0247f59bd0722aaa64e2a6.elf.site",
+  "territory_source": "https://www.ysedc.org/about-us"
  },
  {
   "objectid": "4535",
