@@ -11990,6 +11990,32 @@
   "ai_link": "https://6ac551557e9b4a7ebf0de738ef7d6bfa.elf.site"
  },
  {
+  "objectid": "4570",
+  "organization": "North Florida Mega Industrial Park",
+  "category": "Megasite",
+  "city": "Lake City",
+  "state": "FL",
+  "country": "US",
+  "latitude": "30.2536611896015",
+  "longitude": "-82.5126417002155",
+  "home_county_fips": "12023",
+  "home_county_name": "Columbia County",
+  "territory_fips": [
+   "12023"
+  ],
+  "territory_county_count": 1,
+  "territory_basis": "home_county",
+  "resolution_status": "resolved",
+  "flags": [],
+  "geo_system": "US_FIPS",
+  "geoid_type": "county_fips",
+  "territory_geoids": [
+   "12023"
+  ],
+  "embed_url": "https://nfmip.com/",
+  "ai_link": "https://ab37eba33deb46f5bc8f7c9494ba85dc.elf.site"
+ },
+ {
   "objectid": "4530",
   "organization": "Northeast Alabama Regional Megasite",
   "category": "Megasite",
