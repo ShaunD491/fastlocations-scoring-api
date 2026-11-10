@@ -38,6 +38,16 @@ titles, `labor_data/titles.json.gz`). Exact or clear matches are picked determin
 Claude in the EDO Portal (`api.php labor_parse`), which may only choose among the listed codes. The user always
 sees and can change the matched code. The portal page is `EDO/labor.html` (FastLabor).
 
+## Phase 5: dashboards, briefings, ArcGIS
+
+| Script | Writes | Notes |
+|---|---|---|
+| `build_dash_labor.py` | `dash/data/labor/<OBJECTID>.json` (382 orgs, ~6.8 MB), `_titles.json`, `_sectors.json`, `_meta.json` | Every occupation in the org's labor area: `[code, emp, lq, wage_median, growth_pct]`. Geography follows `dash/data/trends.json`: msa -> OEWS metro; city/county -> the OEWS metro holding the county (modelled county if nonmetro); region -> sum of its counties (LQ recomputed as sum(emp)/sum(emp/lq)); state -> OEWS statewide; csd -> the CD; cma -> its CDs (cma_to_csd_mapping.json, else core CD by name from ca_cma.json); province -> sum of CDs. Rerun after build_labor_runtime.py. |
+| `build_property_labor.py` (run `py -3 -P`) | `properties/labor_areas.json` (~230 KB) | Places every Property Explorer listing in its OEWS metro/nonmetro area (U.S.) or economic region (Canada): county + state first (89k listings), else city via `us_places.json` / `ca_places.json` and point-in-polygon on the `out/geo` boundaries (16k), else the listing organization's own area when it covers a single place (`source` map). ~2.5k listings stay unplaced. Rerun after a property refresh. Front end: the "Workforce" button under each listing's city in `properties/properties.js` (v26) opens the panel. |
+| `publish_arcgis.py` | ArcGIS Online hosted feature layers from `out/geo/*.geojson` | Dry run by default; `--publish` needs `ARCGIS_TOKEN` (or `ARCGIS_USER` + `ARCGIS_PASSWORD`). Shares with the organization (optional `--group`), never public. Re-runs overwrite in place. Not yet run. |
+
+Front ends: `dash/js/dashboard.js` "Workforce by Occupation" section (signature / largest / fastest-growing tables + search; descriptive data, not the AI+Plus scoring); `EDO/js/report.js` FastPitch "Workers for <industry>" section (the prospect's NAICS sector's national occupation mix from `_sectors.json`, local counts, workers per hire when the job count is known; signature occupations when there is no NAICS). Canadian briefings map each SOC to its NOCs, keeping only NOCs that mostly share one NOC major group.
+
 ## Run order
 
 | # | Script | Output (`out/`) | Source |
@@ -92,3 +102,9 @@ After adding them, re-run `build_crosswalks.py`, then `fetch_oews.py`. For the P
 - Canadian employment counts come from the 2021 Census (`emp_source: "census_2021"`). Wages stay in CAD, and comparisons use each country's own national median. Label Canadian figures "comparable, not identical".
 - NOC → SOC is one-to-many and mostly partial. `soc_primary` is the closest single SOC (the only full link, or else the best title match), and every candidate link is kept in `noc_soc.json`.
 - The Census key is read from `../../tool/refresh_config.json` (`census_api_key`) or `CENSUS_API_KEY`.
+
+### Public role search (2026-11-10)
+`POST /labor/place` (`labor.place_summary`): criteria plus `area` (OEWS area or economic region), `country` and `states`.
+Returns the place's rank among its country's peers, the top 5 inside the given states and the top 3 overall.
+`build_dash_labor.py` writes `search: {area, country, states, area_name}` into each dashboard file for it.
+Known gap: SOC 51-4121 (welders) has no NOC in the crosswalk, though NOC 72106 fits, so welders are not counted in Canada.

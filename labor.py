@@ -360,3 +360,48 @@ def rank_metros(criteria, top=10, include_nonmetro=False):
                                    for i, g in enumerate(ranked[:top], 1)]
         out["results"][country + "_candidates"] = len(ranked)
     return out
+
+
+def place_summary(criteria, area=None, country=None, states=None, top_in_state=5):
+    """One community's standing for the requested roles (dashboard role search).
+
+    area + country: an OEWS area code (US metro or nonmetro) or a Canadian economic-region code; the place
+    is ranked against its peers in its own country (metros among metros; a nonmetro area among metros and
+    nonmetro areas together). states: state / province abbreviations; the best-scoring places inside them
+    are returned too (for state, province and multi-county organizations, which have no single area).
+    """
+    idx = index()
+    if not idx:
+        return {"error": "labor data not built (labor_data/index.json missing)"}
+    country = "CA" if str(country or "").upper() in ("CA", "CAN", "CANADA") else "US"
+    if area and country == "US" and area not in idx["areas"]:
+        return {"error": f"unknown OEWS area {area}"}
+    if area and country == "CA" and area not in idx["ers"]:
+        return {"error": f"unknown economic region {area}"}
+    nonmetro = bool(area and country == "US" and idx["areas"][area][1] == "nonmetro")
+    crit = dict(criteria or {})
+    crit["geography"] = dict(crit.get("geography") or {}, countries=[country])
+    full = rank_metros(crit, top=10 ** 6, include_nonmetro=nonmetro)
+    if full.get("error"):
+        return full
+    rows = full["results"].get(country) or []
+    out = {"schema_version": "1.0", "mode": "place_summary", "request": full["request"], "country": country,
+           "peers": len(rows), "peer_set": ("U.S. metro and nonmetro areas" if nonmetro else
+                                            "U.S. metro areas" if country == "US" else "Canadian economic regions")}
+    if area:
+        hit = next((r for r in rows if r["geo_code"] == area), None)
+        out["place"] = hit
+        if hit is None:
+            out["note"] = "this area has no published employment for the requested occupations"
+    sts = {str(s).upper() for s in (states or []) if s}
+    if sts:
+        def in_states(r):
+            if r["state_or_province"] in sts:
+                return True
+            tail = r["name"].rsplit(", ", 1)[-1] if ", " in r["name"] else ""
+            return any(t in sts for t in tail.split("-"))
+        inside = [r for r in rows if in_states(r)]
+        out["in_states"] = inside[:top_in_state]
+        out["in_states_count"] = len(inside)
+    out["leaders"] = rows[:3]
+    return out

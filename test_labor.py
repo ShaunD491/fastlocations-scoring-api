@@ -262,12 +262,32 @@ def test_intake_matches_common_roles():
     assert json.dumps(L.parse("40 welders, 6 assemblers"), sort_keys=True) == json.dumps(L.parse("40 welders, 6 assemblers"), sort_keys=True)
 
 
+def test_place_summary():
+    import labor
+    crit = {"workforce": {"occupations": [{"soc_code": "51-4041", "headcount": 200}, {"soc_code": "51-4121", "headcount": 50}]}}
+    full = labor.rank_metros(crit, top=10 ** 6)
+    us = full["results"]["US"]
+    pick = us[7]
+    s = labor.place_summary(crit, area=pick["geo_code"], country="US", states=[pick["state_or_province"]])
+    assert s["place"]["rank"] == 8 and s["peers"] == len(us) and s["place"]["labor_score"] == pick["labor_score"]
+    assert s["in_states"] and all(r["rank"] >= 1 for r in s["in_states"]) and s["leaders"][0]["rank"] == 1
+    nm = next(a for a, v in labor.index()["areas"].items() if v[1] == "nonmetro")
+    s2 = labor.place_summary(crit, area=nm, country="US")
+    assert s2["peer_set"].startswith("U.S. metro and nonmetro") and s2["peers"] > len(us)
+    er = sorted(labor.index()["ers"])[0]
+    s3 = labor.place_summary(crit, area=er, country="CA")
+    assert s3["country"] == "CA" and "place" in s3
+    s4 = labor.place_summary(crit, states=["OH"])
+    assert "place" not in s4 and s4["in_states_count"] > 0
+    assert labor.place_summary(crit, area="nope", country="US").get("error")
+
+
 def test_api_gate_is_ai_plus_only():
     os.environ.pop("FL_LABOR_OPEN", None)
     os.environ["FL_LABOR_KEY"] = "k" * 24
     import app
     c = app.app.test_client()
-    for path in ("/labor/rank", "/labor/compare", "/labor/parse"):
+    for path in ("/labor/rank", "/labor/compare", "/labor/parse", "/labor/place"):
         assert c.post(path, json={}).status_code == 403, path
     assert c.get("/labor/occupations?q=weld").status_code == 403
     occ = {"workforce": {"occupations": [{"soc_code": "51-4041", "headcount": 50}]}, "geography": {"countries": ["US"]}}

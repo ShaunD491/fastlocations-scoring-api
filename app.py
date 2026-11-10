@@ -13,6 +13,8 @@ Routes:
                     (workforce.occupations, if given, adds occupation labor scoring - see labor.py)
   POST /labor/rank     -> body = ProjectCriteria with workforce.occupations; every US metro and Canadian
                           economic region ranked for those roles (?top=N default 10, ?nonmetro=1)
+  POST /labor/place    -> body = ProjectCriteria + "area" (OEWS area / ER code), "country", "states": one
+                          community's labor score and rank among its country's metros, plus the best in its state(s)
   POST /labor/compare  -> body = ProjectCriteria + "sites": [2-5 FIPS/CDUIDs, "City, ST" or {lat,lon}]
   GET  /labor/occupations?q=weld  -> SOC/NOC title lookup for the occupation picker
   POST /labor/parse    -> {"text": "120 forklift operators and 10 maintenance techs"} -> roles, headcounts,
@@ -176,6 +178,14 @@ def labor_rank():
     try: top=max(1,min(int(request.args.get("top",10)),100))
     except ValueError: top=10
     return jsonify(labor.rank_metros(crit,top=top,include_nonmetro=request.args.get("nonmetro") in ("1","true")))
+
+@app.route("/labor/place", methods=["POST","OPTIONS"])
+def labor_place():
+    """Dashboard role search: one community's rank for the roles (body = ProjectCriteria + area/country/states)."""
+    if request.method=="OPTIONS": return ("",204)
+    if not labor_allowed(): return jsonify(LABOR_DENIED),403
+    b=request.get_json(force=True,silent=True) or {}
+    return jsonify(labor.place_summary(b,area=b.get("area"),country=b.get("country"),states=b.get("states")))
 
 @app.route("/labor/compare", methods=["POST","OPTIONS"])
 def labor_compare():
