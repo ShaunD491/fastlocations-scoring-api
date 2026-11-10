@@ -68,3 +68,10 @@ _data_backups/
 # refresh tool knows the age of the DATA rather than the age of the file.
 !*_meta.json
 !ct_migration_meta.json
+
+# labor pipeline: raw downloads and build outputs stay local
+pipeline/labor/raw/
+pipeline/labor/out/
+
+# occupation labor runtime (pipeline/labor/build_labor_runtime.py)
+!labor_data/index.json

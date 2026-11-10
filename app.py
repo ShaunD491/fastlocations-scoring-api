@@ -10,6 +10,19 @@ Routes:
   GET  /         -> the intake form
   GET  /health   -> data load status (open this in a browser to confirm the API is up)
   POST /match    -> body = ProjectCriteria JSON; returns ranked results + serving EDO (?top=N, default 5)
+                    (workforce.occupations, if given, adds occupation labor scoring - see labor.py)
+  POST /labor/rank     -> body = ProjectCriteria with workforce.occupations; every US metro and Canadian
+                          economic region ranked for those roles (?top=N default 10, ?nonmetro=1)
+  POST /labor/compare  -> body = ProjectCriteria + "sites": [2-5 FIPS/CDUIDs, "City, ST" or {lat,lon}]
+  GET  /labor/occupations?q=weld  -> SOC/NOC title lookup for the occupation picker
+  POST /labor/parse    -> {"text": "120 forklift operators and 10 maintenance techs"} -> roles, headcounts,
+                          matched SOC/NOC candidates (labor_intake.py)
+
+OCCUPATION LABOR IS AN AI+PLUS FEATURE. The /labor/* routes and workforce.occupations in /match and
+/submit only work for callers that send the shared key (header X-FL-Labor-Key = env FL_LABOR_KEY). The
+caller is EDO/api.php, which signs the EDO in with its portal access code first (labor_* actions) and
+adds the key. Without the key /labor/* returns 403 and /match ignores workforce.occupations. Running
+app.py directly (local dev) leaves it open unless FL_LABOR_KEY is set.
 
 CORS is open so the form works whether it's opened via this server, a file://, or
 another local dev server (e.g. VS Code Live Server).
@@ -20,13 +33,33 @@ os.environ.setdefault("FL_DATA_DIR", HERE)
 
 from flask import Flask, request, jsonify, send_file
 import scorer
+import hmac
+import labor
+import labor_intake
+
+LABOR_DENIED={"ok":False,"error":"Occupation labor scoring is part of FastLocations AI+Plus.",
+              "upgrade":"https://www.fastlocations.ai/subscribe.html"}
+
+def labor_allowed():
+    key=os.environ.get("FL_LABOR_KEY","")
+    if not key: return os.environ.get("FL_LABOR_OPEN")=="1"
+    got=request.headers.get("X-FL-Labor-Key","")
+    return bool(got) and hmac.compare_digest(got,key)
+
+def strip_labor(crit):
+    """Public callers: drop the AI+Plus labor inputs so /match scores exactly as before."""
+    wf=crit.get("workforce")
+    if isinstance(wf,dict) and (wf.get("occupations") or wf.get("labor_weights")):
+        crit["workforce"]={k:v for k,v in wf.items() if k not in ("occupations","labor_weights")}
+        return True
+    return False
 
 app=Flask(__name__)
 
 @app.after_request
 def add_cors(resp):
     resp.headers["Access-Control-Allow-Origin"]="*"
-    resp.headers["Access-Control-Allow-Headers"]="Content-Type"
+    resp.headers["Access-Control-Allow-Headers"]="Content-Type, X-FL-Labor-Key"
     resp.headers["Access-Control-Allow-Methods"]="GET, POST, OPTIONS"
     return resp
 
@@ -47,7 +80,8 @@ def email_status():
 @app.get("/health")
 def health():
     return {"status":"ok","counties":len(scorer.FEAT),"edos":len(scorer.MASTER),
-            "states_with_incentives":len(scorer.INC)}
+            "states_with_incentives":len(scorer.INC),
+            "labor_data":(labor.index() or {}).get("built")}
 
 
 def send_match_email(criteria, out):
@@ -90,6 +124,7 @@ def send_match_email(criteria, out):
 def submit():
     if request.method=="OPTIONS": return ("",204)
     crit=request.get_json(force=True,silent=True) or {}
+    if not labor_allowed(): strip_labor(crit)
     out=scorer.run(crit, top=5)
     try: res=send_match_email(crit, out)
     except Exception as e: res={"sent": False, "reason": str(e)[:150]}
@@ -128,9 +163,47 @@ def match():
     crit=request.get_json(force=True,silent=True) or {}
     try: top=int(request.args.get("top",5))
     except ValueError: top=5
+    stripped=strip_labor(crit) if not labor_allowed() else False
     out=scorer.run(crit,top=top)
+    if stripped: out["labor_access"]="workforce.occupations ignored: occupation labor scoring is part of AI+Plus"
     return jsonify(out)
 
+@app.route("/labor/rank", methods=["POST","OPTIONS"])
+def labor_rank():
+    if request.method=="OPTIONS": return ("",204)
+    if not labor_allowed(): return jsonify(LABOR_DENIED),403
+    crit=request.get_json(force=True,silent=True) or {}
+    try: top=max(1,min(int(request.args.get("top",10)),100))
+    except ValueError: top=10
+    return jsonify(labor.rank_metros(crit,top=top,include_nonmetro=request.args.get("nonmetro") in ("1","true")))
+
+@app.route("/labor/compare", methods=["POST","OPTIONS"])
+def labor_compare():
+    if request.method=="OPTIONS": return ("",204)
+    if not labor_allowed(): return jsonify(LABOR_DENIED),403
+    crit=request.get_json(force=True,silent=True) or {}
+    return jsonify(scorer.compare_sites(crit,crit.get("sites") or []))
+
+@app.get("/labor/occupations")
+def labor_occupations():
+    if not labor_allowed(): return jsonify(LABOR_DENIED),403
+    q=(request.args.get("q") or "").strip().lower()
+    idx=labor.index()
+    if not idx or len(q)<2: return jsonify([])
+    hits=[{"country":"US","code":c,"title":t} for c,t in idx["us_titles"].items() if q in t.lower() or c.startswith(q)]
+    hits+=[{"country":"CA","code":c,"title":t,"soc_code":idx["noc_to_soc"].get(c)}
+           for c,t in idx["ca_titles"].items() if q in t.lower() or c.startswith(q)]
+    hits.sort(key=lambda h:(not h["title"].lower().startswith(q),h["country"]!="US",h["title"]))
+    return jsonify(hits[:25])
+
+@app.route("/labor/parse", methods=["POST","OPTIONS"])
+def labor_parse():
+    if request.method=="OPTIONS": return ("",204)
+    if not labor_allowed(): return jsonify(LABOR_DENIED),403
+    text=((request.get_json(force=True,silent=True) or {}).get("text") or "")[:4000]
+    return jsonify(labor_intake.parse(text))
+
 if __name__=="__main__":
+    os.environ.setdefault("FL_LABOR_OPEN","1")      # local dev: labor routes open unless FL_LABOR_KEY is set
     print("FastLocations scoring API -> http://127.0.0.1:8000  (Ctrl+C to stop)")
     app.run(host="127.0.0.1",port=8000,debug=False)

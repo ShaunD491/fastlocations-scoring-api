@@ -27,6 +27,7 @@ within its country; the cost dimension is additionally ranked within market-size
 Small-county reliability damping + local/regional coverage bonus applied to the final.
 """
 import json,os,sys,math,collections,urllib.request,urllib.parse
+import labor as LAB                                # occupation-level labor scoring (workforce.occupations)
 O=os.environ.get("FL_DATA_DIR") or os.path.dirname(os.path.abspath(__file__))
 # encoding="utf-8" is not optional. open() defaults to the platform encoding,
 # which on Windows is cp1252, so every accented name in the data - Montreal,
@@ -316,6 +317,12 @@ DEFAULT_WEIGHTS={"workforce":0.23,"infrastructure":0.09,"incentives":0.09,"real_
                  "demographics":0.04,"logistics":0.08,"cost":0.13,"safety":0.05,"market_size":0.09,
                  "livability":0.05,"innovation":0.05}
 DAI_WORKFORCE_SHARE=7/23
+# OCCUPATION LABOR: when the project lists the roles it must hire (workforce.occupations, see labor.py)
+# the occupation labor score -- availability, competition for the hires, wage cost, growth, turnover
+# for THOSE occupations -- is blended into the workforce dimension at this fixed share, after DAI.
+# Fixed for the same reason as DAI: its pull must not drift with how many other workforce metrics a
+# query populates. No occupations listed -> workforce is unchanged.
+LABOR_WORKFORCE_SHARE=0.5
 # Small-county reliability damping. A county's score is shrunk toward the candidate-set mean
 # by reliability = pop/(pop+SCALE_DAMP_K): big labor markets keep their score, thin ones (where
 # percentile metrics are noisy and the market can't realistically host most projects) are pulled
@@ -1109,6 +1116,15 @@ def build_rationale(rank,r,pending):
     if null_dims:
         nice=", ".join(d.replace("_"," ") for d in null_dims)
         out.append(f'Data for {nice} is not in the model for this location, so the score reflects only the available factors rather than penalizing those gaps.')
+    lb=r.get("labor") or {}
+    for o in (lb.get("occupations") or [])[:3]:
+        if o.get("emp") is None: continue
+        bits=[f'about {o["emp"]:,} {o["title"]} workers locally']
+        if o.get("competition_ratio") is not None: bits.append(f'{o["competition_ratio"]:g} per hire requested')
+        if o.get("wage_index") is not None: bits.append(f'wages at {o["wage_index"]*100:.0f}% of the national median')
+        if o.get("over_wage_ceiling"): bits.append("above the wage ceiling")
+        if o.get("tight_pool"): bits.append("a tight pool for this many hires")
+        out.append("For the roles requested: "+", ".join(bits)+(" (modelled local estimate)." if o.get("modelled") else "."))
     edo=r["serving_edos"][0] if r["serving_edos"] else None
     if edo: out.append(f'A lead here would route to {edo["organization"]} ({edo["category"]}).')
     if r.get("has_listed_properties"):
@@ -1163,6 +1179,12 @@ def run(criteria,top=10):
     dai=score_dimension(refset,m_dai,criteria)
     sub["workforce"]={ff:_wavg([(v,1-DAI_WORKFORCE_SHARE),(dai[ff],DAI_WORKFORCE_SHARE)])
                       for ff,v in sub["workforce"].items()}
+    lab=LAB.score_geos(criteria,{c:[f for f in refset if gsys(ALLFEAT[f])==c] for c in ("US","CA")},
+                       {"US":"county","CA":"cd"})
+    if lab:
+        sub["workforce"]={ff:_wavg([(v,1-LABOR_WORKFORCE_SHARE),
+                                    ((lab.get(ff) or {}).get("labor_score"),LABOR_WORKFORCE_SHARE)])
+                          for ff,v in sub["workforce"].items()}
     cands=list(refset)
     trace={"candidates_start":len(cands)}
     if weights_fallback:
@@ -1316,7 +1338,8 @@ def run(criteria,top=10):
                             "penalties":{"hazard":hz_pen,"water":wt_pen},
                             "factors_scored":len([1 for dim in DIMS if scores[dim] is not None]),
                             "factors_total":len(DIMS)},
-                        "final_score":final,"serving_edos":edos})
+                        "final_score":final,"serving_edos":edos,
+                        "labor":(lab.get(f) if lab else None)})
     results.sort(key=lambda r:(r["final_score"] is not None,r["final_score"]),reverse=True)
     # PRIMARY = counties served by an EDO customer, collapsed to distinct serving EDOs (roll past
     # repeats so the Top-N are different customers) with backfill; OTHER NOTABLE = the top-scoring
@@ -1354,10 +1377,64 @@ def run(criteria,top=10):
     for i,r in enumerate(top_results,1): r["rationale"]=build_rationale(i,r,None)
     other_notable=[{"county":r["county"],"state":r["state"],"country":r["country"],
                     "msa":r.get("msa"),"final_score":r["final_score"],"lat":r.get("lat"),"lon":r.get("lon")} for r in other[:top]]
-    return {"schema_version":"1.0","trace":trace,"weights_used":w,
+    out_extra={"labor_request":LAB.requested_summary(criteria)} if lab else {}
+    return {"schema_version":"1.0","trace":trace,"weights_used":w,**out_extra,
             "dimensions_live":["workforce","demographics","logistics","incentives","real_estate","cost","safety","market_size","infrastructure","livability","innovation"],
             "dimensions_pending_data":[],
             "results":top_results,"other_notable":other_notable}
+
+def _resolve_site(site):
+    """A comparison site -> (geoid, how). Accepts a county FIPS / Canadian CDUID, {"geoid": ...},
+    {"lat": .., "lon": ..}, or a place name ("Cleveland, OH"). Points resolve to the county / CD with the
+    NEAREST CENTROID (no boundary file is loaded at runtime), which is reported as how="nearest_centroid"."""
+    if isinstance(site,dict):
+        if site.get("geoid"): site=str(site["geoid"])
+        elif site.get("lat") is not None and site.get("lon") is not None:
+            pt=(float(site["lat"]),float(site["lon"]))
+            return _nearest_geo(pt),"nearest_centroid"
+        else: site=site.get("place") or site.get("name") or ""
+    site=str(site).strip()
+    if site in ALLFEAT: return site,"geoid"
+    pt=geocode_place(site)
+    return (_nearest_geo(pt),"nearest_centroid") if pt else (None,"unresolved")
+def _nearest_geo(pt):
+    best=None
+    for f,d in ALLFEAT.items():
+        if d.get("lat") is None or d.get("lon") is None: continue
+        dist=haversine_mi(pt[0],pt[1],d["lat"],d["lon"])
+        if best is None or dist<best[0]: best=(dist,f)
+    return best[1] if best else None
+def compare_sites(criteria,sites):
+    """SITE LABOR COMPARISON: 2-5 named locations side by side for the project's occupations
+    (workforce.occupations). Each sub-score is still a percentile against EVERY county (US) or census
+    division (CA) in that country, so a site's numbers mean the same thing here as in /match; the table
+    only picks out the named sites. Returns one row per site plus the best site per sub-score."""
+    sites=list(sites or [])[:5]
+    resolved=[]
+    for s_ in sites:
+        g,how=_resolve_site(s_); resolved.append((s_,g,how))
+    countries={gsys(ALLFEAT[g]) for _,g,_ in resolved if g}
+    ref={c:[f for f in ALLFEAT if gsys(ALLFEAT[f])==c] for c in countries}
+    lab=LAB.score_geos(criteria,ref,{"US":"county","CA":"cd"})
+    if not lab:
+        return {"error":"no usable occupations in workforce.occupations",**LAB.requested_summary(criteria)}
+    rows=[]
+    for s_,g,how in resolved:
+        if not g:
+            rows.append({"site":s_,"resolved":None,"how":how}); continue
+        d=ALLFEAT[g]
+        rows.append({"site":s_,"resolved":g,"how":how,"name":f'{d["NAME"]}, {d["ST_ABBREV"]}',
+                     "country":("Canada" if gsys(d)=="CA" else "US"),
+                     "msa":(MSA_MAP.get(g) if gsys(d)=="US" else CMA_MAP.get(g)),**lab.get(g,{})})
+    best={}
+    for k in ["labor_score"]+LAB.SUBS:
+        vals=[(r.get("labor_score") if k=="labor_score" else (r.get("sub_scores") or {}).get(k),r["name"])
+              for r in rows if r.get("resolved")]
+        vals=[v for v in vals if v[0] is not None]
+        if vals: best[k]=max(vals)[1]
+    return {"schema_version":"1.0","mode":"site_labor_comparison","request":LAB.requested_summary(criteria),
+            "sites":rows,"best_by":best,
+            "note":"US county and Canadian census-division figures are modelled; Canadian figures are comparable, not identical."}
 
 if __name__=="__main__":
     crit=json.load(open(sys.argv[1])) if len(sys.argv)>1 else {}
