@@ -134,6 +134,8 @@ def resolve(req):
         notes.append("no US equivalent - scored in Canada only")
     if not nocs:
         notes.append("no Canadian equivalent - scored in the US only")
+    elif not noc and soc in (idx.get("soc_to_noc_approx") or {}):
+        notes.append("Canada: counted in the broader group " + ", ".join(idx["ca_titles"].get(n, n) for n in nocs))
     return {"soc": soc, "nocs": nocs, "headcount": hc if hc > 0 else None, "wage_ceiling": ceil,
             "title_raw": req.get("title_raw"),
             "title": idx["us_titles"].get(soc) if soc else idx["ca_titles"].get(nocs[0]),

@@ -107,4 +107,4 @@ After adding them, re-run `build_crosswalks.py`, then `fetch_oews.py`. For the P
 `POST /labor/place` (`labor.place_summary`): criteria plus `area` (OEWS area or economic region), `country` and `states`.
 Returns the place's rank among its country's peers, the top 5 inside the given states and the top 3 overall.
 `build_dash_labor.py` writes `search: {area, country, states, area_name}` into each dashboard file for it.
-Known gap: SOC 51-4121 (welders) has no NOC in the crosswalk, though NOC 72106 fits, so welders are not counted in Canada.
+SOC -> NOC coverage (2026-11-10): build_labor_runtime.py gives each NOC one primary SOC, then fills SOCs left without a NOC from the full crosswalk (same SOC major group, OEWS roll-ups via their detailed SOCs, and the hand-reviewed CROSS_FAMILY_OK list). 811 of 824 OEWS SOCs now reach Canada; filled ones are in index soc_to_noc_approx and labor.py notes them as a broader Canadian group. 13 are left unmapped on purpose (e.g. project management specialists, logisticians), because the crosswalk links for them are wrong.

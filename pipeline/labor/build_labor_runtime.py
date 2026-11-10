@@ -50,6 +50,23 @@ def dump(path, obj):
         json.dump(obj, fh, separators=(",", ":"))
 
 
+# SOC -> NOC links across SOC major groups, taken from the official crosswalk and kept after review (2026-11-10)
+CROSS_FAMILY_OK = {
+    "13-2082": ["14200"], "15-1241": ["21311"], "19-4042": ["22300"], "19-4099": ["22214"], "21-1091": ["41404"],
+    "23-1012": ["14103"], "23-1022": ["11200"], "25-9021": ["21112"], "25-9044": ["41201"], "29-9092": ["41301"],
+    "29-9093": ["33109"], "31-2011": ["32109"], "31-2021": ["32109"], "31-2022": ["32109"], "31-9094": ["12110"],
+    "31-9096": ["32104"], "31-9097": ["33101"], "33-1091": ["62029"], "33-2022": ["22112"], "33-3041": ["43202"],
+    "33-9011": ["43202"], "33-9092": ["54100"], "37-3012": ["85103"], "39-4011": ["62201"], "39-4031": ["62201"],
+    "39-5091": ["52119"], "39-5092": ["63211"], "39-5093": ["63211"], "39-5094": ["63211"], "39-6012": ["64314"],
+    "41-9012": ["55109"], "41-9021": ["10020"], "43-3041": ["64321"], "43-4061": ["12104"], "43-4141": ["63102"],
+    "49-2093": ["22310"], "49-9011": ["73200"], "49-9045": ["72320"], "49-9062": ["22310"], "49-9095": ["73200"],
+    "49-9096": ["72500"], "51-6051": ["53124"], "51-9071": ["62202"], "51-9083": ["33109"], "51-9162": ["22302"],
+    "53-3011": ["32102"], "53-3099": ["74205"], "53-6021": ["65329"], "53-6041": ["22300"], "53-6051": ["22231"],
+    "53-6061": ["65210"], "53-7031": ["73400"], "53-7063": ["95100", "95101"], "53-7071": ["93101"],
+    "53-7072": ["92101", "94140"], "53-7073": ["84101"], "53-7081": ["75212"],
+}
+
+
 def main():
     # Clear old occupation files one by one (removing the folders themselves fails while OneDrive holds them).
     for sub in ("us", "ca"):
@@ -106,6 +123,26 @@ def main():
         dump(os.path.join(DEST, "ca", noc + ".json.gz"), d)
     for noc, soc in sorted(idx["noc_to_soc"].items()):
         idx["soc_to_noc"].setdefault(soc, []).append(noc)
+    # Gap fill: a NOC carries one primary SOC above, so SOCs that are never a primary (welders 51-4121,
+    # forklift operators 53-7051, ...) would have no Canadian supply at all. Give each such SOC the NOCs
+    # the full NOC 2016 -> SOC crosswalk links it to, keeping only NOCs whose primary SOC is in the same
+    # SOC major group (so crossing guards do not borrow construction labourers). These are broader
+    # Canadian groups; soc_to_noc_approx lists them so the scorer can say so.
+    # Two further steps: OEWS roll-up codes (29-2010, 31-1120, 51-2090 ...) are not in the crosswalk, so they
+    # take the NOCs of their detailed SOCs (same first six characters); and crosswalk links into another SOC
+    # major group are used only where reviewed by hand (CROSS_FAMILY_OK, 2026-11-10: plausible homes such as
+    # phlebotomists -> medical laboratory assistants; links like project managers -> interior designers are left out).
+    xw_full = load_json(os.path.join(XW, "noc_soc.json"))["soc_to_noc"]
+    idx["soc_to_noc_approx"] = {}
+    for soc in sorted(idx["us_titles"]):
+        if soc in idx["soc_to_noc"]:
+            continue
+        cands = xw_full.get(soc) or sorted({n for k, v in xw_full.items() if k[:6] == soc[:6] and k != soc for n in v})
+        nocs = [n for n in cands if n in cby and ((idx["noc_to_soc"].get(n) or "")[:2] == soc[:2] or n in CROSS_FAMILY_OK.get(soc, ()))]
+        if nocs:
+            idx["soc_to_noc"][soc] = nocs
+            idx["soc_to_noc_approx"][soc] = nocs
+    print(f"  SOC -> NOC: {len(idx['soc_to_noc'])} SOCs reach Canada ({len(idx['soc_to_noc_approx'])} via broader groups)")
     print(f"  CA: {len(cby)} occupation files")
 
     # Hiring sheds for the competition sub-score (labor.py): a county inside a metro hires from the
