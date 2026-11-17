@@ -14205,6 +14205,34 @@
   ]
  },
  {
+  "objectid": "4571",
+  "organization": "St. Louis Regional Freightway",
+  "category": "Regional Development Agency",
+  "city": "St. Louis",
+  "state": "MO",
+  "country": "US",
+  "latitude": "38.62721492",
+  "longitude": "-90.18929054",
+  "home_county_fips": "29510",
+  "home_county_name": "St. Louis city",
+  "territory_fips": [
+   "29510"
+  ],
+  "territory_county_count": 1,
+  "territory_basis": "home_county_only_INCOMPLETE",
+  "resolution_status": "partial",
+  "flags": [
+   "multi_county_territory_unenumerated"
+  ],
+  "geo_system": "US_FIPS",
+  "geoid_type": "county_fips",
+  "territory_geoids": [
+   "29510"
+  ],
+  "embed_url": "https://www.thefreightway.com/",
+  "ai_link": "https://01644655906c4176b2722b8687c1bf2f.elf.site"
+ },
+ {
   "objectid": "74",
   "organization": "St. Petersburg Economic Development Corporation",
   "category": "Local Development Agency",
